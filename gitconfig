@@ -1,0 +1,15 @@
+[alias]
+	st = status
+	co = checkout
+[user]
+	name = Duncan Grazier
+	email = itsmeduncan@gmail.com
+[color]
+	ui = always
+[core]
+	excludesfile = /Users/duncan/.gitignore
+  editor = /usr/bin/vim
+[difftool]
+	prompt = false
+[github]
+	user = itsmeduncan
