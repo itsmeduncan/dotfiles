@@ -116,6 +116,7 @@ Bundle 'tpope/vim-rake'
 Bundle 'tpope/vim-haml'
 Bundle 'taglist.vim'
 Bundle 'plasticboy/vim-markdown'
+Bundle 'kchmck/vim-coffee-script'
 
 filetype plugin indent on
 " ---
