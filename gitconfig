@@ -1,6 +1,8 @@
 [alias]
 	st = status
 	co = checkout
+	br = branch
+	d = diff
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@gmail.com
