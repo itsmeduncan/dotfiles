@@ -16,6 +16,7 @@ alias sc="./script/console"
 alias unicorn="unicorn_rails -p3000"
 alias bes="bundle exec rspec"
 alias ber="bundle exec rake"
+alias bec="bundle exec cucumber"
 
 export NODE_PATH=/usr/local/lib/node
 
