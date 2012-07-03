@@ -2,7 +2,7 @@
 
 CDPATH=".:~:~/Projects"
 
-export PATH="/usr/local/bin:$PATH"
+export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
@@ -17,6 +17,8 @@ alias unicorn="unicorn_rails -p3000"
 alias bes="bundle exec rspec"
 alias ber="bundle exec rake"
 alias bec="bundle exec cucumber"
+
+alias git=hub
 
 export NODE_PATH=/usr/local/lib/node
 

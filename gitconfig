@@ -6,6 +6,7 @@
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@gmail.com
+	signingkey = B5C033F1
 [color]
 	ui = always
 [core]
@@ -15,3 +16,7 @@
 	prompt = false
 [github]
 	user = itsmeduncan
+[browser "gitscm"]
+	cmd = /bin/sh -c 'open http://git-scm.com/docs/$(basename $1 .html)' --
+[help]
+	browser = gitscm
