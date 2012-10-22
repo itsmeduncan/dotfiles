@@ -1,8 +1,9 @@
 [alias]
-	st = status
+	st = status -sb
 	co = checkout
 	br = branch
 	d = diff
+ 	dw = --word-diff
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@gmail.com
@@ -11,7 +12,7 @@
 	ui = always
 [core]
 	excludesfile = /Users/duncan/.gitignore
-  editor = /usr/bin/vim
+  	editor = /usr/bin/vim
 [difftool]
 	prompt = false
 [github]
