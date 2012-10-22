@@ -1,6 +1,7 @@
 [alias]
 	st = status -sb
 	co = checkout
+	ci = commit
 	br = branch
 	d = diff
  	dw = --word-diff
