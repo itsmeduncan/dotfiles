@@ -4,7 +4,8 @@
 	ci = commit
 	br = branch
 	d = diff
- 	dw = --word-diff
+  dw = --word-diff
+  ds = diff --staged
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@gmail.com
