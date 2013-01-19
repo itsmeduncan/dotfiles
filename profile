@@ -6,6 +6,9 @@ export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
+export EDITOR=subl
+export VISUAL=subl
+
 source "$HOME/.git-completion.bash"
 
 PS1="\A \[\e[28;1m\]\u@\h \[\e[0m\]\W\$(__git_ps1)\$ "
