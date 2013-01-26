@@ -8,6 +8,7 @@
   ds = diff --staged
   ffm = merge --ff
   f = fetch -p
+  p = push
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@gmail.com
