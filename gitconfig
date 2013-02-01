@@ -2,7 +2,8 @@
 	st = status -sb
 	co = checkout
 	ci = commit
-	br = branch
+  bl = blame
+  br = branch
 	d = diff
   dw = --word-diff
   ds = diff --staged
