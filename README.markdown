@@ -2,6 +2,9 @@
 
 ### Sublime Text 2 personal preferences
 
+cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+git clone git://github.com/kemayo/sublime-text-2-git.git Git
+
 ```javascript
 // Settings in here override those in "Default/Preferences.sublime-settings", and
 // are overridden in turn by file type specific settings.
