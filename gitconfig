@@ -1,29 +1,30 @@
 [alias]
-	st = status -sb
-	co = checkout
-	ci = commit
+  st = status -sb
+  co = checkout
+  ci = commit
   bl = blame
   br = branch
-	d = diff
+  d = diff
   dw = --word-diff
   ds = diff --staged
-  ffm = merge --ff
+  ffm = merge --ff-only
   f = fetch -p
   p = push
 [user]
-	name = Duncan Grazier
-	email = itsmeduncan@gmail.com
-	signingkey = B5C033F1
+  name = Duncan Grazier
+  email = itsmeduncan@gmail.com
+  signingkey = B5C033F1
 [color]
-	ui = always
+  ui = auto
 [core]
-	excludesfile = /Users/duncan/.gitignore
-  	editor = /usr/bin/vim
+  excludesfile = /Users/duncan/.gitignore
+  editor = /usr/bin/vim
 [difftool]
-	prompt = false
+  prompt = false
 [github]
-	user = itsmeduncan
+  user = itsmeduncan
 [browser "gitscm"]
-	cmd = /bin/sh -c 'open http://git-scm.com/docs/$(basename $1 .html)' --
+  cmd = /bin/sh -c 'open http://git-scm.com/docs/$(basename $1 .html)' --
 [help]
-	browser = gitscm
+  browser = gitscm
+  autocorrect = -1
