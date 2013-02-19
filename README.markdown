@@ -1,9 +1,27 @@
 # Dotfiles
 
-### Sublime Text 2 personal preferences
+## Application
 
+### Terminal
+
+```
+Font: Menlo
+Font size: 14
+Width: 120
+Height: 50
+Only show 'Active process name'
+Cursor: block (blink)
+Close if the shell exited cleanly
+Declare terminal as: xterm-256color
+```
+
+
+### Sublime Text 2
+
+```
 cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
 git clone git://github.com/kemayo/sublime-text-2-git.git Git
+```
 
 ```javascript
 // Settings in here override those in "Default/Preferences.sublime-settings", and
