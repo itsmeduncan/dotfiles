@@ -7,8 +7,8 @@
 ```
 Font: Menlo
 Font size: 14
-Width: 120
-Height: 50
+Width: 100
+Height: 40
 Only show 'Active process name'
 Cursor: block (blink)
 Close if the shell exited cleanly
