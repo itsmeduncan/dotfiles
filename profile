@@ -11,15 +11,13 @@ export VISUAL=subl
 
 source "$HOME/.git-completion.bash"
 
-PS1="\A \[\e[28;1m\]\u@\h \[\e[0m\]\W\$(__git_ps1)\$ "
+PS1="\A \[\e[0m\]\W\$(__git_ps1)\$ "
 
 alias ls="ls -G"
-alias ss="./script/server"
-alias sc="./script/console"
-alias unicorn="unicorn_rails -p3000"
+alias ss="bundle exec rails s"
+alias sc="bundle exec rails c"
 alias bes="bundle exec rspec"
 alias ber="bundle exec rake"
-alias bec="bundle exec cucumber"
 
 alias git=hub
 
