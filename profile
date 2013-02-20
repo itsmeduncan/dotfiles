@@ -9,6 +9,8 @@ export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 export EDITOR=subl
 export VISUAL=subl
 
+export HISTCONTROL=ignoreboth:erasedups
+
 source "$HOME/.git-completion.bash"
 
 PS1="\A \[\e[0m\]\W\$(__git_ps1)\$ "
