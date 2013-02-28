@@ -23,6 +23,11 @@ cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
 git clone git://github.com/kemayo/sublime-text-2-git.git Git
 ```
 
+```
+cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
+git clone git@github.com:jisaacks/GitGutter.git
+```
+
 ```javascript
 // Settings in here override those in "Default/Preferences.sublime-settings", and
 // are overridden in turn by file type specific settings.
