@@ -1,10 +1,12 @@
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-CDPATH=".:~:~/Projects"
+CDPATH=".:~:~/Projects:~/Projects/shopkeep"
 
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
+
+#export SSL_CERT_FILE=/Users/duncan/.rvm/usr/ssl/cert.pem
 
 export EDITOR=subl
 export VISUAL=subl
@@ -28,3 +30,4 @@ export NODE_PATH=/usr/local/lib/node
 if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
+[[ -s /Users/duncan/.nvm/nvm.sh ]] && . /Users/duncan/.nvm/nvm.sh # This loads NVM
