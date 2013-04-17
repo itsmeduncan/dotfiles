@@ -6,12 +6,12 @@ export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
-#export SSL_CERT_FILE=/Users/duncan/.rvm/usr/ssl/cert.pem
-
 export EDITOR=subl
 export VISUAL=subl
 
 export HISTCONTROL=ignoreboth:erasedups
+shopt -s histappend
+export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 source "$HOME/.git-completion.bash"
 
@@ -22,6 +22,7 @@ alias ss="bundle exec rails s"
 alias sc="bundle exec rails c"
 alias bes="bundle exec rspec"
 alias ber="bundle exec rake"
+alias be="bundle exec"
 
 alias git=hub
 
@@ -31,3 +32,4 @@ if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
 [[ -s /Users/duncan/.nvm/nvm.sh ]] && . /Users/duncan/.nvm/nvm.sh # This loads NVM
+
