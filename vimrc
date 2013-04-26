@@ -144,3 +144,5 @@ map <F5> :! bundle exec rspec %<CR>
 
 " Run the current context
 map <F6> :! bundle exec rspec %:<C-r>=line('.')<CR>
+
+autocmd Filetype gitcommit setlocal spell textwidth=72
