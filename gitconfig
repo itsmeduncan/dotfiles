@@ -10,6 +10,7 @@
   ffm = merge --ff-only
   f = fetch -p
   p = push
+  su = submodule update --init --recursive
 [user]
   name = Duncan Grazier
   email = itsmeduncan@gmail.com
