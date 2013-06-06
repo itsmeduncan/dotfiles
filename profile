@@ -1,8 +1,10 @@
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-CDPATH=".:~:~/Projects:~/Projects/shopkeep"
+CDPATH=".:~:~/Projects:~/Projects/ShopKeep:~/Projects/Go"
 
-export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+export GOPATH=$HOME/Projects/Go
+
+export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:$PATH"
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
