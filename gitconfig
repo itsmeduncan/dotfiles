@@ -5,6 +5,7 @@
   bl = blame
   br = branch
   d = diff
+  dp = --no-pager diff
   dw = --word-diff
   ds = diff --staged
   ffm = merge --ff-only
