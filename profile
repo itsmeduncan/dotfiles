@@ -20,6 +20,7 @@ source "$HOME/.git-completion.bash"
 PS1="\A \[\e[0m\]\W\$(__git_ps1)\$ "
 
 alias ls="ls -G"
+alias ll="ls -alFG"
 alias ss="bundle exec rails s"
 alias sc="bundle exec rails c"
 alias bes="bundle exec rspec"
