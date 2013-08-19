@@ -4,7 +4,7 @@ CDPATH=".:~:~/Projects:~/Projects/ShopKeep:~/Projects/Go"
 
 export GOPATH=$HOME/Projects/Go
 
-export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:$PATH"
+export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin:$PATH"
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
