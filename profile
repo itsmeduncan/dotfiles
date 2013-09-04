@@ -26,6 +26,7 @@ alias sc="bundle exec rails c"
 alias bes="bundle exec rspec"
 alias ber="bundle exec rake"
 alias be="bundle exec"
+alias mou="open -a Mou"
 
 alias git=hub
 
