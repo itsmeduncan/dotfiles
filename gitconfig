@@ -12,6 +12,7 @@
   f = fetch -p
   p = push
   su = submodule update --init --recursive
+  suf = submodule update --init --recursive --force
 [user]
   name = Duncan Grazier
   email = itsmeduncan@gmail.com
