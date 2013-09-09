@@ -8,8 +8,8 @@ export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin
 
 export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
 
-export EDITOR=subl
-export VISUAL=subl
+export EDITOR='subl -w'
+export VISUAL='subl -w'
 
 export HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
