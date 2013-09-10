@@ -1,6 +1,6 @@
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
-CDPATH=".:~:~/Projects:~/Projects/ShopKeep:~/Projects/Go"
+CDPATH=".:~:~/Projects"
 
 export GOPATH=$HOME/Projects/Go
 
