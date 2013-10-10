@@ -6,7 +6,8 @@ export GOPATH=$HOME/Projects/Go
 
 export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin:$PATH"
 
-export LSCOLORS="ExGxBxDxCxEgEdxbxgxcxd"
+export CLICOLOR=1
+export LSCOLORS=Gxfxcxdxbxegedabagacad
 
 export EDITOR='subl -w'
 export VISUAL='subl -w'
@@ -17,7 +18,7 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 source "$HOME/.git-completion.bash"
 
-PS1="\A \[\e[0m\]\W\$(__git_ps1)\$ "
+PS1='\e[90m\A\e[0m \e[32m\W\e[0m $(__git_ps1 "[\e[100m%s\e[0m] ")» '
 
 alias ls="ls -G"
 alias ll="ls -alFG"
