@@ -29,8 +29,6 @@ alias ber="bundle exec rake"
 alias be="bundle exec"
 alias mou="open -a Mou"
 
-alias git=hub
-
 export NODE_PATH=/usr/local/lib/node
 
 if [ -f `brew --prefix`/etc/bash_completion ]; then
