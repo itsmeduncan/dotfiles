@@ -1,4 +1,3 @@
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 CDPATH=".:~:~/Projects"
 
@@ -18,7 +17,7 @@ export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 source "$HOME/.git-completion.bash"
 
-PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\] $(__git_ps1 "[\e[100m%s\e[0m] ")» '
+PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\]$(__git_ps1 "‹\e[100m%s\e[0m›") » '
 
 alias ls="ls -G"
 alias ll="ls -alFG"
@@ -35,4 +34,3 @@ if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
 [[ -s /Users/duncan/.nvm/nvm.sh ]] && . /Users/duncan/.nvm/nvm.sh # This loads NVM
-
