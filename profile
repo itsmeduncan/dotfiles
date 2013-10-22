@@ -1,5 +1,5 @@
 
-CDPATH=".:~:~/Projects"
+CDPATH=".:~:~/Projects:~/Projects/Shopkeep"
 
 export GOPATH=$HOME/Projects/Go
 
