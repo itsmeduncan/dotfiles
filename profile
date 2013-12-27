@@ -1,9 +1,7 @@
-
-CDPATH=".:~:~/Projects:~/Projects/Shopkeep"
-
 export GOPATH=$HOME/Projects/Go
-
 export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin:$PATH"
+
+CDPATH=".:~:~/Projects:~/Projects/Shopkeep:$GOPATH/src/github.com/shopkeep"
 
 export CLICOLOR=1
 export LSCOLORS=Gxfxcxdxbxegedabagacad
