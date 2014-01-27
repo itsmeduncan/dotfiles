@@ -18,7 +18,7 @@ source "$HOME/.git-completion.bash"
 PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\]$(__git_ps1 "‹\e[100m%s\e[0m›") » '
 
 alias ls="ls -G"
-alias ll="ls -alFG"
+alias ll="ls -alhFG"
 alias ss="bundle exec rails s"
 alias sc="bundle exec rails c"
 alias bes="bundle exec rspec"
