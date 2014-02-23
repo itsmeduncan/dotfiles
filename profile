@@ -30,6 +30,9 @@ alias be='bundle exec'
 
 alias mou="open -a Mou"
 
+alias clean='git br --merged | grep -v "\*" | xargs -n 1 git branch -d'
+alias prune='git remote prune origin'
+
 export NODE_PATH=/usr/local/lib/node
 
 if [ -f `brew --prefix`/etc/bash_completion ]; then
