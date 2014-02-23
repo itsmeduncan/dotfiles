@@ -13,6 +13,8 @@ export HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
 export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
+export DOCKER_HOST=127.0.0.1:4243
+
 source "$HOME/.git-completion.bash"
 
 PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\]$(__git_ps1 "‹\e[100m%s\e[0m›") » '
