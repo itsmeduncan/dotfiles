@@ -21,11 +21,13 @@ PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\]$(__git_ps1 "‹\e[100m%s\e[0m›") » '
 
 alias ls="ls -G"
 alias ll="ls -alhFG"
-alias ss="bundle exec rails s"
-alias sc="bundle exec rails c"
-alias bes="bundle exec rspec"
-alias ber="bundle exec rake"
-alias be="bundle exec"
+
+alias ss='bundle exec rails s'
+alias sc='bundle exec rails c'
+alias bes='bundle exec rspec'
+alias ber='bundle exec rake'
+alias be='bundle exec'
+
 alias mou="open -a Mou"
 
 export NODE_PATH=/usr/local/lib/node
