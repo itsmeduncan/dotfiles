@@ -30,3 +30,5 @@
 [help]
   browser = gitscm
   autocorrect = -1
+[push]
+	default = simple
