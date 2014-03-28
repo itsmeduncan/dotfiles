@@ -6,8 +6,8 @@ CDPATH=".:~:~/Projects:~/Projects/Shopkeep:$GOPATH/src/github.com/shopkeep"
 export CLICOLOR=1
 export LSCOLORS=Gxfxcxdxbxegedabagacad
 
-export EDITOR='subl -w'
-export VISUAL='subl -w'
+export EDITOR='atom -w'
+export VISUAL='atom -w'
 
 export HISTCONTROL=ignoreboth:erasedups
 shopt -s histappend
