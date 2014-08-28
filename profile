@@ -24,6 +24,8 @@ alias prune='git remote prune origin'
 
 export NODE_PATH=/usr/local/lib/node
 
+complete -C aws_completer aws
+
 if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
