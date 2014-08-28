@@ -1,0 +1,19 @@
+'editor':
+  'fontSize': 15
+  'lineHeight': 1.4
+  'preferredLineLength': 78
+  'showIndentGuide': true
+'core':
+  'excludeVcsIgnoredPaths': false
+  'audioBeep': false
+  'projectHome': '~/Projects/'
+  'themes': [
+    'seti-ui'
+    'seti-syntax'
+  ]
+'exception-reporting':
+  'userId': '8058216d-0916-94a8-ee30-b9a286cb93ad'
+'welcome':
+  'showOnStartup': false
+'metrics':
+  'userId': '8ad65fe19751fba485a35c69912285ac5e7a04d8'
