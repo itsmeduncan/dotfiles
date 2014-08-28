@@ -1,7 +1,7 @@
 export GOPATH=$HOME/Projects/Go
 export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin:$PATH"
 
-CDPATH=".:~:~/Projects:~/Projects/Shopkeep:$GOPATH/src/github.com/shopkeep:$GOPATH/src/github.com/itsmeduncan"
+CDPATH=".:~:~/Projects:~/Projects/Shopkeep:~/Projects/Actuator:$GOPATH/src/github.com/shopkeep:$GOPATH/src/github.com/itsmeduncan"
 PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\]$(__git_ps1 "‹\e[100m%s\e[0m›") » '
 
 export CLICOLOR=1
