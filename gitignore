@@ -40,3 +40,5 @@ Thumbs.db
 .tmtags
 .notes
 .pullable.yml
+
+atom/storage

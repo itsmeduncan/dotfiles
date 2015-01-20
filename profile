@@ -1,8 +1,8 @@
 export GOPATH=$HOME/Projects/Go
 export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin:$PATH"
 
-CDPATH=".:~:~/Projects:~/Projects/Shopkeep:~/Projects/Actuator:$GOPATH/src/github.com/shopkeep:$GOPATH/src/github.com/itsmeduncan"
-PS1='\[\e[90m\A\e[0m\] \[\e[32m\W\e[0m\]$(__git_ps1 "‹\e[100m%s\e[0m›") » '
+CDPATH=".:~:~/Projects:~/Projects/itsmeduncan:~/Projects/shopkeep:~/Projects/mobius:$GOPATH/src/github.com/shopkeep:$GOPATH/src/github.com/itsmeduncan"
+PS1='\A \W$(__git_ps1 "<%s>") » '
 
 export CLICOLOR=1
 export LSCOLORS=Gxfxcxdxbxegedabagacad
@@ -29,4 +29,6 @@ complete -C aws_completer aws
 if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
-[[ -s /Users/duncan/.nvm/nvm.sh ]] && . /Users/duncan/.nvm/nvm.sh # This loads NVM
+[[ -s /Users/duncan/.nvm/nvm.sh ]] && . /Users/duncan/.nvm/nvm.sh
+
+export PATH="$PATH:$HOME/.rvm/bin"

@@ -19,8 +19,8 @@
 [color]
   ui = auto
 [core]
-  excludesfile = /Users/duncan/.gitignore
-  editor = /usr/bin/vim
+	excludesfile = /Users/itsmeduncan/.gitignore
+	editor = atom --wait
 [difftool]
   prompt = false
 [github]
