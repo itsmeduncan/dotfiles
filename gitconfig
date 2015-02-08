@@ -20,7 +20,7 @@
   ui = auto
 [core]
 	excludesfile = /Users/itsmeduncan/.gitignore
-	editor = atom --wait
+	editor = vim
 [difftool]
   prompt = false
 [github]
