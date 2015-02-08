@@ -22,13 +22,15 @@ alias mou="open -a Mou"
 alias clean='git br --merged | grep -v "\*" | xargs -n 1 git branch -d'
 alias prune='git remote prune origin'
 
-export NODE_PATH=/usr/local/lib/node
+export NODE_PATH=$NODE_PATH:/usr/local/lib/node
 
 complete -C aws_completer aws
 
 if [ -f `brew --prefix`/etc/bash_completion ]; then
   . `brew --prefix`/etc/bash_completion
 fi
-[[ -s /Users/duncan/.nvm/nvm.sh ]] && . /Users/duncan/.nvm/nvm.sh
+
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
 
 export PATH="$PATH:$HOME/.rvm/bin"
