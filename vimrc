@@ -26,6 +26,7 @@ Bundle 'othree/html5.vim'
 Bundle 'rstacruz/sparkup'
 Bundle 'scrooloose/nerdtree'
 Bundle 'fatih/vim-go'
+Bundle 'ryanss/vim-hackernews'
 
 
 " Automatically install bundles on first run
