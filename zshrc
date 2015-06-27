@@ -23,7 +23,7 @@ ZSH_THEME="itsmeduncan"
 # DISABLE_AUTO_TITLE="true"
 
 # Uncomment the following line to enable command auto-correction.
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 
 # Uncomment the following line to display red dots whilst waiting for completion.
 # COMPLETION_WAITING_DOTS="true"
@@ -86,3 +86,6 @@ setopt auto_cd
 cdpath=(~ ~/Projects/src/github.com ~/Projects)
 
 setopt autopushd
+
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
