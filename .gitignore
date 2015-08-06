@@ -1,2 +1,5 @@
 vim/bundle/*
 !vim/bundle/vundle
+
+atom/packages
+atom/.apm/
