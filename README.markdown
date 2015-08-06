@@ -1,16 +1,10 @@
 # Dotfiles
 
-## Application
+## Install
 
-### Terminal
+The installer will overwrite the files that currently exist.
 
 ```
-Font: Menlo
-Font size: 14pt
-Width: 100
-Height: 40
-Only show 'Active process name'
-Cursor: block (blink)
-Close if the shell exited cleanly
-Declare terminal as: xterm-256color
+chmod +x install.sh
+./install.sh
 ```
