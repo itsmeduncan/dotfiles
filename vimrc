@@ -133,6 +133,9 @@ let g:airline_symbols.whitespace = 'Ξ'
 let g:airline_section_y = airline#section#create(['%p', '%%'])
 let g:airline_section_z = airline#section#create_right(['%l', '%c'])
 
+" Gitcommit messsages
+autocmd Filetype gitcommit setlocal spell textwidth=72
+
 " Closetag settings
 let g:closetag_html_style=1
 autocmd! FileType html,htmldjango source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
