@@ -7,3 +7,5 @@
   editor:
     invisibles: {}
     showIndentGuide: true
+    showInvisibles: true
+  react: {}

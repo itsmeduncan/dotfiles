@@ -1,7 +1,7 @@
 ---
 :benchmark: false
-:verbose: true
-gem: --no-document --verbose
+:verbose: false
+gem: --no-document
 :update_sources: true
 :sources:
 - http://gemcutter.org
