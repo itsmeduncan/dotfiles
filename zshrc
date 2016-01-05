@@ -92,3 +92,5 @@ export NVM_DIR="/Users/itsmeduncan/.nvm"
 
 # added by travis gem
 [ -f /Users/itsmeduncan/.travis/travis.sh ] && source /Users/itsmeduncan/.travis/travis.sh
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
