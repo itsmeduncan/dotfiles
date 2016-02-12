@@ -94,3 +94,5 @@ export NVM_DIR="/Users/itsmeduncan/.nvm"
 [ -f /Users/itsmeduncan/.travis/travis.sh ] && source /Users/itsmeduncan/.travis/travis.sh
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
+
+eval "$(direnv hook zsh)"
