@@ -90,6 +90,9 @@ setopt autopushd
 export NVM_DIR="/Users/itsmeduncan/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
+export PATH="$HOME/.node/bin:$PATH"
+export PATH="$HOME/.npm-packages/bin:$PATH"
+
 # added by travis gem
 [ -f /Users/itsmeduncan/.travis/travis.sh ] && source /Users/itsmeduncan/.travis/travis.sh
 
