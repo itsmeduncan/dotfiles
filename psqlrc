@@ -1,0 +1,22 @@
+-- I don't need to hear about everything you are setting..
+\set QUIET ON
+
+-- auto format in rows when columns don't fit
+\x auto
+
+-- history size
+\set HISTSIZE 2000
+
+-- turn on timing by default
+\timing
+
+\set QUIET OFF
+
+-- prompt 1 `(root@[local]:5432) [development] *` where star means in uncommitted transaction
+\set PROMPT1 '(%n@%M:%>) [%[%033[1;33;40m%]%/%[%033[0m%]] %[%033[0;36;29m%]%x%[%033[0m%]\n%# '
+
+-- prompt 2
+\set PROMPT2 '-> '
+
+-- null character
+\pset null ¤

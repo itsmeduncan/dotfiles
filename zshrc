@@ -93,6 +93,8 @@ export NVM_DIR="/Users/itsmeduncan/.nvm"
 export PATH="$HOME/.node/bin:$PATH"
 export PATH="$HOME/.npm-packages/bin:$PATH"
 
+export HOMEBREW_NO_ANALYTICS=1
+
 # added by travis gem
 [ -f /Users/itsmeduncan/.travis/travis.sh ] && source /Users/itsmeduncan/.travis/travis.sh
 
