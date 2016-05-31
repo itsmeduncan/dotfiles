@@ -9,10 +9,6 @@ export LSCOLORS=Gxfxcxdxbxegedabagacad
 export EDITOR='atom -w'
 export VISUAL='atom -w'
 
-export DOCKER_HOST=tcp://192.168.59.103:2376
-export DOCKER_CERT_PATH=/Users/itsmeduncan/.boot2docker/certs/boot2docker-vm
-export DOCKER_TLS_VERIFY=1
-
 source "$HOME/.git-completion.bash"
 
 alias ls="ls -G"
