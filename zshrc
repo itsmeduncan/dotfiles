@@ -95,9 +95,6 @@ export PATH="$HOME/.npm-packages/bin:$PATH"
 
 export HOMEBREW_NO_ANALYTICS=1
 
-# added by travis gem
-[ -f /Users/itsmeduncan/.travis/travis.sh ] && source /Users/itsmeduncan/.travis/travis.sh
-
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
 eval "$(direnv hook zsh)"
