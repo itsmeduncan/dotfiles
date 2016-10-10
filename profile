@@ -2,7 +2,7 @@ export GOPATH=$HOME/Projects/
 export PATH="/usr/local/sbin:/usr/local/bin:$GOPATH/bin:/usr/local/share/npm/bin:$PATH"
 
 CDPATH=".:~:~/Projects:$GOPATH/src/github.com/shopkeep:$GOPATH/src/github.com/itsmeduncan:$GOPATH/src/github.com/madewithglimpse"
-PS1='\A \W$(__git_ps1 "<%s>") » '
+PS1='\T \A \W$(__git_ps1 "<%s>") » '
 
 export CLICOLOR=1
 export LSCOLORS=Gxfxcxdxbxegedabagacad

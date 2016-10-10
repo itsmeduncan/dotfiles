@@ -3,3 +3,4 @@ vim/bundle/*
 
 atom/packages
 atom/.apm/
+atom/blob-store
