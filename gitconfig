@@ -14,8 +14,8 @@
   su = submodule update --init --recursive
   suf = submodule update --init --recursive --force
 [user]
-  name = Duncan Grazier
-  email = itsmeduncan@gmail.com
+	name = Duncan Grazier
+	email = itsmeduncan@gmail.com
 [color]
   ui = auto
 [core]
@@ -37,8 +37,9 @@
 [url "git@github.com:"]
     insteadOf = https://github.com/
 [filter "lfs"]
-	clean = git-lfs clean %f
-	smudge = git-lfs smudge %f
 	required = true
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	clean = git-lfs clean -- %f
 [commit]
     template = ~/.gitmessage
