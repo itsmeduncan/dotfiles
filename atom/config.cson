@@ -1,6 +1,8 @@
 "*":
-  core: {}
+  core:
+    telemetryConsent: "limited"
   editor:
+    fontSize: 15
     invisibles: {}
     showIndentGuide: true
     showInvisibles: true
