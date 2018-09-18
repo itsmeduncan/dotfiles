@@ -88,7 +88,7 @@ cdpath=(~ ~/Projects/src/github.com ~/Projects)
 setopt autopushd
 
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+. "/usr/local/opt/nvm/nvm.sh"
 
 autoload -U add-zsh-hook
 load-nvmrc() {
