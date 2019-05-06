@@ -1,5 +1,5 @@
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/itsmeduncan/.oh-my-zsh
+export ZSH=/Users/duncangrazier/.oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -49,7 +49,6 @@ plugins=(git brew)
 
 # User configuration
 
-#export PATH="/Users/itsmeduncan/.rvm/gems/ruby-2.1.2/bin:/Users/itsmeduncan/.rvm/gems/ruby-2.1.2@global/bin:/Users/itsmeduncan/.rvm/rubies/ruby-2.1.2/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/itsmeduncan/.rvm/bin"
 # export MANPATH="/usr/local/man:$MANPATH"
 
 source $ZSH/oh-my-zsh.sh
@@ -80,7 +79,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 export GOPATH=$HOME/Projects/
-export PATH="$PATH:$HOME/.rvm/bin:$GOPATH/bin" # Add RVM to PATH for scripting
+export PATH="$PATH:$GOPATH/bin"
 
 setopt auto_cd
 cdpath=(~ ~/Projects/src/github.com ~/Projects)
@@ -116,8 +115,12 @@ export PATH="$HOME/.npm-packages/bin:$PATH"
 
 export HOMEBREW_NO_ANALYTICS=1
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
-
 eval "$(direnv hook zsh)"
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+[[ -s "$HOME/.bootstrap/env.sh" ]] && . "$HOME/.bootstrap/env.sh"
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+
+export GOPATH="$HOME/Projects/"
