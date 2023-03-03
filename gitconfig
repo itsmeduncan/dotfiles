@@ -16,7 +16,7 @@
   suf = submodule update --init --recursive --force
 [user]
 	name = Duncan Grazier
-	email = itsmeduncan@gmail.com
+	email = itsmeduncan@users.noreply.github.com
 [color]
   ui = auto
 [core]
