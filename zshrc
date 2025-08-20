@@ -5,7 +5,8 @@ export ZSH=/Users/`id -un`/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="spaceship"
+# ZSH_THEME="spaceship"
+source /opt/homebrew/opt/spaceship/spaceship.zsh
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -78,15 +79,11 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-export GOPATH=$HOME/Projects/
-export PATH="$PATH:$GOPATH/bin"
-
 setopt auto_cd
 cdpath=(~ ~/Projects/src/github.com ~/Projects)
 
 setopt autopushd
 
-export NVM_DIR="$HOME/.nvm"
 [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
 [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
@@ -111,17 +108,6 @@ load-nvmrc() {
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
 
-export PATH="$HOME/.node/bin:$PATH"
-export PATH="$HOME/.npm-packages/bin:$PATH"
-
-export HOMEBREW_NO_ANALYTICS=1
-
 eval "$(direnv hook zsh)"
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
 [[ -s "$HOME/.bootstrap/env.sh" ]] && . "$HOME/.bootstrap/env.sh"
-
-export PATH="$HOME/.rbenv/bin:$PATH"
-
-export GOPATH="$HOME/Projects/"

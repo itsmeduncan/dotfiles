@@ -6,8 +6,8 @@ PS1='\T \A \W$(__git_ps1 "<%s>") » '
 
 export CLICOLOR=1
 export LSCOLORS=Gxfxcxdxbxegedabagacad
-export EDITOR='atom -w'
-export VISUAL='atom -w'
+export EDITOR='code'
+export VISUAL='code'
 
 source "$HOME/.git-completion.bash"
 

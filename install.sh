@@ -1,6 +1,6 @@
 #!/bin/bash
 
-files=(atom gemrc git-completion.bash gitconfig gitignore gitmessage profile tmux.conf vimrc zshrc psqlrc)
+files=(gemrc git-completion.bash gitconfig gitignore gitmessage profile psqlrc tmux.conf vimrc zprofile zshrc)
 
 for file in "${files[@]}"
 do
