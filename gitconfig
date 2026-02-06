@@ -20,8 +20,14 @@
 [color]
   ui = auto
 [core]
-	excludesfile = /Users/itsmeduncan/.gitignore
+	excludesfile = ~/.gitignore
 	editor = vim
+	pager = delta
+[interactive]
+	diffFilter = delta --color-only
+[delta]
+	navigate = true
+	side-by-side = true
 [difftool]
   prompt = false
 [github]
@@ -33,6 +39,20 @@
   autocorrect = -1
 [push]
 	default = simple
+[pull]
+	rebase = true
+[fetch]
+	prune = true
+[merge]
+	conflictstyle = zdiff3
+[rerere]
+	enabled = true
+[diff]
+	algorithm = histogram
+[branch]
+	sort = -committerdate
+[column]
+	ui = auto
 [credential]
     helper = osxkeychain
 [url "git@github.com:"]

@@ -1,8 +1,29 @@
 # Dotfiles
 
-* Install & setup [zsh](http://www.zsh.org)
-* Install & setup [tmux](https://tmux.github.io)
-* Install & setup [oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh)
-* Install & setup these dot files (`./install.sh`)
-* Clone `tpm` `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm`
-* Setup [Spaceship Prompt](https://denysdovhan.com/spaceship-prompt/#installing)
+Personal dotfiles for macOS (Apple Silicon).
+
+## Install
+
+```bash
+git clone git@github.com:itsmeduncan/dotfiles.git
+cd dotfiles
+./install.sh
+```
+
+The install script will:
+
+* Install [Homebrew](https://brew.sh) if missing
+* Install dependencies: mise, eza, bat, ripgrep, fd, zoxide, fzf, git-delta, direnv, tmux, spaceship
+* Symlink all dotfiles to `$HOME`
+* Install [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) if missing
+* Install [tpm](https://github.com/tmux-plugins/tpm) (tmux plugin manager) if missing
+
+## Post-install
+
+Set up global runtimes with [mise](https://mise.jdx.dev):
+
+```bash
+mise use -g node@lts
+mise use -g python@3
+mise use -g ruby@3
+```
