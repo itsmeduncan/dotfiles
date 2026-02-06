@@ -6,7 +6,7 @@ set -e
 files=(editorconfig gemrc gitconfig gitignore gitmessage profile psqlrc tmux.conf vimrc zprofile zshrc)
 
 # Homebrew dependencies
-brews=(mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux spaceship)
+brews=(mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux spaceship gh pre-commit)
 
 # Install Homebrew if missing
 if ! command -v brew &>/dev/null; then

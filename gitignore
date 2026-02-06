@@ -109,3 +109,12 @@ tags
 .tags
 
 .vscode
+
+# AI tools
+.claude/
+.cursor/
+.aider*
+.copilot/
+.env
+.env.*
+!.env.example
