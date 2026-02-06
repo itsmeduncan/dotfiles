@@ -3,7 +3,7 @@
 set -e
 
 # Dotfiles to symlink into $HOME
-files=(gemrc gitconfig gitignore gitmessage profile psqlrc tmux.conf vimrc zprofile zshrc)
+files=(editorconfig gemrc gitconfig gitignore gitmessage profile psqlrc tmux.conf vimrc zprofile zshrc)
 
 # Homebrew dependencies
 brews=(mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux spaceship)
