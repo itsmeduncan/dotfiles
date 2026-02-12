@@ -23,6 +23,9 @@ for file in "${files[@]}"; do
   ln -sf "$(pwd)/$file" "$HOME/.$file"
 done
 
+# Symlink bin directory
+ln -sfn "$(pwd)/bin" "$HOME/.dotfiles/bin"
+
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

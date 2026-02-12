@@ -1,0 +1,15 @@
+#!/bin/sh
+cache="/tmp/tmux_weather"
+# Refresh every 30 minutes
+if [ ! -f "$cache" ] || [ $(($(date +%s) - $(stat -f %m "$cache"))) -gt 1800 ]; then
+  loc=$(curl -s --max-time 3 'https://ipinfo.io/loc' 2>/dev/null)
+  if [ -n "$loc" ]; then
+    lat=${loc%%,*}
+    lon=${loc##*,}
+    temp=$(curl -s --max-time 3 "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&temperature_unit=fahrenheit" 2>/dev/null | sed -n 's/.*"temperature_2m":\([0-9.]*\).*/\1/p')
+    if [ -n "$temp" ]; then
+      printf "%.0f°F" "$temp" > "$cache"
+    fi
+  fi
+fi
+cat "$cache" 2>/dev/null
