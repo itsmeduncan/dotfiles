@@ -1,6 +1,6 @@
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
-source /opt/homebrew/opt/spaceship/spaceship.zsh
+source "$(brew --prefix)/opt/spaceship/spaceship.zsh"
 plugins=(git brew)
 source $ZSH/oh-my-zsh.sh
 
