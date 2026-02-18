@@ -56,6 +56,7 @@ set scrolloff=3             " keep minimal number of lines above/below cursor
 set showcmd                 " show command line at bottom of screen
 set sidescroll=3            " scroll sideways 3 characters at a time
 set splitright              " open vertical split right of current window
+set mouse=a                 " enable mouse support (scrolling, selection, etc.)
 set visualbell              " use visual bell instead of beeping
 set wildmenu                " tab auto-complete for commands
 set wildignore=*.pyc        " stuff for auto-complete to ignore
