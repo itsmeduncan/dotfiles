@@ -12,6 +12,7 @@ if !isdirectory(expand("~/.vim/bundle/vundle"))
 endif
 set nocompatible
 filetype off
+set rtp+=/opt/homebrew/opt/fzf
 set rtp+=~/.vim/bundle/vundle
 call vundle#rc()
 Bundle 'gmarik/vundle'
@@ -27,6 +28,7 @@ Bundle 'rstacruz/sparkup'
 Bundle 'scrooloose/nerdtree'
 Bundle 'fatih/vim-go'
 Bundle 'ryanss/vim-hackernews'
+Bundle 'junegunn/fzf.vim'
 
 
 " Automatically install bundles on first run
@@ -90,8 +92,10 @@ vnoremap x "_x
 vnoremap c "_c
 vnoremap p "_dP
 
-" Poor man's CtrlP
-noremap <Leader>e :e **/*
+" Fuzzy finder (fzf)
+noremap <C-p> :Files<CR>
+noremap <Leader>b :Buffers<CR>
+noremap <Leader>f :Rg<CR>
 
 " Move between open buffers easier
 noremap <C-J> :bp<CR>
