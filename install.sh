@@ -6,7 +6,7 @@ set -e
 files=(editorconfig gemrc gitconfig gitignore gitmessage profile psqlrc tmux.conf vimrc zprofile zshrc)
 
 # Homebrew dependencies
-brews=(mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux spaceship gh pre-commit)
+brews=(vim mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux spaceship gh pre-commit)
 
 # Install Homebrew if missing
 if ! command -v brew &>/dev/null; then
@@ -34,4 +34,9 @@ fi
 # Install tmux plugin manager if missing
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+
+# Install tmux plugins headlessly
+if [ -f "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
+  "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 fi

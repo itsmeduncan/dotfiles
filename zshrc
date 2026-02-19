@@ -1,3 +1,6 @@
+export EDITOR='vim'
+export VISUAL='vim'
+
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
 source "$(brew --prefix)/opt/spaceship/spaceship.zsh"
@@ -40,6 +43,5 @@ export PATH="$PATH:/Users/buildops-dgrazier/.lmstudio/bin"
 
 export PATH="$HOME/.local/bin:$PATH"
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+alias g="git"
+alias vi="vim"

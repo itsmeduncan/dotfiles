@@ -6,36 +6,36 @@
 "  MIT License
 
 
-" Automatically setup Vundle on first run
-if !isdirectory(expand("~/.vim/bundle/vundle"))
-    call system("git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle")
+" Automatically install vim-plug on first run
+let data_dir = '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+    silent execute '!curl -fLo ' . data_dir . '/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+
 set nocompatible
 filetype off
 set rtp+=/opt/homebrew/opt/fzf
-set rtp+=~/.vim/bundle/vundle
-call vundle#rc()
-Bundle 'gmarik/vundle'
-Bundle 'nanotech/jellybeans.vim'
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'tpope/vim-fugitive'
-Bundle 'bling/vim-airline'
-Bundle 'Lokaltog/vim-easymotion'
-Bundle 'junegunn/vim-easy-align'
-Bundle 'vim-scripts/closetag.vim'
-Bundle 'othree/html5.vim'
-Bundle 'rstacruz/sparkup'
-Bundle 'scrooloose/nerdtree'
-Bundle 'fatih/vim-go'
-Bundle 'ryanss/vim-hackernews'
-Bundle 'junegunn/fzf.vim'
 
-
-" Automatically install bundles on first run
-if !isdirectory(expand("~/.vim/bundle/vim-airline"))
-    execute 'silent BundleInstall'
-    execute 'silent q'
-endif
+call plug#begin('~/.vim/bundle')
+Plug 'nanotech/jellybeans.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'bling/vim-airline'
+Plug 'Lokaltog/vim-easymotion'
+Plug 'junegunn/vim-easy-align'
+Plug 'vim-scripts/closetag.vim'
+Plug 'othree/html5.vim'
+Plug 'rstacruz/sparkup'
+Plug 'scrooloose/nerdtree'
+Plug 'fatih/vim-go'
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'christoomey/vim-tmux-navigator'
+call plug#end()
 
 
 filetype plugin indent on   " detect file type and load indents and plugins
@@ -55,6 +55,7 @@ set number                  " show line numbers
 set scrolloff=3             " keep minimal number of lines above/below cursor
 set showcmd                 " show command line at bottom of screen
 set sidescroll=3            " scroll sideways 3 characters at a time
+set signcolumn=yes          " always show sign column for visual stability
 set splitright              " open vertical split right of current window
 set mouse=a                 " enable mouse support (scrolling, selection, etc.)
 set visualbell              " use visual bell instead of beeping
@@ -98,17 +99,13 @@ noremap <C-p> :Files<CR>
 noremap <Leader>b :Buffers<CR>
 noremap <Leader>f :Rg<CR>
 
-" Move between open buffers easier
-noremap <C-J> :bp<CR>
-noremap <C-K> :bn<CR>
+" Move between open buffers
+noremap [b :bp<CR>
+noremap ]b :bn<CR>
 noremap <Leader>d :bd!<CR>:bp<CR>
 
-" Move between vertical splits easier
-noremap <C-h> <C-w>h
-noremap <C-l> <C-w>l
-
 " Git/fugitive shortcuts
-nnoremap <Leader>gs :Gstatus<CR>
+nnoremap <Leader>gs :Git<CR>
 nnoremap <Leader>gd :Gdiff<CR>
 nnoremap <Leader>gf <C-W>h<C-W>czR
 nnoremap <Leader>gp :Git push<CR>
@@ -119,8 +116,8 @@ map <Leader>a <Plug>(EasyAlign)
 map <Leader>n :NERDTreeToggle<CR>
 
 " Shortcuts to edit and reload vim config
-nnoremap <Leader>r :edit ~/.vim/vimrc<CR>
-nnoremap <Leader>R :source ~/.vim/vimrc<CR>:source ~/.vim/vimrc<CR>
+nnoremap <Leader>r :edit ~/.vimrc<CR>
+nnoremap <Leader>R :source ~/.vimrc<CR>
 
 set guioptions=
 set guifont=Menlo:h14
