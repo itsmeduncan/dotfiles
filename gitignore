@@ -110,6 +110,11 @@ tags
 
 .vscode
 
+# Next.js
+.next/
+out/
+.vercel
+
 # AI tools
 .claude/
 .cursor/
