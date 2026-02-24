@@ -14,6 +14,11 @@ setopt autopushd
 
 eval "$(mise activate zsh)"
 
+# Android SDK
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
+export JAVA_HOME=$(mise where java 2>/dev/null)
+
 eval "$(direnv hook zsh)"
 eval "$(zoxide init zsh)"
 source <(fzf --zsh)

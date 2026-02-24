@@ -31,6 +31,21 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
+# Install Android development tools via mise
+mise install java@temurin-17 2>/dev/null || true
+mise use -g java@temurin-17 2>/dev/null || true
+
+# Install Android SDK via Homebrew (Android Studio not required)
+if [ ! -d "$HOME/Library/Android/sdk" ]; then
+  brew install --cask android-commandlinetools
+  yes | sdkmanager --sdk_root="$HOME/Library/Android/sdk" \
+    "platform-tools" \
+    "platforms;android-35" \
+    "build-tools;35.0.0" \
+    "emulator"
+  yes | sdkmanager --sdk_root="$HOME/Library/Android/sdk" --licenses
+fi
+
 # Install tmux plugin manager if missing
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
