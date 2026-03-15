@@ -1,3 +1,7 @@
-[]
 
-*
+
+
+# --- Commit Message Guidelines ---
+# Subject: imperative mood, <72 chars, no period
+# Body: wrap at 72, explain *why* not *what*
+# Refs: Fixes #123, Closes #456

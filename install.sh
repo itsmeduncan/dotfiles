@@ -2,11 +2,28 @@
 
 set -e
 
+# Xcode CLI tools (required for git, compilers, etc.)
+if ! xcode-select -p &>/dev/null; then
+  echo "Installing Xcode Command Line Tools..."
+  xcode-select --install
+  echo "Press enter after Xcode tools finish installing."
+  read -r
+fi
+
 # Dotfiles to symlink into $HOME
-files=(editorconfig gemrc gitconfig gitignore gitmessage profile psqlrc tmux.conf vimrc zprofile zshrc)
+files=(editorconfig gemrc gitconfig gitignore gitmessage psqlrc tmux.conf vimrc zprofile zshrc)
 
 # Homebrew dependencies
-brews=(vim mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux spaceship gh pre-commit)
+brews=(
+  # Core
+  neovim mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux gh pre-commit
+  # Shell
+  spaceship zsh-autosuggestions zsh-syntax-highlighting
+  # Dev tools
+  uv pnpm lazygit jq yq watchman
+  # Mobile
+  cocoapods swiftlint
+)
 
 # Install Homebrew if missing
 if ! command -v brew &>/dev/null; then
@@ -18,6 +35,11 @@ for pkg in "${brews[@]}"; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
 
+# Install Nerd Font
+if ! brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
+  brew install --cask font-meslo-lg-nerd-font
+fi
+
 # Symlink dotfiles
 for file in "${files[@]}"; do
   ln -sf "$(pwd)/$file" "$HOME/.$file"
@@ -26,10 +48,18 @@ done
 # Symlink bin directory
 ln -sfn "$(pwd)/bin" "$HOME/.dotfiles/bin"
 
+# Symlink nvim config
+mkdir -p "$HOME/.config"
+ln -sfn "$(pwd)/config/nvim" "$HOME/.config/nvim"
+
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
+
+# Install runtimes via mise
+eval "$(mise activate bash)"
+mise use -g node@lts python@3 ruby@3 2>/dev/null || true
 
 # Install Android development tools via mise
 mise install java@temurin-17 2>/dev/null || true
@@ -55,3 +85,39 @@ fi
 if [ -f "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
   "$HOME/.tmux/plugins/tpm/bin/install_plugins"
 fi
+
+# Install Neovim plugins headlessly
+nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
+
+# macOS productivity defaults
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write NSGlobalDomain KeyRepeat -int 2
+defaults write NSGlobalDomain InitialKeyRepeat -int 15
+defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.NSScrollAnimationEnabled -bool false
+
+# Claude Code global settings
+mkdir -p "$HOME/.claude"
+cat > "$HOME/.claude/settings.json" << 'EOF'
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(gh *)",
+      "Bash(mise *)",
+      "Bash(uv *)",
+      "Bash(pnpm *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(python *)",
+      "Bash(ruff *)"
+    ]
+  }
+}
+EOF

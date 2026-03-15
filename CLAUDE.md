@@ -5,42 +5,57 @@ Personal dotfiles for macOS (Apple Silicon). Managed by symlinks via `install.sh
 ## Setup
 
 1. Clone the repo and run `./install.sh`
-2. The script handles everything: Homebrew, dependencies, symlinks, oh-my-zsh, and tpm
-3. Post-install: set up runtimes with `mise use -g node@lts python@3 ruby@3`
+2. The script handles everything: Homebrew, dependencies, symlinks, oh-my-zsh, tpm, runtimes, Neovim plugins, and macOS defaults
 
 ## Structure
 
 All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 
-- **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH), `profile` (bash fallback)
+- **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH)
 - **Git:** `gitconfig` (aliases, delta pager, modern defaults), `gitignore` (global ignores including AI tools), `gitmessage` (commit template)
-- **Editor:** `vimrc` (Vim config with Vundle), `.editorconfig` (cross-editor formatting)
-- **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard support)
+- **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
+- **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore)
 - **Other:** `gemrc`, `psqlrc`
 
 ## Key tools
 
-- **Shell:** zsh + oh-my-zsh + Spaceship Prompt
+- **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
 - **Package manager:** Homebrew (`/opt/homebrew`)
-- **Version manager:** mise (manages Node, Python, Ruby, and other runtimes)
+- **Version manager:** mise (manages Node, Python, Ruby, Java, and other runtimes)
 - **Go:** GOPATH at `$HOME/Projects/`
 - **Env management:** direnv
-- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs)
+- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit
+- **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching)
+- **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
 - **Git workflow:** gh (GitHub CLI), pre-commit (hook framework)
 
 ## Git config highlights
 
 - `delta` as pager with side-by-side diffs
 - `pull.rebase = true` — no merge commits on pull
+- `push.autoSetupRemote = true` — no `-u origin` needed on first push
 - `merge.conflictstyle = zdiff3` — better conflict markers
 - `rerere.enabled = true` — remembers conflict resolutions
+- `rebase.autosquash = true` + `updateRefs = true` — modern rebase defaults
 - `diff.algorithm = histogram` — better diffs for moved code
 - `fetch.prune = true` — auto-cleanup stale remote branches
-- Aliases: `st`, `co`, `ci`, `br`, `d`, `ds`, `f`, `p`, `ffm`, `l`
+- `init.defaultBranch = main`
+- Aliases: `st`, `co`, `ci`, `br`, `d`, `ds`, `f`, `p`, `ffm`, `l`, `lg`, `undo`, `amend`, `wip`, `cleanup`
+
+## Neovim
+
+Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.config/nvim/`.
+
+- Plugin manager: lazy.nvim (auto-bootstrapped)
+- LSP: pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
+- Completion: blink.cmp
+- Fuzzy finder: fzf-lua
+- Treesitter for syntax highlighting
+- Key leader: `,`
 
 ## Conventions
 
 - No secrets in dotfiles. Use `~/.bootstrap/env.sh` or direnv for secrets.
 - AI tool artifacts (`.claude/`, `.cursor/`, `.aider*`, `.env`) are globally gitignored.
-- Editor is `code` (VS Code) in profile, `vim` in gitconfig.
-- `.editorconfig` enforces 2-space indent (4 for Python/Go), LF line endings, UTF-8.
+- Editor is `nvim` everywhere (shell, gitconfig). `vim` and `vi` are aliased to `nvim`.
+- `.editorconfig` enforces 2-space indent (4 for Python/Go/Swift/Kotlin), LF line endings, UTF-8.
