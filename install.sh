@@ -101,23 +101,8 @@ defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.NSScrollAnimationEnabled -bool false
 
-# Claude Code global settings
+# Claude Code config (profile-wide CLAUDE.md, settings, agents)
 mkdir -p "$HOME/.claude"
-cat > "$HOME/.claude/settings.json" << 'EOF'
-{
-  "permissions": {
-    "allow": [
-      "Bash(git *)",
-      "Bash(gh *)",
-      "Bash(mise *)",
-      "Bash(uv *)",
-      "Bash(pnpm *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(node *)",
-      "Bash(python *)",
-      "Bash(ruff *)"
-    ]
-  }
-}
-EOF
+ln -sf "$(pwd)/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+ln -sf "$(pwd)/claude/settings.json" "$HOME/.claude/settings.json"
+ln -sfn "$(pwd)/claude/agents" "$HOME/.claude/agents"
