@@ -81,6 +81,12 @@ if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 fi
 
+# Seed tmux-resurrect dir so continuum auto-restore doesn't error on first launch
+mkdir -p "$HOME/.tmux/resurrect"
+if [ ! -f "$HOME/.tmux/resurrect/last" ]; then
+  touch "$HOME/.tmux/resurrect/last"
+fi
+
 # Install tmux plugins headlessly
 if [ -f "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
   "$HOME/.tmux/plugins/tpm/bin/install_plugins"
