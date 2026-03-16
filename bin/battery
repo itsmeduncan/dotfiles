@@ -1,0 +1,21 @@
+#!/bin/sh
+# Output a battery emoji based on current charge level (macOS)
+level=$(pmset -g batt | grep -Eo '[0-9]+%' | tr -d '%')
+charging=$(pmset -g batt | grep -c 'AC Power')
+
+if [ -z "$level" ]; then
+  echo "🔌"
+  exit 0
+fi
+
+if [ "$charging" -gt 0 ] && [ "$level" -lt 100 ]; then
+  echo "⚡ ${level}%"
+elif [ "$level" -ge 80 ]; then
+  echo "🔋 ${level}%"
+elif [ "$level" -ge 50 ]; then
+  echo "🪫 ${level}%"
+elif [ "$level" -ge 20 ]; then
+  echo "🪫 ${level}%"
+else
+  echo "🪫 ${level}%"
+fi

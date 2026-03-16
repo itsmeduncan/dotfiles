@@ -6,9 +6,28 @@ if [ ! -f "$cache" ] || [ $(($(date +%s) - $(stat -f %m "$cache"))) -gt 1800 ]; 
   if [ -n "$loc" ]; then
     lat=${loc%%,*}
     lon=${loc##*,}
-    temp=$(curl -s --max-time 3 "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&temperature_unit=fahrenheit" 2>/dev/null | sed -n 's/.*"temperature_2m":\([0-9.]*\).*/\1/p')
+    data=$(curl -s --max-time 3 "https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&temperature_unit=fahrenheit" 2>/dev/null)
+    temp=$(echo "$data" | sed -n 's/.*"temperature_2m":\([0-9.]*\).*/\1/p')
+    code=$(echo "$data" | sed -n 's/.*"weather_code":\([0-9]*\).*/\1/p')
     if [ -n "$temp" ]; then
-      printf "%.0f°F" "$temp" > "$cache"
+      # WMO weather codes -> emoji
+      case "$code" in
+        0)         icon="☀️" ;;   # Clear sky
+        1|2)       icon="🌤️" ;;  # Partly cloudy
+        3)         icon="☁️" ;;   # Overcast
+        45|48)     icon="🌫️" ;;  # Fog
+        51|53|55)  icon="🌦️" ;;  # Drizzle
+        61|63|65)  icon="🌧️" ;;  # Rain
+        66|67)     icon="🌧️" ;;  # Freezing rain
+        71|73|75)  icon="🌨️" ;;  # Snow
+        77)        icon="🌨️" ;;  # Snow grains
+        80|81|82)  icon="🌧️" ;;  # Rain showers
+        85|86)     icon="🌨️" ;;  # Snow showers
+        95)        icon="⛈️" ;;   # Thunderstorm
+        96|99)     icon="⛈️" ;;   # Thunderstorm with hail
+        *)         icon="🌡️" ;;  # Fallback
+      esac
+      printf "%s %.0f°F" "$icon" "$temp" > "$cache"
     fi
   fi
 fi

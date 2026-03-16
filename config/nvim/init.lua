@@ -97,17 +97,14 @@ require("lazy").setup({
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
     event = { "BufReadPost", "BufNewFile" },
-    opts = {
-      ensure_installed = {
-        "lua", "python", "typescript", "javascript", "tsx",
-        "json", "html", "css", "bash", "markdown", "swift", "kotlin",
-        "vim", "vimdoc", "yaml", "toml",
-      },
-      highlight = { enable = true },
-      indent = { enable = true },
-    },
-    config = function(_, opts)
-      require("nvim-treesitter.configs").setup(opts)
+    config = function()
+      require("nvim-treesitter").setup({
+        ensure_installed = {
+          "lua", "python", "typescript", "javascript", "tsx",
+          "json", "html", "css", "bash", "markdown", "swift", "kotlin",
+          "vim", "vimdoc", "yaml", "toml",
+        },
+      })
     end,
   },
 
@@ -127,33 +124,16 @@ require("lazy").setup({
     config = function(_, opts)
       require("mason-lspconfig").setup(opts)
 
-      local lspconfig = require("lspconfig")
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-      local on_attach = function(_, bufnr)
-        local map = function(keys, func, desc)
-          vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
-        end
-        map("gd", vim.lsp.buf.definition, "Go to definition")
-        map("gr", vim.lsp.buf.references, "References")
-        map("K", vim.lsp.buf.hover, "Hover")
-        map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-        map("<leader>rn", vim.lsp.buf.rename, "Rename")
-        map("[d", vim.diagnostic.goto_prev, "Prev diagnostic")
-        map("]d", vim.diagnostic.goto_next, "Next diagnostic")
+      -- Servers with default settings
+      for _, server in ipairs({ "pyright", "ts_ls", "kotlin_language_server", "sourcekit" }) do
+        vim.lsp.config(server, { capabilities = capabilities })
       end
 
-      local servers = { "pyright", "ts_ls", "kotlin_language_server" }
-      for _, server in ipairs(servers) do
-        lspconfig[server].setup({
-          capabilities = capabilities,
-          on_attach = on_attach,
-        })
-      end
-
-      lspconfig.lua_ls.setup({
+      -- lua_ls with custom settings
+      vim.lsp.config("lua_ls", {
         capabilities = capabilities,
-        on_attach = on_attach,
         settings = {
           Lua = {
             workspace = { checkThirdParty = false },
@@ -162,11 +142,7 @@ require("lazy").setup({
         },
       })
 
-      -- sourcekit-lsp for Swift (ships with Xcode, not managed by Mason)
-      lspconfig.sourcekit.setup({
-        capabilities = capabilities,
-        on_attach = on_attach,
-      })
+      vim.lsp.enable({ "pyright", "ts_ls", "kotlin_language_server", "lua_ls", "sourcekit" })
     end,
   },
 
@@ -234,6 +210,23 @@ vim.keymap.set("n", "<leader>R", "<cmd>source $MYVIMRC<cr>")
 
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
+
+-- LSP keymaps
+autocmd("LspAttach", {
+  group = augroup("lsp_keymaps", { clear = true }),
+  callback = function(ev)
+    local map = function(keys, func, desc)
+      vim.keymap.set("n", keys, func, { buffer = ev.buf, desc = desc })
+    end
+    map("gd", vim.lsp.buf.definition, "Go to definition")
+    map("gr", vim.lsp.buf.references, "References")
+    map("K", vim.lsp.buf.hover, "Hover")
+    map("<leader>ca", vim.lsp.buf.code_action, "Code action")
+    map("<leader>rn", vim.lsp.buf.rename, "Rename")
+    map("[d", vim.diagnostic.goto_prev, "Prev diagnostic")
+    map("]d", vim.diagnostic.goto_next, "Next diagnostic")
+  end,
+})
 
 -- Smaller indents for web files
 autocmd("FileType", {
