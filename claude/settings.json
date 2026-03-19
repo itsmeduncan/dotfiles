@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Bash(git *)",
+      "Bash(git)",
       "Bash(gh *)",
+      "Bash(gh)",
+      "Bash(*&& git *)",
+      "Bash(*&& gh *)",
+      "Bash(*; git *)",
+      "Bash(*; gh *)",
+      "Bash(*| git *)",
+      "Bash(*| gh *)",
       "Bash(mise *)",
       "Bash(uv *)",
       "Bash(pnpm *)",

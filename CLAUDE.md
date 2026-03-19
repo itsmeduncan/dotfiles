@@ -59,7 +59,7 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.sh`.
 
 - **`claude/CLAUDE.md`** — Profile-wide instructions (coding preferences, stack defaults, conventions). Applied to every project.
-- **`claude/settings.json`** — Pre-approved tool permissions for common dev commands (git, gh, mise, uv, pnpm, npm, node, python, ruff).
+- **`claude/settings.json`** — Pre-approved tool permissions for common dev commands (git, gh, mise, uv, pnpm, npm, node, python, ruff). Includes compound command rules so git/gh are auto-allowed in chained (`&&`, `;`, `|`) commands.
 - **`claude/agents/`** — Reusable agents:
   - `review.md` — Code review (bugs, security, performance, readability)
   - `test.md` — Write tests for new or changed code
