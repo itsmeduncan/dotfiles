@@ -33,6 +33,9 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 {}'"
 source <(fzf --zsh)
 
+# atuin - shell history
+eval "$(atuin init zsh)"
+
 # Update tmux window name with project:branch
 _tmux_window_name() {
   [[ -n "$TMUX" ]] || return
@@ -52,12 +55,24 @@ alias ll="eza -la --git"
 alias cat="bat --paging=never"
 alias tree="eza --tree"
 alias lg="lazygit"
+alias top="btm"
+alias du="dust"
 alias dc="docker compose"
 alias p="cd ~/Projects/src/github.com"
 
 [[ -s "$HOME/.bootstrap/env.sh" ]] && . "$HOME/.bootstrap/env.sh"
 
 export PATH="$HOME/.local/bin:$PATH"
+
+# yazi - cd to last directory on exit
+function y() {
+  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+  yazi "$@" --cwd-file="$tmp"
+  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+    builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmp"
+}
 
 alias g="git"
 alias vi="nvim"

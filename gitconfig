@@ -18,6 +18,7 @@
   amend = commit --amend --no-edit
   wip = !git add -A && git commit -m 'wip'
   cleanup = !git branch --merged main | grep -v '\\*\\|main' | xargs -n 1 git branch -d
+  absorb = absorb --and-rebase
   lg = log --oneline --graph --decorate -20
 [user]
 	name = Duncan Grazier

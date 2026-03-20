@@ -18,7 +18,11 @@
       "Bash(npx *)",
       "Bash(node *)",
       "Bash(python *)",
-      "Bash(ruff *)"
+      "Bash(ruff *)",
+      "Bash(just *)",
+      "Bash(atuin *)",
+      "Bash(yazi)",
+      "Bash(btm)"
     ]
   }
 }

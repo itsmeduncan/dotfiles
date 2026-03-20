@@ -178,6 +178,194 @@ require("lazy").setup({
     "christoomey/vim-tmux-navigator",
     lazy = false,
   },
+
+  -- ── Git Enhancement ─────────────────────────────────────────────────
+
+  {
+    "lewis6991/gitsigns.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    opts = {
+      on_attach = function(bufnr)
+        local gs = require("gitsigns")
+        local map = function(mode, l, r, desc)
+          vim.keymap.set(mode, l, r, { buffer = bufnr, desc = desc })
+        end
+        map("n", "]c", function()
+          if vim.wo.diff then return "]c" end
+          vim.schedule(function() gs.nav_hunk("next") end)
+          return "<Ignore>"
+        end, "Next hunk")
+        map("n", "[c", function()
+          if vim.wo.diff then return "[c" end
+          vim.schedule(function() gs.nav_hunk("prev") end)
+          return "<Ignore>"
+        end, "Prev hunk")
+        map("n", "<leader>hs", gs.stage_hunk, "Stage hunk")
+        map("n", "<leader>hu", gs.undo_stage_hunk, "Undo stage hunk")
+        map("n", "<leader>hp", gs.preview_hunk, "Preview hunk")
+        map("n", "<leader>tb", gs.toggle_current_line_blame, "Toggle line blame")
+      end,
+    },
+  },
+
+  -- ── Formatting ──────────────────────────────────────────────────────
+
+  {
+    "stevearc/conform.nvim",
+    event = "BufWritePre",
+    cmd = "ConformInfo",
+    opts = {
+      formatters_by_ft = {
+        python = { "ruff_format" },
+        typescript = { "prettier" },
+        javascript = { "prettier" },
+        typescriptreact = { "prettier" },
+        javascriptreact = { "prettier" },
+        lua = { "stylua" },
+        swift = { "swiftformat" },
+        kotlin = { "ktlint" },
+      },
+      format_on_save = {
+        timeout_ms = 500,
+        lsp_format = "fallback",
+      },
+    },
+  },
+
+  -- ── Linting ─────────────────────────────────────────────────────────
+
+  {
+    "mfussenegger/nvim-lint",
+    event = { "BufWritePost", "BufReadPost" },
+    config = function()
+      local lint = require("lint")
+      lint.linters_by_ft = {
+        python = { "ruff" },
+        swift = { "swiftlint" },
+      }
+      vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+        group = vim.api.nvim_create_augroup("nvim_lint", { clear = true }),
+        callback = function()
+          lint.try_lint()
+        end,
+      })
+    end,
+  },
+
+  -- ── Diagnostics Panel ───────────────────────────────────────────────
+
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    cmd = "Trouble",
+    keys = {
+      { "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", desc = "Workspace diagnostics" },
+      { "<leader>xd", "<cmd>Trouble diagnostics toggle filter.buf=0<cr>", desc = "Document diagnostics" },
+    },
+    opts = {},
+  },
+
+  -- ── Keybinding Discovery ───────────────────────────────────────────
+
+  {
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    opts = {
+      spec = {
+        { "<leader>g", group = "git" },
+        { "<leader>h", group = "hunks" },
+        { "<leader>x", group = "diagnostics" },
+        { "<leader>c", group = "code" },
+        { "<leader>t", group = "toggle" },
+      },
+    },
+  },
+
+  -- ── Lua LSP Enhancement ────────────────────────────────────────────
+
+  {
+    "folke/lazydev.nvim",
+    ft = "lua",
+    opts = {
+      library = {
+        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+      },
+    },
+  },
+
+  -- ── File Explorer ──────────────────────────────────────────────────
+
+  {
+    "stevearc/oil.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    keys = {
+      { "<leader>e", "<cmd>Oil<cr>", desc = "Open file explorer" },
+      { "-", "<cmd>Oil<cr>", desc = "Open parent directory" },
+    },
+    opts = {
+      view_options = {
+        show_hidden = true,
+      },
+    },
+  },
+
+  -- ── Motion ─────────────────────────────────────────────────────────
+
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    keys = {
+      { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+      { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+    },
+    opts = {},
+  },
+
+  -- ── File Bookmarks ─────────────────────────────────────────────────
+
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    keys = {
+      { "<leader>a", function() require("harpoon"):list():add() end, desc = "Harpoon add file" },
+      { "<leader>1", function() require("harpoon"):list():select(1) end, desc = "Harpoon file 1" },
+      { "<leader>2", function() require("harpoon"):list():select(2) end, desc = "Harpoon file 2" },
+      { "<leader>3", function() require("harpoon"):list():select(3) end, desc = "Harpoon file 3" },
+      { "<leader>4", function() require("harpoon"):list():select(4) end, desc = "Harpoon file 4" },
+    },
+    config = function()
+      require("harpoon"):setup()
+    end,
+  },
+
+  -- ── Utility Bundle ─────────────────────────────────────────────────
+
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    opts = {
+      dashboard = { enabled = true },
+      notifier = { enabled = true },
+      indent = { enabled = true },
+      words = { enabled = true },
+      terminal = { enabled = true },
+    },
+    keys = {
+      { "<leader>d", function() Snacks.bufdelete() end, desc = "Delete buffer" },
+      { "<leader>tt", function() Snacks.terminal() end, desc = "Toggle terminal" },
+    },
+  },
+
+  -- ── Markdown Rendering ─────────────────────────────────────────────
+
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = "markdown",
+    opts = {},
+  },
 }, {
   install = { colorscheme = { "jellybeans" } },
   checker = { enabled = false },
@@ -197,7 +385,7 @@ vim.keymap.set("v", "p", '"_dP')
 -- Buffer navigation
 vim.keymap.set("n", "[b", "<cmd>bp<cr>")
 vim.keymap.set("n", "]b", "<cmd>bn<cr>")
-vim.keymap.set("n", "<leader>d", "<cmd>bd!<cr>")
+-- <leader>d mapped to Snacks.bufdelete() in plugin config
 
 -- Git (fugitive close diff helper)
 vim.keymap.set("n", "<leader>gf", "<C-W>h<C-W>czR")

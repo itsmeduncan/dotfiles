@@ -25,10 +25,11 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Version manager:** mise (manages Node, Python, Ruby, Java, and other runtimes)
 - **Go:** GOPATH at `$HOME/Projects/`
 - **Env management:** direnv
-- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit
-- **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching)
+- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit, yazi (file manager), dust (du), bottom (top), tokei (code stats), hyperfine (benchmarks)
+- **Shell history:** atuin (SQLite-backed, fuzzy-searchable, per-directory filtering)
+- **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching), just (command runner)
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
-- **Git workflow:** gh (GitHub CLI), pre-commit (hook framework)
+- **Git workflow:** gh (GitHub CLI), pre-commit (hook framework), git-absorb (auto-fixup commits)
 
 ## Git config highlights
 
@@ -41,7 +42,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - `diff.algorithm = histogram` — better diffs for moved code
 - `fetch.prune = true` — auto-cleanup stale remote branches
 - `init.defaultBranch = main`
-- Aliases: `st`, `co`, `ci`, `br`, `d`, `ds`, `f`, `p`, `ffm`, `l`, `lg`, `undo`, `amend`, `wip`, `cleanup`
+- Aliases: `st`, `co`, `ci`, `br`, `d`, `ds`, `f`, `p`, `ffm`, `l`, `lg`, `undo`, `amend`, `wip`, `cleanup`, `absorb`
 
 ## Neovim
 
@@ -52,6 +53,17 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 - Completion: blink.cmp
 - Fuzzy finder: fzf-lua
 - Treesitter for syntax highlighting
+- Git: gitsigns.nvim (gutter signs, hunk staging, inline blame)
+- Formatting: conform.nvim (format-on-save: ruff, prettier, stylua, swiftformat, ktlint)
+- Linting: nvim-lint (async: ruff, swiftlint)
+- Diagnostics: trouble.nvim (`<leader>xx` workspace, `<leader>xd` document)
+- File explorer: oil.nvim (`<leader>e`, `-`)
+- Motion: flash.nvim (`s` jump, `S` treesitter select)
+- Bookmarks: harpoon (`<leader>a` add, `<leader>1..4` jump)
+- Utilities: snacks.nvim (dashboard, notifier, indent guides, word highlight, terminal)
+- Keybinding discovery: which-key.nvim
+- Markdown rendering: render-markdown.nvim
+- Lua LSP: lazydev.nvim
 - Key leader: `,`
 
 ## Claude Code

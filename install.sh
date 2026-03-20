@@ -18,9 +18,9 @@ brews=(
   # Core
   neovim mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux gh pre-commit
   # Shell
-  spaceship zsh-autosuggestions zsh-syntax-highlighting
+  spaceship zsh-autosuggestions zsh-syntax-highlighting atuin
   # Dev tools
-  uv pnpm lazygit jq yq watchman
+  uv pnpm lazygit jq yq watchman git-absorb yazi just hyperfine dust bottom tokei
   # Mobile
   cocoapods swiftlint
 )
@@ -51,6 +51,9 @@ ln -sfn "$(pwd)/bin" "$HOME/.dotfiles/bin"
 # Symlink nvim config
 mkdir -p "$HOME/.config"
 ln -sfn "$(pwd)/config/nvim" "$HOME/.config/nvim"
+
+# Symlink yazi config
+ln -sfn "$(pwd)/config/yazi" "$HOME/.config/yazi"
 
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
