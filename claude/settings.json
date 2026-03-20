@@ -24,5 +24,8 @@
       "Bash(yazi)",
       "Bash(btm)"
     ]
+  },
+  "enabledPlugins": {
+    "swift-lsp@claude-plugins-official": true
   }
 }
