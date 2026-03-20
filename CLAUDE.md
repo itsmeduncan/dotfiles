@@ -14,7 +14,9 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH)
 - **Git:** `gitconfig` (aliases, delta pager, modern defaults), `gitignore` (global ignores including AI tools), `gitmessage` (commit template)
 - **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
-- **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore)
+- **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
+- **Utilities:** `bin/weather`, `bin/battery` (custom scripts used in tmux status bar)
+- **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
 - **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions), `claude/agents/` (reusable agents)
 - **Other:** `gemrc`, `psqlrc`
 
@@ -42,29 +44,46 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - `diff.algorithm = histogram` — better diffs for moved code
 - `fetch.prune = true` — auto-cleanup stale remote branches
 - `init.defaultBranch = main`
-- Aliases: `st`, `co`, `ci`, `br`, `d`, `ds`, `f`, `p`, `ffm`, `l`, `lg`, `undo`, `amend`, `wip`, `cleanup`, `absorb`
+- Aliases: `st`, `co`, `ci`, `bl`, `br`, `d`, `dp`, `dw`, `ds`, `f`, `p`, `ffm`, `l`, `lg`, `su`, `suf`, `undo`, `amend`, `wip`, `cleanup`, `absorb`
 
 ## Neovim
 
 Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.config/nvim/`.
 
 - Plugin manager: lazy.nvim (auto-bootstrapped)
-- LSP: pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
+- Colorscheme: jellybeans.vim
+- LSP: Mason + mason-lspconfig (auto-install), nvim-lspconfig — pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
 - Completion: blink.cmp
-- Fuzzy finder: fzf-lua
-- Treesitter for syntax highlighting
-- Git: gitsigns.nvim (gutter signs, hunk staging, inline blame)
+- Fuzzy finder: fzf-lua (`<C-p>` files, `<leader>f` grep, `<leader>b` buffers)
+- Treesitter: syntax highlighting, text objects
+- Git: vim-fugitive (`<leader>gs` status, `<leader>gd` diff, `<leader>gp` push), gitsigns.nvim (gutter signs, hunk staging, inline blame)
 - Formatting: conform.nvim (format-on-save: ruff, prettier, stylua, swiftformat, ktlint)
 - Linting: nvim-lint (async: ruff, swiftlint)
 - Diagnostics: trouble.nvim (`<leader>xx` workspace, `<leader>xd` document)
 - File explorer: oil.nvim (`<leader>e`, `-`)
 - Motion: flash.nvim (`s` jump, `S` treesitter select)
 - Bookmarks: harpoon (`<leader>a` add, `<leader>1..4` jump)
-- Utilities: snacks.nvim (dashboard, notifier, indent guides, word highlight, terminal)
+- Editing: Comment.nvim (toggle comments), nvim-surround (surround text objects)
+- Status line: lualine.nvim (jellybeans theme)
+- Tmux integration: vim-tmux-navigator (`C-h/j/k/l` pane navigation)
+- Utilities: snacks.nvim (dashboard, notifier, indent guides, word highlight, terminal — `<leader>d` delete buffer, `<leader>tt` terminal)
+- Icons: nvim-web-devicons
 - Keybinding discovery: which-key.nvim
 - Markdown rendering: render-markdown.nvim
 - Lua LSP: lazydev.nvim
+- Config: `<leader>r` edit, `<leader>R` reload
 - Key leader: `,`
+
+## Tmux
+
+Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
+
+- Plugins: tmux-resurrect (session persistence), tmux-sensible (sensible defaults), tmux-continuum (auto-restore every 15min), tmux-yank (clipboard integration)
+- Ghostty terminal support: RGB color override, passthrough enabled
+- Vim-style pane navigation (`C-h/j/k/l`) via vim-tmux-navigator integration
+- Status bar: session name, window tabs, weather, battery, date/time
+- Quick Claude Code pane: `prefix C` (30% right split)
+- Vi copy mode with pbcopy integration
 
 ## Claude Code
 
