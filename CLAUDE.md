@@ -5,7 +5,7 @@ Personal dotfiles for macOS (Apple Silicon). Managed by symlinks via `install.sh
 ## Setup
 
 1. Clone the repo and run `./install.sh`
-2. The script handles everything: Homebrew, dependencies, symlinks, oh-my-zsh, tpm, runtimes, Neovim plugins, macOS defaults, and Claude Code config
+2. The script handles everything: Homebrew, dependencies, GUI apps (casks), symlinks, SSH key, oh-my-zsh, tpm, runtimes (mise + Rust), Neovim plugins, macOS defaults, firewall, and Claude Code config
 
 ## Structure
 
@@ -17,20 +17,24 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
 - **Utilities:** `bin/weather`, `bin/battery` (custom scripts used in tmux status bar)
 - **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
-- **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions), `claude/agents/` (reusable agents)
+- **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions), `claude/agents/` (reusable agents), `claude/skills/` (workflow skills)
 - **Other:** `gemrc`, `psqlrc`
 
 ## Key tools
 
 - **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
 - **Package manager:** Homebrew (`/opt/homebrew`)
-- **Version manager:** mise (manages Node, Python, Ruby, Java, and other runtimes)
+- **Version manager:** mise (manages Node, Python, Ruby, Java, Go, and other runtimes)
 - **Go:** GOPATH at `$HOME/Projects/`
+- **Rust:** rustup (installed by `install.sh` if missing)
 - **Env management:** direnv
-- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit, yazi (file manager), dust (du), bottom (top), tokei (code stats), hyperfine (benchmarks)
+- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit, yazi (file manager), dust (du), bottom (top), tokei (code stats), hyperfine (benchmarks), tldr (man pages), mosh (remote shell), wget
 - **Shell history:** atuin (SQLite-backed, fuzzy-searchable, per-directory filtering)
 - **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching), just (command runner)
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
+- **Cloud & infra:** awscli, terraform
+- **Networking:** mosh, nmap
+- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale
 - **Git workflow:** gh (GitHub CLI), pre-commit (hook framework), git-absorb (auto-fixup commits)
 
 ## Git config highlights
@@ -97,6 +101,14 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `debug.md` — Systematically diagnose and fix bugs
   - `pr.md` — Create well-structured pull requests
   - `scaffold.md` — Bootstrap new projects with best-practice structure
+- **`claude/skills/`** — Workflow skills:
+  - `audit` — Explore and catalog a codebase area
+  - `fix-ci` — Run linters and type checkers locally, fix all errors
+  - `fix-pipeline` — Diagnose and fix remote CI failures from GitHub Actions
+  - `ship` — Lint, commit, push, and create PR in one shot
+  - `sync-docs` — Update documentation to match current code
+  - `sync-main` — Checkout main, pull latest, prune merged branches
+  - `unstick` — Diagnose why a dev environment won't start
 
 ## Conventions
 

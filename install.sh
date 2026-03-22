@@ -21,8 +21,24 @@ brews=(
   spaceship zsh-autosuggestions zsh-syntax-highlighting atuin
   # Dev tools
   uv pnpm lazygit jq yq watchman git-absorb yazi just hyperfine dust bottom tokei
+  # Cloud & infra
+  awscli terraform
+  # Networking
+  mosh nmap
+  # Additional tools
+  wget tldr
   # Mobile
   cocoapods swiftlint
+)
+
+# GUI applications
+casks=(
+  ghostty
+  orbstack
+  1password
+  slack
+  notion
+  tailscale
 )
 
 # Install Homebrew if missing
@@ -35,9 +51,23 @@ for pkg in "${brews[@]}"; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
 
+# Install cask applications
+for app in "${casks[@]}"; do
+  brew list --cask "$app" &>/dev/null || brew install --cask "$app"
+done
+
 # Install Nerd Font
 if ! brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
   brew install --cask font-meslo-lg-nerd-font
+fi
+
+# SSH key
+if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
+  mkdir -p "$HOME/.ssh"
+  ssh-keygen -t ed25519 -C "$(git config user.email)" -N "" -f "$HOME/.ssh/id_ed25519"
+  eval "$(ssh-agent -s)"
+  ssh-add "$HOME/.ssh/id_ed25519"
+  echo "Add your SSH key to GitHub: pbcopy < ~/.ssh/id_ed25519.pub"
 fi
 
 # Symlink dotfiles
@@ -62,7 +92,7 @@ fi
 
 # Install runtimes via mise
 eval "$(mise activate bash)"
-mise use -g node@lts python@3 ruby@3 2>/dev/null || true
+mise use -g node@lts python@3 ruby@3 go@latest 2>/dev/null || true
 
 # Install Android development tools via mise
 mise install java@temurin-17 2>/dev/null || true
@@ -98,6 +128,11 @@ fi
 # Install Neovim plugins headlessly
 nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
 
+# Rust
+if ! command -v rustup &>/dev/null; then
+  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
+
 # macOS productivity defaults
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 defaults write NSGlobalDomain KeyRepeat -int 2
@@ -105,10 +140,32 @@ defaults write NSGlobalDomain InitialKeyRepeat -int 15
 defaults write com.apple.finder AppleShowAllFiles -bool true
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.NSScrollAnimationEnabled -bool false
+
+# Disable smart quotes and dashes
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+
+# Expand save and print panels by default
+defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+
+# Trackpad tap to click
+defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+
+# Firewall
+sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on 2>/dev/null || true
+
+# Apply Finder and Dock changes
+killall Finder 2>/dev/null || true
+killall Dock 2>/dev/null || true
 
 # Claude Code config (profile-wide CLAUDE.md, settings, agents)
 mkdir -p "$HOME/.claude"
