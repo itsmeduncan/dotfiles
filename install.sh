@@ -51,9 +51,11 @@ for pkg in "${brews[@]}"; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
 
-# Install cask applications
+# Install cask applications (skip if already installed via brew or directly)
 for app in "${casks[@]}"; do
-  brew list --cask "$app" &>/dev/null || brew install --cask "$app"
+  if ! brew list --cask "$app" &>/dev/null; then
+    brew install --cask "$app" || true
+  fi
 done
 
 # Install Nerd Font
