@@ -22,7 +22,18 @@
       "Bash(just *)",
       "Bash(atuin *)",
       "Bash(yazi)",
-      "Bash(btm)"
+      "Bash(btm)",
+      "Bash(cat *)",
+      "Bash(wc *)",
+      "Bash(which *)",
+      "Bash(brew *)",
+      "Bash(find *)",
+      "Bash(ls *)",
+      "Bash(swiftlint *)",
+      "Bash(xcrun *)",
+      "Bash(xcodebuild *)",
+      "Bash(xcodegen *)",
+      "Bash(git-cliff *)"
     ]
   },
   "enabledPlugins": {
