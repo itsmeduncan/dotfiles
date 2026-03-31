@@ -18,6 +18,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Utilities:** `bin/weather`, `bin/battery` (custom scripts used in tmux status bar)
 - **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
 - **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions), `claude/agents/` (reusable agents), `claude/skills/` (workflow skills)
+- **Package managers:** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Other:** `gemrc`, `psqlrc`
 
 ## Key tools
@@ -109,6 +110,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `sync-docs` — Update documentation to match current code
   - `sync-main` — Checkout main, pull latest, prune merged branches
   - `unstick` — Diagnose why a dev environment won't start
+  - `cross-platform-review` — Deep cross-platform parity and launch-readiness review for iOS/Android apps
 
 ## Conventions
 

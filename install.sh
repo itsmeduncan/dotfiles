@@ -11,7 +11,7 @@ if ! xcode-select -p &>/dev/null; then
 fi
 
 # Dotfiles to symlink into $HOME
-files=(editorconfig gemrc gitconfig gitignore gitmessage psqlrc tmux.conf vimrc zprofile zshrc)
+files=(bunfig.toml editorconfig gemrc gitconfig gitignore gitmessage npmrc psqlrc tmux.conf vimrc zprofile zshrc)
 
 # Homebrew dependencies
 brews=(
@@ -91,6 +91,13 @@ ln -sfn "$(pwd)/config/nvim" "$HOME/.config/nvim"
 
 # Symlink yazi config
 ln -sfn "$(pwd)/config/yazi" "$HOME/.config/yazi"
+
+# Symlink uv config
+ln -sfn "$(pwd)/config/uv" "$HOME/.config/uv"
+
+# Symlink pnpm config
+mkdir -p "$HOME/Library/Preferences"
+ln -sfn "$(pwd)/config/pnpm" "$HOME/Library/Preferences/pnpm"
 
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then

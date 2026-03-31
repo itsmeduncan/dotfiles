@@ -47,6 +47,17 @@ Personal coding preferences that apply to all projects.
 - If something is broken, say what's broken and fix it. Don't ask permission to fix obvious bugs.
 - When unsure between approaches, present the options with pros/cons and a recommendation.
 
+## Supply Chain Security
+
+Global package manager configs enforce a **7-day minimum release age** for all dependencies (npm, pnpm, uv, bun). This is intentional — it prevents installation of packages published less than 7 days ago as a supply chain attack mitigation.
+
+If a package install fails because a version is "too new":
+- **Do not** remove or weaken the min-release-age config.
+- **Do not** bypass with `--no-verify` or equivalent flags.
+- Pin the dependency to the most recent version that satisfies the age requirement.
+- If no version satisfies it (brand-new package), flag it to the user — they'll decide whether to temporarily override.
+- `ignore-scripts=true` is set globally for npm. If a package legitimately needs postinstall scripts, flag it rather than enabling scripts globally.
+
 ## Project Organization
 
 - Projects live in `~/Projects/src/github.com/<org>/<repo>`
