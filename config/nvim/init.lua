@@ -60,6 +60,24 @@ require("lazy").setup({
     priority = 1000,
     config = function()
       vim.cmd.colorscheme("jellybeans")
+      -- OLED overrides: pure black backgrounds, softer contrast
+      local bg = "#000000"
+      vim.api.nvim_set_hl(0, "Normal", { bg = bg })
+      vim.api.nvim_set_hl(0, "NormalNC", { bg = bg })
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = bg })
+      vim.api.nvim_set_hl(0, "SignColumn", { bg = bg })
+      vim.api.nvim_set_hl(0, "LineNr", { fg = "#3a3a3a", bg = bg })
+      vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#7a9f9f", bg = bg, bold = true })
+      vim.api.nvim_set_hl(0, "EndOfBuffer", { fg = bg, bg = bg })
+      vim.api.nvim_set_hl(0, "StatusLine", { fg = "#b0b0b0", bg = bg })
+      vim.api.nvim_set_hl(0, "StatusLineNC", { fg = "#3a3a3a", bg = bg })
+      vim.api.nvim_set_hl(0, "VertSplit", { fg = "#1a1a1a", bg = bg })
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#1a1a1a", bg = bg })
+      vim.api.nvim_set_hl(0, "Pmenu", { fg = "#b0b0b0", bg = "#0a0a0a" })
+      vim.api.nvim_set_hl(0, "PmenuSel", { fg = "#000000", bg = "#7a9f9f" })
+      vim.api.nvim_set_hl(0, "CursorLine", { bg = "#0a0a0a" })
+      vim.api.nvim_set_hl(0, "Visual", { bg = "#1a3a3a" })
+      vim.api.nvim_set_hl(0, "FloatBorder", { fg = "#3a3a3a", bg = bg })
     end,
   },
 
@@ -164,13 +182,24 @@ require("lazy").setup({
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     event = "VeryLazy",
-    opts = {
-      options = {
-        theme = "jellybeans",
-        section_separators = "",
-        component_separators = "|",
-      },
-    },
+    config = function()
+      local oled_theme = require("lualine.themes.jellybeans")
+      -- Force all lualine backgrounds to pure black
+      for _, mode in pairs(oled_theme) do
+        for _, section in pairs(mode) do
+          if type(section) == "table" and section.bg then
+            section.bg = "#000000"
+          end
+        end
+      end
+      require("lualine").setup({
+        options = {
+          theme = oled_theme,
+          section_separators = "",
+          component_separators = "|",
+        },
+      })
+    end,
   },
 
   -- Tmux navigation

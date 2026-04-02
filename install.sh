@@ -96,8 +96,11 @@ for file in "${files[@]}"; do
   ln -sf "$(pwd)/$file" "$HOME/.$file"
 done
 
-# Symlink bin directory
+# Symlink bin directory (remove stale dir so the symlink lands correctly)
 mkdir -p "$HOME/.dotfiles"
+if [ -d "$HOME/.dotfiles/bin" ] && [ ! -L "$HOME/.dotfiles/bin" ]; then
+  rm -rf "$HOME/.dotfiles/bin"
+fi
 ln -sfn "$(pwd)/bin" "$HOME/.dotfiles/bin"
 
 # Symlink nvim config

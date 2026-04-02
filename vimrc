@@ -42,6 +42,19 @@ filetype plugin indent on   " detect file type and load indents and plugins
 syntax on                   " turn on syntax highlighting
 colorscheme jellybeans      " syntax highlighting colours
 
+" OLED: force pure black background
+if has('termguicolors')
+  set termguicolors
+endif
+highlight Normal guibg=#000000
+highlight NonText guibg=#000000
+highlight LineNr guibg=#000000 guifg=#3a3a3a
+highlight SignColumn guibg=#000000
+highlight VertSplit guibg=#000000 guifg=#1a1a1a
+highlight StatusLine guibg=#000000 guifg=#b0b0b0
+highlight StatusLineNC guibg=#000000 guifg=#3a3a3a
+highlight EndOfBuffer guibg=#000000 guifg=#000000
+
 set autoread                " auto reload buffer when file modified externally
 set clipboard=unnamed       " yank and paste using system clipboard
 set encoding=utf-8          " default character encoding
