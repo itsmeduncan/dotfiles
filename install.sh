@@ -56,11 +56,25 @@ for pkg in "${brews[@]}"; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
 
+# Map cask tokens to their .app names for detecting non-Homebrew installs
+declare -A cask_app_names=(
+  [ghostty]="Ghostty"
+  [orbstack]="OrbStack"
+  [1password]="1Password"
+  [slack]="Slack"
+  [notion]="Notion"
+  [tailscale]="Tailscale"
+)
+
 # Install cask applications (skip if already installed via brew or directly)
 for app in "${casks[@]}"; do
-  if ! brew list --cask "$app" &>/dev/null; then
-    brew install --cask "$app" || true
+  app_name="${cask_app_names[$app]}"
+  if brew list --cask "$app" &>/dev/null; then
+    continue
+  elif [ -n "$app_name" ] && [ -d "/Applications/${app_name}.app" ]; then
+    continue
   fi
+  brew install --cask "$app" || true
 done
 
 # Install Nerd Font
@@ -83,6 +97,7 @@ for file in "${files[@]}"; do
 done
 
 # Symlink bin directory
+mkdir -p "$HOME/.dotfiles"
 ln -sfn "$(pwd)/bin" "$HOME/.dotfiles/bin"
 
 # Symlink nvim config
@@ -147,39 +162,55 @@ if ! command -v rustup &>/dev/null; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 fi
 
-# macOS productivity defaults
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-defaults write NSGlobalDomain KeyRepeat -int 2
-defaults write NSGlobalDomain InitialKeyRepeat -int 15
-defaults write com.apple.finder AppleShowAllFiles -bool true
-defaults write com.apple.finder ShowPathbar -bool true
-defaults write com.apple.finder ShowStatusBar -bool true
-defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
-defaults write com.apple.finder _FXSortFoldersFirst -bool true
-defaults write com.apple.dock autohide -bool true
-defaults write com.apple.dock tilesize -int 48
-defaults write com.apple.dock show-recents -bool false
-defaults write com.apple.NSScrollAnimationEnabled -bool false
+# macOS productivity defaults (only write if value differs, restart apps only if changed)
+defaults_changed=false
+
+set_default() {
+  local domain="$1" key="$2" type="$3" value="$4"
+  local current
+  current=$(defaults read "$domain" "$key" 2>/dev/null) || current=""
+  if [ "$current" != "$value" ]; then
+    defaults write "$domain" "$key" "$type" "$value"
+    defaults_changed=true
+  fi
+}
+
+set_default NSGlobalDomain AppleShowAllExtensions -bool true
+set_default NSGlobalDomain KeyRepeat -int 2
+set_default NSGlobalDomain InitialKeyRepeat -int 15
+set_default com.apple.finder AppleShowAllFiles -bool true
+set_default com.apple.finder ShowPathbar -bool true
+set_default com.apple.finder ShowStatusBar -bool true
+set_default com.apple.finder _FXShowPosixPathInTitle -bool true
+set_default com.apple.finder FXPreferredViewStyle -string Nlsv
+set_default com.apple.finder _FXSortFoldersFirst -bool true
+set_default com.apple.dock autohide -bool true
+set_default com.apple.dock tilesize -int 48
+set_default com.apple.dock show-recents -bool false
+set_default com.apple.NSScrollAnimationEnabled -bool false
 
 # Disable smart quotes and dashes
-defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+set_default NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+set_default NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
 # Expand save and print panels by default
-defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
+set_default NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
+set_default NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 
 # Trackpad tap to click
-defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
-defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+set_default com.apple.AppleMultitouchTrackpad Clicking -bool true
+set_default com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
-# Firewall
-sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on 2>/dev/null || true
+# Firewall (only enable if not already on)
+if ! /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate 2>/dev/null | grep -q "enabled"; then
+  sudo /usr/libexec/ApplicationFirewall/socketfilterfw --setglobalstate on 2>/dev/null || true
+fi
 
-# Apply Finder and Dock changes
-killall Finder 2>/dev/null || true
-killall Dock 2>/dev/null || true
+# Restart Finder and Dock only if defaults changed
+if [ "$defaults_changed" = true ]; then
+  killall Finder 2>/dev/null || true
+  killall Dock 2>/dev/null || true
+fi
 
 # Claude Code config (profile-wide CLAUDE.md, settings, agents)
 mkdir -p "$HOME/.claude"
