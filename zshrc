@@ -3,7 +3,7 @@ export VISUAL='nvim'
 
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
-plugins=(git brew)
+plugins=(brew mise direnv gh fzf zoxide uv terraform aws docker-compose)
 source $ZSH/oh-my-zsh.sh
 source "$(brew --prefix)/opt/spaceship/spaceship.zsh"
 
@@ -15,23 +15,15 @@ cdpath=(~ ~/Projects/src/github.com ~/Projects)
 
 setopt autopushd
 
-eval "$(mise activate zsh)"
-
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
 export JAVA_HOME=$(mise where java 2>/dev/null)
 
-eval "$(direnv hook zsh)"
-eval "$(zoxide init zsh)"
-
-# fzf
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# fzf customizations (plugin handles init and FZF_DEFAULT_COMMAND)
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 {}'"
-source <(fzf --zsh)
 
 # atuin - shell history
 eval "$(atuin init zsh)"

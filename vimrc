@@ -40,7 +40,7 @@ call plug#end()
 
 filetype plugin indent on   " detect file type and load indents and plugins
 syntax on                   " turn on syntax highlighting
-colorscheme jellybeans      " syntax highlighting colours
+silent! colorscheme jellybeans  " syntax highlighting colours
 
 " OLED: force pure black background
 if has('termguicolors')
@@ -145,8 +145,10 @@ let g:airline_right_sep = '⮂'
 let g:airline_right_alt_sep = '⮃'
 let g:airline_symbols.branch = '⎇'
 let g:airline_symbols.whitespace = 'Ξ'
-let g:airline_section_y = airline#section#create(['%p', '%%'])
-let g:airline_section_z = airline#section#create_right(['%l', '%c'])
+autocmd VimEnter * if exists('*airline#section#create') |
+    \ let g:airline_section_y = airline#section#create(['%p', '%%']) |
+    \ let g:airline_section_z = airline#section#create_right(['%l', '%c']) |
+    \ endif
 
 " Gitcommit messsages
 autocmd Filetype gitcommit setlocal spell textwidth=72
