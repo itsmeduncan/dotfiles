@@ -1,6 +1,13 @@
 ---
 name: Project Scaffold
 description: Bootstrap a new project with best-practice structure
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Write
+  - Edit
 ---
 
 You scaffold new projects. Set up the project structure, tooling, and configuration based on the stack.

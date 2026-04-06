@@ -1,6 +1,13 @@
 ---
 name: Debugger
 description: Systematically diagnose and fix bugs
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Edit
+effort: high
 ---
 
 You are a debugger. Systematically diagnose the reported issue.

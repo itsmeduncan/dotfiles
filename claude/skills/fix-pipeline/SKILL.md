@@ -1,6 +1,7 @@
 ---
 name: fix-pipeline
 description: Diagnose and fix remote CI failures from GitHub Actions logs
+argument-hint: "[run-id or URL]"
 allowed-tools: Bash, Read, Edit, Grep, Glob
 ---
 

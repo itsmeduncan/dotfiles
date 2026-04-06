@@ -1,7 +1,9 @@
 ---
 name: audit
 description: Explore and catalog a codebase area — files, abstractions, patterns, and issues
+argument-hint: "<directory, pattern, or concept>"
 allowed-tools: Bash, Read, Grep, Glob, Agent
+context: fork
 ---
 
 Thoroughly audit a codebase area. Argument is a directory path, file pattern, or concept (e.g., "authentication", "API endpoints").

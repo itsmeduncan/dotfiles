@@ -1,6 +1,7 @@
 ---
 name: cross-platform-review
 description: "Deep cross-platform parity and launch-readiness review for iOS and Android mobile apps. Performs a comprehensive audit from 12 stakeholder perspectives: Principal Engineer, SDET, Product Manager, Product Owner, CEO, CMO, CPO, CTO, Security Engineer, Licensing Counsel, Solutions Architect, and Release Engineer. Use this skill whenever the user asks to compare iOS and Android codebases, audit mobile app launch readiness, check feature parity across platforms, review code before open-sourcing a mobile app, or perform any kind of cross-platform quality gate. Also trigger when the user mentions 'parity review', 'platform audit', 'launch readiness', 'open source prep', or 'cross-platform comparison' for mobile apps."
+context: fork
 ---
 
 # Cross-Platform Parity & Launch-Readiness Review

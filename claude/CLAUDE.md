@@ -9,14 +9,6 @@ Personal coding preferences that apply to all projects.
 - Package managers: Homebrew, mise (runtimes), uv (Python), pnpm (Node.js)
 - Git: delta pager, rebase workflow, `gh` CLI for GitHub
 
-## Stack
-
-- **Python:** uv for packaging, ruff for linting/formatting, pytest for testing, pyright for types
-- **Node.js/TypeScript:** pnpm, Next.js/React, ESLint, Prettier
-- **iOS:** Swift, SwiftUI, Xcode, swiftlint, cocoapods
-- **Android:** Kotlin, Jetpack Compose, Gradle
-- **Infrastructure:** Docker Compose, direnv for env management
-
 ## Coding Preferences
 
 - Write concise, readable code. Favor clarity over cleverness.
@@ -31,13 +23,6 @@ Personal coding preferences that apply to all projects.
 - When asked to set up, install, or configure something, confirm approach and scope BEFORE making changes. Prefer the minimal, reversible option. Do not migrate to a different tool/framework unless explicitly asked.
 - Do NOT attempt interactive CLI sessions (TUI tools, interactive installers, `less`, `vim`, etc.). If a command requires interactive input, tell the user the exact command to run with `!` prefix.
 - Scripts and install files must be idempotent — safe to run multiple times without side effects.
-
-## Style
-
-- Python: ruff format, 4-space indent, double quotes, type hints on public APIs
-- TypeScript: Prettier defaults, 2-space indent, single quotes, strict mode
-- Swift: swiftlint defaults, 4-space indent
-- Kotlin: ktlint defaults, 4-space indent
 
 ## Git Conventions
 

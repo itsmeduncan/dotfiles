@@ -43,5 +43,19 @@
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true
   },
-  "effortLevel": "high"
+  "effortLevel": "high",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ~/.claude/hooks/auto-format.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
 }

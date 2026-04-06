@@ -94,23 +94,31 @@ Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 
 Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.sh`.
 
-- **`claude/CLAUDE.md`** — Profile-wide instructions (coding preferences, stack defaults, conventions). Applied to every project.
-- **`claude/settings.json`** — Pre-approved tool permissions for common dev commands (git, gh, mise, uv, pnpm, npm, node, python, ruff). Includes compound command rules so git/gh are auto-allowed in chained (`&&`, `;`, `|`) commands.
-- **`claude/agents/`** — Reusable agents:
-  - `review.md` — Code review (bugs, security, performance, readability)
-  - `test.md` — Write tests for new or changed code
-  - `debug.md` — Systematically diagnose and fix bugs
-  - `pr.md` — Create well-structured pull requests
-  - `scaffold.md` — Bootstrap new projects with best-practice structure
+- **`claude/CLAUDE.md`** — Profile-wide instructions (coding preferences, conventions). Universal rules loaded every session.
+- **`claude/settings.json`** — Pre-approved tool permissions, status line, plugins, effort level, and hooks (auto-format on Edit/Write).
+- **`claude/rules/`** — Path-specific rules loaded only when working with matching files:
+  - `python.md` — Python conventions (uv, ruff, pyright, pytest). Triggers on `*.py`, `pyproject.toml`
+  - `typescript.md` — TypeScript/Node conventions (pnpm, prettier, eslint). Triggers on `*.ts`, `*.tsx`, `package.json`
+  - `swift.md` — iOS conventions (SwiftUI, swiftlint, swiftformat). Triggers on `*.swift`
+  - `kotlin.md` — Android conventions (Compose, ktlint, Gradle). Triggers on `*.kt`, `*.gradle.kts`
+  - `terraform.md` — Infra conventions. Triggers on `*.tf`
+- **`claude/agents/`** — Reusable agents with tool restrictions:
+  - `review.md` — Code review (read-only: Read, Grep, Glob, Bash)
+  - `test.md` — Write tests (Read, Grep, Glob, Bash, Edit, Write; high effort)
+  - `debug.md` — Diagnose and fix bugs (Read, Grep, Glob, Bash, Edit; high effort)
+  - `pr.md` — Create pull requests (read-only: Read, Grep, Glob, Bash)
+  - `scaffold.md` — Bootstrap new projects (Read, Grep, Glob, Bash, Write, Edit)
 - **`claude/skills/`** — Workflow skills:
-  - `audit` — Explore and catalog a codebase area
+  - `audit` — Explore and catalog a codebase area (runs in forked context)
   - `fix-ci` — Run linters and type checkers locally, fix all errors
   - `fix-pipeline` — Diagnose and fix remote CI failures from GitHub Actions
   - `ship` — Lint, commit, push, and create PR in one shot
   - `sync-docs` — Update documentation to match current code
   - `sync-main` — Checkout main, pull latest, prune merged branches
   - `unstick` — Diagnose why a dev environment won't start
-  - `cross-platform-review` — Deep cross-platform parity and launch-readiness review for iOS/Android apps
+  - `cross-platform-review` — Deep cross-platform parity review for iOS/Android (runs in forked context)
+- **`claude/hooks/`** — Lifecycle hooks:
+  - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
 
 ## Conventions
 

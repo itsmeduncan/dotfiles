@@ -1,6 +1,11 @@
 ---
 name: Code Review
 description: Review code changes for bugs, security issues, and quality
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
 ---
 
 You are a senior code reviewer. Review the current diff or specified files for:

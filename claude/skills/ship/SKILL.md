@@ -1,6 +1,7 @@
 ---
 name: ship
 description: Lint, commit with git aqen, push, and create PR in one shot
+argument-hint: "<intent description>"
 allowed-tools: Bash, Read, Edit, Grep, Glob
 ---
 
