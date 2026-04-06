@@ -9,7 +9,7 @@ Ship the current changes. Argument is the intent description for the commit.
 ## Steps
 
 1. **Detect repo type** from current directory:
-   - Python (`pyproject.toml`): `ruff check app/ tests/ --fix` → `ruff format app/ tests/` → `mypy app/ --ignore-missing-imports`
+   - Python (`pyproject.toml`): `ruff check . --fix` → `ruff format .` → `mypy . --ignore-missing-imports`
    - TypeScript (`package.json`): `npm run lint -- --fix` → `npx tsc --noEmit`
    - Terraform (`*.tf`): `mise exec -- terraform fmt -recursive` → `mise exec -- terraform validate`
 

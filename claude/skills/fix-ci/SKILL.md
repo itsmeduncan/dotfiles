@@ -11,9 +11,9 @@ Fix all lint, format, and type errors in the current repo until CI would pass.
 1. **Detect repo type:**
    - Python (`pyproject.toml`):
      ```
-     ruff check app/ tests/ --fix
-     ruff format app/ tests/
-     mypy app/ --ignore-missing-imports
+     ruff check . --fix
+     ruff format .
+     mypy . --ignore-missing-imports
      ```
    - TypeScript (`package.json`):
      ```

@@ -26,6 +26,12 @@ Personal coding preferences that apply to all projects.
 - Error messages should be actionable — say what went wrong AND what to do about it.
 - Tests should be fast, isolated, and test behavior not implementation.
 
+## Behavioral Guardrails
+
+- When asked to set up, install, or configure something, confirm approach and scope BEFORE making changes. Prefer the minimal, reversible option. Do not migrate to a different tool/framework unless explicitly asked.
+- Do NOT attempt interactive CLI sessions (TUI tools, interactive installers, `less`, `vim`, etc.). If a command requires interactive input, tell the user the exact command to run with `!` prefix.
+- Scripts and install files must be idempotent — safe to run multiple times without side effects.
+
 ## Style
 
 - Python: ruff format, 4-space indent, double quotes, type hints on public APIs
