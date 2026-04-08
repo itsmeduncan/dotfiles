@@ -20,7 +20,7 @@ brews=(
   # Shell
   spaceship zsh-autosuggestions zsh-syntax-highlighting atuin
   # Dev tools
-  uv pnpm lazygit jq yq watchman git-absorb yazi just hyperfine dust bottom tokei
+  uv pnpm lazygit jq yq watchman git-absorb yazi just hyperfine dust bottom tokei postgresql
   # Cloud & infra
   awscli terraform
   # Networking

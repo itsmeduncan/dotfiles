@@ -11,6 +11,9 @@
         "qwen/qwen3-coder-next": {
           "name": "Qwen3 Coder Next"
         },
+        "google/gemma-4-26b-a4ba": {
+          "name": "Gemma 4 26B"
+        },
         "text-embedding-nomic-embed-text-v1.5": {
           "name": "Nomic Embed Text"
         }
