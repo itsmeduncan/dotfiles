@@ -26,6 +26,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
 - **Package manager:** Homebrew (`/opt/homebrew`)
 - **Version manager:** mise (manages Node, Python, Ruby, Java, Go, and other runtimes)
+- **AI:** opencode (CLI agent), lm-studio (local LLMs)
 - **Go:** GOPATH at `$HOME/Projects/`
 - **Rust:** rustup (installed by `install.sh` if missing)
 - **Env management:** direnv
@@ -77,6 +78,7 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 - Markdown rendering: render-markdown.nvim
 - Lua LSP: lazydev.nvim
 - Config: `<leader>r` edit, `<leader>R` reload
+- AI assistant: `nickjvandyke/opencode.nvim` (`<leader>o` to open)
 - Key leader: `,`
 
 ## Tmux

@@ -26,7 +26,7 @@ brews=(
   # Networking
   mosh nmap
   # Additional tools
-  wget tldr
+  wget tldr opencode
   # Mobile
   cocoapods swiftlint
 )
@@ -39,6 +39,7 @@ casks=(
   slack
   notion
   tailscale
+  lm-studio
 )
 
 # Install Homebrew if missing
@@ -64,6 +65,7 @@ declare -A cask_app_names=(
   [slack]="Slack"
   [notion]="Notion"
   [tailscale]="Tailscale"
+  [lm-studio]="LM Studio"
 )
 
 # Install cask applications (skip if already installed via brew or directly)
@@ -116,6 +118,26 @@ ln -sfn "$(pwd)/config/uv" "$HOME/.config/uv"
 # Symlink pnpm config
 mkdir -p "$HOME/Library/Preferences"
 ln -sfn "$(pwd)/config/pnpm" "$HOME/Library/Preferences/pnpm"
+
+# Setup opencode config
+mkdir -p "$HOME/.config/opencode"
+ln -sf "$(pwd)/config/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
+
+# Create opencode auth file with placeholder if missing
+mkdir -p "$HOME/.local/share/opencode"
+if [ ! -f "$HOME/.local/share/opencode/auth.json" ]; then
+  cat > "$HOME/.local/share/opencode/auth.json" << 'EOF'
+{
+  "lm-studio": {
+    "type": "api",
+    "key": "sk-local"
+  }
+}
+EOF
+fi
+
+# Symlink lm-studio config
+ln -sfn "$(pwd)/config/lmstudio" "$HOME/.lmstudio"
 
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then

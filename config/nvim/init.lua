@@ -387,6 +387,16 @@ require("lazy").setup({
     },
   },
 
+  -- ── AI Assistant ──────────────────────────────────────────────────
+
+  {
+    "nickjvandyke/opencode.nvim",
+    cmd = "OpenCode",
+    keys = {
+      { "<leader>o", "<cmd>OpenCode<cr>", desc = "Open OpenCode" },
+    },
+  },
+
   -- ── Markdown Rendering ─────────────────────────────────────────────
 
   {

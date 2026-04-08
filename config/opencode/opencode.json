@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "lm-studio": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "LM Studio",
+      "options": {
+        "baseURL": "http://localhost:1234/v1"
+      },
+      "models": {
+        "qwen/qwen3-coder-next": {
+          "name": "Qwen3 Coder Next"
+        },
+        "text-embedding-nomic-embed-text-v1.5": {
+          "name": "Nomic Embed Text"
+        }
+      }
+    }
+  },
+  "model": "lm-studio/qwen/qwen3-coder-next",
+  "small_model": "lm-studio/qwen/qwen3-coder-next"
+}
