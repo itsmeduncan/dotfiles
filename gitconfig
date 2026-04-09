@@ -1,30 +1,30 @@
 [alias]
-  l = log --date=human
-  st = status -sb
-  co = checkout
-  ci = commit
-  bl = blame
-  br = branch
-  d = diff
-  dp = --no-pager diff
-  dw = --word-diff
-  ds = diff --staged
-  ffm = merge --ff-only
-  f = fetch -p
-  p = push
-  su = submodule update --init --recursive
-  suf = submodule update --init --recursive --force
-  undo = reset --soft HEAD~1
-  amend = commit --amend --no-edit
-  wip = !git add -A && git commit -m 'wip'
-  cleanup = !git branch --merged main | grep -v '\\*\\|main' | xargs -n 1 git branch -d
-  absorb = absorb --and-rebase
-  lg = log --oneline --graph --decorate -20
+	l = log --date=human
+	st = status -sb
+	co = checkout
+	ci = commit
+	bl = blame
+	br = branch
+	d = diff
+	dp = --no-pager diff
+	dw = --word-diff
+	ds = diff --staged
+	ffm = merge --ff-only
+	f = fetch -p
+	p = push
+	su = submodule update --init --recursive
+	suf = submodule update --init --recursive --force
+	undo = reset --soft HEAD~1
+	amend = commit --amend --no-edit
+	wip = !git add -A && git commit -m 'wip'
+	cleanup = !git branch --merged main | grep -v '\\*\\|main' | xargs -n 1 git branch -d
+	absorb = absorb --and-rebase
+	lg = log --oneline --graph --decorate -20
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@users.noreply.github.com
 [color]
-  ui = auto
+	ui = auto
 [core]
 	excludesfile = ~/.gitignore
 	editor = nvim
@@ -46,16 +46,16 @@
 	hunk-header-style = "syntax bold"
 	hunk-header-decoration-style = "omit"
 [difftool]
-  prompt = false
+	prompt = false
 [github]
-  user = itsmeduncan
+	user = itsmeduncan
 [browser "gitscm"]
-  cmd = /bin/sh -c 'open http://git-scm.com/docs/$(basename $1 .html)' --
+	cmd = /bin/sh -c 'open http://git-scm.com/docs/$(basename $1 .html)' --
 [help]
-  browser = gitscm
-  autocorrect = prompt
+	browser = gitscm
+	autocorrect = prompt
 [init]
-  defaultBranch = main
+	defaultBranch = main
 [push]
 	default = simple
 	autoSetupRemote = true
@@ -79,13 +79,13 @@
 [column]
 	ui = auto
 [credential]
-    helper = osxkeychain
+	helper = osxkeychain
 [url "git@github.com:"]
-    insteadOf = https://github.com/
+	insteadOf = https://github.com/
 [filter "lfs"]
 	required = true
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	clean = git-lfs clean -- %f
 [commit]
-    template = ~/.gitmessage
+	template = ~/.gitmessage

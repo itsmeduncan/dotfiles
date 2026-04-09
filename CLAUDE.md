@@ -17,6 +17,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
 - **Utilities:** `bin/weather`, `bin/battery` (custom scripts used in tmux status bar)
 - **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
+- **Opencode:** `config/opencode/opencode.json` (opencode CLI agent config — symlinked to `~/.config/opencode/`)
 - **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions), `claude/agents/` (reusable agents), `claude/skills/` (workflow skills)
 - **Package managers:** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Other:** `gemrc`, `psqlrc`
@@ -32,7 +33,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Env management:** direnv
 - **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit, yazi (file manager), dust (du), bottom (top), tokei (code stats), hyperfine (benchmarks), tldr (man pages), mosh (remote shell), wget
 - **Shell history:** atuin (SQLite-backed, fuzzy-searchable, per-directory filtering)
-- **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching), just (command runner)
+- **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching), just (command runner), PostgreSQL (database)
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
 - **Cloud & infra:** awscli, terraform
 - **Networking:** mosh, nmap
@@ -119,6 +120,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `sync-main` — Checkout main, pull latest, prune merged branches
   - `unstick` — Diagnose why a dev environment won't start
   - `cross-platform-review` — Deep cross-platform parity review for iOS/Android (runs in forked context)
+- **`claude/statusline.sh`** — Custom status line script (shows directory, git branch, model, context usage, rate limits).
 - **`claude/hooks/`** — Lifecycle hooks:
   - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
 

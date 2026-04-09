@@ -13,7 +13,7 @@ if [ "$charging" -gt 0 ] && [ "$level" -lt 100 ]; then
 elif [ "$level" -ge 80 ]; then
   echo "🔋 ${level}%"
 elif [ "$level" -ge 50 ]; then
-  echo "🪫 ${level}%"
+  echo "🔋 ${level}%"
 elif [ "$level" -ge 20 ]; then
   echo "🪫 ${level}%"
 else

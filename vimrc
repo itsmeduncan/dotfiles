@@ -1,9 +1,4 @@
-"  Configuration file for Vim
-"  (http://www.vim.org)
-
-"  ryanss <ryanssdev@icloud.com>
-"  https://github.com/ryanss/vim
-"  MIT License
+"  Legacy Vim configuration (primary editor is Neovim)
 
 
 " Automatically install vim-plug on first run
@@ -84,7 +79,10 @@ set softtabstop=4           " number of spaces pressing <Tab> counts for
 set tabstop=4               " number of spaces a <Tab> in the file counts for
 
 " Smaller indents on css and html files
-autocmd! Syntax css,html,htmldjango,js setlocal shiftwidth=2 tabstop=2 softtabstop=2
+augroup web_indent
+    autocmd!
+    autocmd Syntax css,html,htmldjango,js setlocal shiftwidth=2 tabstop=2 softtabstop=2
+augroup END
 
 set showmatch               " briefly jump to matching bracket
 set ignorecase              " ignore case when pattern matching
@@ -158,12 +156,18 @@ let g:closetag_html_style=1
 autocmd! FileType html,htmldjango source ~/.vim/bundle/closetag.vim/plugin/closetag.vim
 
 " Highlight characters when lines get too long
-autocmd! BufWinEnter *.py,*.vim,vimrc match ErrorMsg '\%>79v.\+'
-autocmd! BufWinEnter *.html match ErrorMsg '\%>100v.\+'
+augroup long_lines
+    autocmd!
+    autocmd BufWinEnter *.py,*.vim,vimrc match ErrorMsg '\%>79v.\+'
+    autocmd BufWinEnter *.html match ErrorMsg '\%>100v.\+'
+augroup END
 
 " Automatically wrap text while typing in Markdown and rST documents
-autocmd! BufNewFile,BufReadPost *.md set filetype=markdown
-autocmd! Filetype markdown,rst set textwidth=79
+augroup markdown_settings
+    autocmd!
+    autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+    autocmd Filetype markdown,rst set textwidth=79
+augroup END
 
 " Remove trailing whitespace and empty lines at end of file
 augroup whitespace

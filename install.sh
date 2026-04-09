@@ -2,6 +2,8 @@
 
 set -e
 
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 # Xcode CLI tools (required for git, compilers, etc.)
 if ! xcode-select -p &>/dev/null; then
   echo "Installing Xcode Command Line Tools..."
@@ -11,7 +13,7 @@ if ! xcode-select -p &>/dev/null; then
 fi
 
 # Dotfiles to symlink into $HOME
-files=(bunfig.toml editorconfig gemrc gitconfig gitignore gitmessage npmrc psqlrc tmux.conf vimrc zprofile zshrc)
+files=(bunfig.toml gemrc gitconfig gitignore gitmessage npmrc psqlrc tmux.conf vimrc zprofile zshrc)
 
 # Homebrew dependencies
 brews=(
@@ -95,7 +97,7 @@ fi
 
 # Symlink dotfiles
 for file in "${files[@]}"; do
-  ln -sf "$(pwd)/$file" "$HOME/.$file"
+  ln -sf "$DOTFILES_DIR/$file" "$HOME/.$file"
 done
 
 # Symlink bin directory (remove stale dir so the symlink lands correctly)
@@ -103,25 +105,25 @@ mkdir -p "$HOME/.dotfiles"
 if [ -d "$HOME/.dotfiles/bin" ] && [ ! -L "$HOME/.dotfiles/bin" ]; then
   rm -rf "$HOME/.dotfiles/bin"
 fi
-ln -sfn "$(pwd)/bin" "$HOME/.dotfiles/bin"
+ln -sfn "$DOTFILES_DIR/bin" "$HOME/.dotfiles/bin"
 
 # Symlink nvim config
 mkdir -p "$HOME/.config"
-ln -sfn "$(pwd)/config/nvim" "$HOME/.config/nvim"
+ln -sfn "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
 
 # Symlink yazi config
-ln -sfn "$(pwd)/config/yazi" "$HOME/.config/yazi"
+ln -sfn "$DOTFILES_DIR/config/yazi" "$HOME/.config/yazi"
 
 # Symlink uv config
-ln -sfn "$(pwd)/config/uv" "$HOME/.config/uv"
+ln -sfn "$DOTFILES_DIR/config/uv" "$HOME/.config/uv"
 
 # Symlink pnpm config
 mkdir -p "$HOME/Library/Preferences"
-ln -sfn "$(pwd)/config/pnpm" "$HOME/Library/Preferences/pnpm"
+ln -sfn "$DOTFILES_DIR/config/pnpm" "$HOME/Library/Preferences/pnpm"
 
 # Setup opencode config
 mkdir -p "$HOME/.config/opencode"
-ln -sf "$(pwd)/config/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
+ln -sf "$DOTFILES_DIR/config/opencode/opencode.json" "$HOME/.config/opencode/opencode.json"
 
 # Create opencode auth file with placeholder if missing
 mkdir -p "$HOME/.local/share/opencode"
@@ -135,9 +137,6 @@ if [ ! -f "$HOME/.local/share/opencode/auth.json" ]; then
 }
 EOF
 fi
-
-# Symlink lm-studio config
-ln -sfn "$(pwd)/config/lmstudio" "$HOME/.lmstudio"
 
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
@@ -239,10 +238,10 @@ fi
 
 # Claude Code config (profile-wide CLAUDE.md, settings, agents)
 mkdir -p "$HOME/.claude"
-ln -sf "$(pwd)/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-ln -sf "$(pwd)/claude/settings.json" "$HOME/.claude/settings.json"
-ln -sfn "$(pwd)/claude/agents" "$HOME/.claude/agents"
-ln -sfn "$(pwd)/claude/skills" "$HOME/.claude/skills"
-ln -sfn "$(pwd)/claude/rules" "$HOME/.claude/rules"
-ln -sfn "$(pwd)/claude/hooks" "$HOME/.claude/hooks"
-ln -sf "$(pwd)/claude/statusline.sh" "$HOME/.claude/statusline.sh"
+ln -sf "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+ln -sf "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
+ln -sfn "$DOTFILES_DIR/claude/agents" "$HOME/.claude/agents"
+ln -sfn "$DOTFILES_DIR/claude/skills" "$HOME/.claude/skills"
+ln -sfn "$DOTFILES_DIR/claude/rules" "$HOME/.claude/rules"
+ln -sfn "$DOTFILES_DIR/claude/hooks" "$HOME/.claude/hooks"
+ln -sf "$DOTFILES_DIR/claude/statusline.sh" "$HOME/.claude/statusline.sh"

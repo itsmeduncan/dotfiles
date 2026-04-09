@@ -70,10 +70,8 @@ alias g="git"
 alias vi="nvim"
 alias vim="nvim"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/duncan/.lmstudio/bin"
-# End of LM Studio CLI section
-
+# LM Studio CLI
+export PATH="$PATH:$HOME/.lmstudio/bin"
 
 # opencode
-export PATH=/Users/duncan/.opencode/bin:$PATH
+export PATH="$HOME/.opencode/bin:$PATH"
