@@ -1,1 +1,79 @@
-# Use defaults — inherits terminal colors
+# Vantablack OLED — pure black bg, teal accent matching nvim/tmux/ghostty
+
+[manager]
+cwd = { fg = "#7a9f9f" }
+hovered = { fg = "#000000", bg = "#7a9f9f" }
+preview_hovered = { underline = true }
+find_keyword = { fg = "#d8ad4c", italic = true }
+find_position = { fg = "#cf6a4c", bg = "reset", italic = true }
+marker_copied = { fg = "#99ad6a", bg = "#99ad6a" }
+marker_cut = { fg = "#cf6a4c", bg = "#cf6a4c" }
+marker_marked = { fg = "#7a9f9f", bg = "#7a9f9f" }
+marker_selected = { fg = "#597bc5", bg = "#597bc5" }
+tab_active = { fg = "#000000", bg = "#7a9f9f" }
+tab_inactive = { fg = "#b0b0b0", bg = "#0a0a0a" }
+tab_width = 1
+border_symbol = "│"
+border_style = { fg = "#1a1a1a" }
+syntect_theme = ""
+
+[status]
+separator_open = ""
+separator_close = ""
+separator_style = { fg = "#0a0a0a", bg = "#0a0a0a" }
+mode_normal = { fg = "#000000", bg = "#7a9f9f", bold = true }
+mode_select = { fg = "#000000", bg = "#99ad6a", bold = true }
+mode_unset = { fg = "#000000", bg = "#cf6a4c", bold = true }
+progress_label = { fg = "#b0b0b0", bold = true }
+progress_normal = { fg = "#7a9f9f", bg = "#0a0a0a" }
+progress_error = { fg = "#cf6a4c", bg = "#0a0a0a" }
+permissions_t = { fg = "#7a9f9f" }
+permissions_r = { fg = "#d8ad4c" }
+permissions_w = { fg = "#cf6a4c" }
+permissions_x = { fg = "#99ad6a" }
+permissions_s = { fg = "#3a3a3a" }
+
+[input]
+border = { fg = "#7a9f9f" }
+title = {}
+value = {}
+selected = { reversed = true }
+
+[select]
+border = { fg = "#7a9f9f" }
+active = { fg = "#d8ad4c" }
+inactive = {}
+
+[tasks]
+border = { fg = "#7a9f9f" }
+title = {}
+hovered = { underline = true }
+
+[which]
+cand = { fg = "#7a9f9f" }
+rest = { fg = "#585858" }
+desc = { fg = "#cf6a4c" }
+separator = "  "
+separator_style = { fg = "#3a3a3a" }
+
+[help]
+on = { fg = "#cf6a4c" }
+exec = { fg = "#7a9f9f" }
+desc = { fg = "#585858" }
+hovered = { bg = "#0a0a0a", bold = true }
+footer = { fg = "#0a0a0a", bg = "#b0b0b0" }
+
+[filetype]
+rules = [
+  { mime = "image/*", fg = "#d8ad4c" },
+  { mime = "video/*", fg = "#a037b0" },
+  { mime = "audio/*", fg = "#a037b0" },
+  { mime = "application/zip", fg = "#cf6a4c" },
+  { mime = "application/gzip", fg = "#cf6a4c" },
+  { mime = "application/x-tar", fg = "#cf6a4c" },
+  { mime = "application/x-bzip", fg = "#cf6a4c" },
+  { mime = "application/x-bzip2", fg = "#cf6a4c" },
+  { mime = "application/x-7z-compressed", fg = "#cf6a4c" },
+  { mime = "application/x-rar", fg = "#cf6a4c" },
+  { name = "*/", fg = "#7a9f9f" },
+]

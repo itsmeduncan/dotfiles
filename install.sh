@@ -114,6 +114,14 @@ ln -sfn "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
 # Symlink yazi config
 ln -sfn "$DOTFILES_DIR/config/yazi" "$HOME/.config/yazi"
 
+# Symlink ghostty config
+mkdir -p "$HOME/.config/ghostty"
+ln -sfn "$DOTFILES_DIR/config/ghostty/config" "$HOME/.config/ghostty/config"
+
+# Symlink bat config
+mkdir -p "$HOME/.config/bat"
+ln -sfn "$DOTFILES_DIR/config/bat/config" "$HOME/.config/bat/config"
+
 # Symlink uv config
 ln -sfn "$DOTFILES_DIR/config/uv" "$HOME/.config/uv"
 

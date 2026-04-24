@@ -1,0 +1,4 @@
+# Dark theme that blends with vantablack terminal bg
+--theme="ansi"
+--style="numbers,changes,header"
+--paging=auto

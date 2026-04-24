@@ -1,0 +1,48 @@
+# Vantablack OLED theme — matches nvim/tmux (#000000 bg, #7a9f9f teal accent)
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+
+background = #000000
+foreground = #b0b0b0
+
+cursor-color = #7a9f9f
+cursor-style = block
+cursor-style-blink = false
+
+selection-background = #1a3a3a
+selection-foreground = #d0d0d0
+
+background-opacity = 1.0
+unfocused-split-opacity = 1.0
+
+# ANSI palette — muted, OLED-tuned
+palette = 0=#000000
+palette = 1=#cf6a4c
+palette = 2=#99ad6a
+palette = 3=#d8ad4c
+palette = 4=#597bc5
+palette = 5=#a037b0
+palette = 6=#7a9f9f
+palette = 7=#b0b0b0
+palette = 8=#3a3a3a
+palette = 9=#cf6a4c
+palette = 10=#99ad6a
+palette = 11=#fad07a
+palette = 12=#8197bf
+palette = 13=#c080d0
+palette = 14=#8fbfbf
+palette = 15=#e8e8d3
+
+window-padding-x = 8
+window-padding-y = 6
+window-padding-balance = true
+window-decoration = true
+
+mouse-hide-while-typing = true
+copy-on-select = clipboard
+shell-integration = zsh
+shell-integration-features = cursor,sudo,title
+
+macos-titlebar-style = hidden
+macos-option-as-alt = true

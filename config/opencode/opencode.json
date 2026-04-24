@@ -11,8 +11,8 @@
         "qwen/qwen3-coder-next": {
           "name": "Qwen3 Coder Next"
         },
-        "qwen3.6-35b-a3b": {
-          "name": "Qwen3.6 35B A3B"
+        "arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8": {
+          "name": "Qwen3.6 35B A3B MLX MXFP8"
         },
         "google/gemma-4-26b-a4ba": {
           "name": "Gemma 4 26B"
@@ -29,6 +29,6 @@
       }
     }
   },
-  "model": "lm-studio/qwen/qwen3-coder-next",
-  "small_model": "lm-studio/qwen/qwen3-coder-next"
+  "model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8",
+  "small_model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8"
 }
