@@ -35,7 +35,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Shell history:** atuin (SQLite-backed, fuzzy-searchable, per-directory filtering)
 - **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching), just (command runner), PostgreSQL (database)
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
-- **Cloud & infra:** awscli, terraform
+- **Cloud & infra:** awscli, terraform, gcloud-cli (Google Cloud CLI)
 - **Networking:** mosh, nmap
 - **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale
 - **Git workflow:** gh (GitHub CLI), pre-commit (hook framework), git-absorb (auto-fixup commits)
@@ -113,6 +113,9 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `scaffold.md` — Bootstrap new projects (Read, Grep, Glob, Bash, Write, Edit)
 - **`claude/skills/`** — Workflow skills:
   - `audit` — Explore and catalog a codebase area (runs in forked context)
+  - `code-review` — Review code for bugs, security issues, and quality (diff or full codebase)
+  - `deep-review` — Deep technical review: generates project context, runs multi-dimensional audit, produces actionable recommendations
+  - `doc-sync` — Keep all documentation surfaces up to date (README, CLAUDE.md, agents, skills, inline docs)
   - `fix-ci` — Run linters and type checkers locally, fix all errors
   - `fix-pipeline` — Diagnose and fix remote CI failures from GitHub Actions
   - `ship` — Lint, commit, push, and create PR in one shot
@@ -120,6 +123,39 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `sync-main` — Checkout main, pull latest, prune merged branches
   - `unstick` — Diagnose why a dev environment won't start
   - `cross-platform-review` — Deep cross-platform parity review for iOS/Android (runs in forked context)
+  - `investigate` — Systematic debugging with root cause investigation (four phases: investigate, diagnose, fix, verify)
+  - `qa` — Systematically QA test a web application and fix bugs found
+  - `qa-only` — Report-only QA testing: produces a bug report without fixing anything
+  - `retro` — Weekly engineering retrospective: analyzes commit history, work patterns, team dynamics
+  - `health` — Code quality dashboard: runs type checker, linter, test runner, dead code detector; scores and tracks trends
+  - `document-release` — Post-ship documentation update: reads all project docs, cross-references with code
+  - `office-hours` — YC Office Hours mode: startup diagnostics via forcing questions, or engineering office hours
+  - `plan-ceo-review` — CEO/founder-mode plan review: rethink the problem, find the 10-star product
+  - `plan-eng-review` — Eng manager-mode plan review: lock in architecture, execution plan, test strategy
+  - `plan-design-review` — Designer's eye plan review: interactive design critique before building
+  - `plan-devex-review` — Interactive developer experience plan review: explores dev personas, workflow gaps
+  - `design-consultation` — Design consultation: understands your product, researches the landscape, proposes solutions
+  - `design-review` — Designer's eye QA: finds visual inconsistency, spacing issues, hierarchy problems
+  - `design-html` — Design finalization: generates production-quality HTML/CSS from design specs
+  - `design-shotgun` — Generate multiple AI design variants, open a comparison board for evaluation
+  - `benchmark` — Performance regression detection: establishes baselines, detects regressions
+  - `autoplan` — Auto-review pipeline: reads CEO, design, eng, and DX review skills into one plan
+  - `checkpoint` — Save and resume working state: captures git state, decisions made, progress
+  - `freeze` — Restrict file edits to a specific directory for the session (safety guardrail)
+  - `unfreeze` — Clear the freeze boundary, allowing edits to all directories
+  - `careful` — Safety guardrails for destructive commands: warns before rm -rf, DROP TABLE, etc.
+  - `guard` — Full safety mode: destructive command warnings + directory-scoped edits
+  - `canary` — Post-deploy canary monitoring: watches the live app for console errors, regressions
+  - `cso` — Chief Security Officer mode: infrastructure-first security audit, secrets archaeology
+  - `codex` — OpenAI Codex CLI wrapper: code review, plan review, adversarial challenge
+  - `browse` — Headless browser for QA testing and site dogfooding: navigate, interact, screenshot
+  - `open-gstack-browser` — Launch GStack Browser with sidebar extension baked in
+  - `connect-chrome` — Connect to an existing Chrome/Chromium browser session for browsing
+  - `setup-browser-cookies` — Import cookies from real Chromium into headless browse session
+  - `land-and-deploy` — Land and deploy: merges PR, waits for CI/deploy, verifies deployment
+  - `setup-deploy` — Configure deployment settings for land-and-deploy workflow
+  - `gstack-upgrade` — Upgrade gstack to the latest version (global or vendored)
+  - `learn` — Manage project learnings: review, search, prune, and export gstack learnings
 - **`claude/statusline.sh`** — Custom status line script (shows directory, git branch, model, context usage, rate limits).
 - **`claude/hooks/`** — Lifecycle hooks:
   - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
