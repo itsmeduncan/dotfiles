@@ -11,6 +11,9 @@
         "qwen/qwen3-coder-next": {
           "name": "Qwen3 Coder Next"
         },
+        "qwen/qwen3-coder-next-8bit": {
+          "name": "Qwen3 Coder Next 8bit"
+        },
         "arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8": {
           "name": "Qwen3.6 35B A3B MLX MXFP8"
         },

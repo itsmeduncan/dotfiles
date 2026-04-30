@@ -7,6 +7,33 @@ plugins=(brew mise direnv gh fzf zoxide uv terraform aws docker-compose)
 source $ZSH/oh-my-zsh.sh
 source "$(brew --prefix)/opt/spaceship/spaceship.zsh"
 
+SPACESHIP_PROMPT_ORDER=(dir git node docker exec_time line_sep char)
+SPACESHIP_PROMPT_ADD_NEWLINE=true
+SPACESHIP_CHAR_SYMBOL="❯ "
+SPACESHIP_DIR_TRUNC=2
+SPACESHIP_GIT_STATUS_PREFIX=" ["
+SPACESHIP_GIT_STATUS_SUFFIX="]"
+
+# Low-profile context: dim, no icons, only show when relevant
+SPACESHIP_NODE_PREFIX=" "
+SPACESHIP_NODE_SUFFIX=""
+SPACESHIP_NODE_SYMBOL=""
+SPACESHIP_NODE_COLOR="240"
+SPACESHIP_NODE_DEFAULT_VERSION=""
+
+SPACESHIP_DOCKER_PREFIX=" "
+SPACESHIP_DOCKER_SUFFIX=""
+SPACESHIP_DOCKER_SYMBOL="d:"
+SPACESHIP_DOCKER_COLOR="240"
+SPACESHIP_DOCKER_VERBOSE=false
+SPACESHIP_DOCKER_CONTEXT_SHOW=false
+
+SPACESHIP_EXEC_TIME_PREFIX=" "
+SPACESHIP_EXEC_TIME_SUFFIX=""
+SPACESHIP_EXEC_TIME_COLOR="240"
+SPACESHIP_EXEC_TIME_ELAPSED=5
+SPACESHIP_EXEC_TIME_SHOW=true
+
 source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 

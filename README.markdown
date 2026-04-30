@@ -17,7 +17,7 @@ The install script will:
   * **Core:** neovim, mise, eza, bat, ripgrep, fd, zoxide, fzf, git-delta, direnv, tmux, gh, pre-commit
   * **Shell:** spaceship, zsh-autosuggestions, zsh-syntax-highlighting, atuin
   * **Dev tools:** uv, pnpm, lazygit, jq, yq, watchman, git-absorb, yazi, just, hyperfine, dust, bottom, tokei, postgresql
-  * **Cloud & infra:** awscli, terraform
+  * **Cloud & infra:** awscli, terraform, gcloud-cli (Google Cloud CLI, installed as cask)
   * **Networking:** mosh, nmap
   * **Additional tools:** wget, tldr, opencode
   * **Mobile:** cocoapods, swiftlint

@@ -42,6 +42,7 @@ casks=(
   notion
   tailscale
   lm-studio
+  gcloud-cli
 )
 
 # Install Homebrew if missing
@@ -154,6 +155,9 @@ fi
 # Install runtimes via mise
 eval "$(mise activate bash)"
 mise use -g node@lts python@3 ruby@3 go@latest 2>/dev/null || true
+
+# Install global Python packages via mise
+mise pip install pidev 2>/dev/null || true
 
 # Install Android development tools via mise
 mise install java@temurin-17 2>/dev/null || true
