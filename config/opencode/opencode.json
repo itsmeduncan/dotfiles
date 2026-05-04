@@ -32,6 +32,11 @@
       }
     }
   },
+  "skills": {
+    "paths": [
+      "/Users/duncan/.agents/skills"
+    ]
+  },
   "model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8",
   "small_model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8"
 }

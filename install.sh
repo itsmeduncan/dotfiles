@@ -147,6 +147,12 @@ if [ ! -f "$HOME/.local/share/opencode/auth.json" ]; then
 EOF
 fi
 
+# Shared agent skills. Claude, Codex, OpenCode, Pi, and other agents should
+# treat this as the canonical global skill tree.
+mkdir -p "$HOME/.agents" "$HOME/.pi/agent"
+ln -sfn "$DOTFILES_DIR/agents/skills" "$HOME/.agents/skills"
+ln -sfn "$DOTFILES_DIR/agents/skills" "$HOME/.pi/agent/skills"
+
 # Install oh-my-zsh if missing
 if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended

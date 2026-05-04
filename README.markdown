@@ -27,6 +27,7 @@ The install script will:
 * Symlink all dotfiles to `$HOME`
 * Symlink config directories (`nvim`, `yazi`, `uv`, `opencode`) to `~/.config/`, `pnpm` to `~/Library/Preferences/`
 * Symlink `bin/` utilities to `~/.dotfiles/bin/`
+* Symlink shared agent skills from `agents/skills/` to `~/.agents/skills` and `~/.pi/agent/skills`
 * Install [oh-my-zsh](https://github.com/ohmyzsh/ohmyzsh) if missing
 * Install runtimes via [mise](https://mise.jdx.dev) (Node LTS, Python 3, Ruby 3, Go, Java Temurin 17)
 * Install [Rust](https://rustup.rs) via rustup if missing
@@ -36,3 +37,13 @@ The install script will:
 * Set macOS productivity defaults (key repeat, Finder, Dock)
 * Enable macOS application firewall
 * Symlink Claude Code config (`~/.claude/`)
+
+## Agent skills
+
+Global cross-agent skills live in `agents/skills/`.
+
+Claude consumes them through `claude/skills -> ../agents/skills`.
+Codex discovers them through `~/.agents/skills`. OpenCode is configured
+with `skills.paths` in `config/opencode/opencode.json`. Pi gets the
+same tree at `~/.pi/agent/skills` for agents that know to inspect a
+local skills directory.
