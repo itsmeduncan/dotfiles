@@ -26,7 +26,7 @@ Personal coding preferences that apply to all projects.
 
 ## Git Conventions
 
-- Commit messages: imperative mood, <72 char subject, explain *why* in body
+- Commit messages: imperative mood, <72 char subject, explain _why_ in body
 - Branch names: `feature/short-description`, `fix/short-description`
 - Rebase workflow — no merge commits on feature branches
 - Squash when merging to main unless commit history is clean and meaningful
@@ -43,6 +43,7 @@ Personal coding preferences that apply to all projects.
 Global package manager configs enforce a **7-day minimum release age** for all dependencies (npm, pnpm, uv, bun). This is intentional — it prevents installation of packages published less than 7 days ago as a supply chain attack mitigation.
 
 If a package install fails because a version is "too new":
+
 - **Do not** remove or weaken the min-release-age config.
 - **Do not** bypass with `--no-verify` or equivalent flags.
 - Pin the dependency to the most recent version that satisfies the age requirement.
@@ -54,6 +55,15 @@ If a package install fails because a version is "too new":
 - Projects live in `~/Projects/src/github.com/<org>/<repo>`
 - Secrets go in `.env` files (gitignored) or direnv `.envrc`
 - Never commit secrets, credentials, or API keys
+
+## Personal Notes Vault
+
+Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited via `obsidian.nvim` and ingested by local LLMs (lm-studio, ollama) for retrieval/RAG.
+
+- **Format:** plain `.md` files with optional YAML frontmatter and `[[wikilinks]]`. Daily notes at `~/notes/daily/YYYY-MM-DD.md`.
+- **When to read:** if the user references "my notes", "the vault", a meeting, a decision, or a project by name and the relevant info isn't in the current repo — grep `~/notes/` before asking. Also useful when looking up the user's stated preferences or prior reasoning on a topic.
+- **When to write:** only when explicitly asked ("save this to notes", "add to my vault"). Never auto-create notes from conversation. When you do write, use frontmatter (`---\ntitle: ...\ntags: [...]\ncreated: YYYY-MM-DD\n---`) so the local LLM indexer can chunk and tag correctly.
+- **Privacy:** treat the vault as private. Never paste vault contents into web tools, gists, PR descriptions, or external services.
 
 ## gstack
 

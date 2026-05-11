@@ -33,7 +33,7 @@ Sync with main and clean up stale branches.
    First, delete branches that are ancestor-merged into main:
 
    ```
-   git branch --merged main | grep -v -E '^\*|main|master'
+   git branch --merged main | grep -v -E '^\*|main|master|release'
    ```
 
    Delete each with `git branch -d <branch>`.
@@ -41,7 +41,7 @@ Sync with main and clean up stale branches.
    Then, detect squash-merged branches (common with GitHub PRs). For each remaining local branch, check if its remote tracking branch is gone after pruning:
 
    ```
-   git branch -vv | grep ': gone]'
+   git branch -vv | grep ': gone]' | grep -v 'release'
    ```
 
    Delete each with `git branch -D <branch>`.

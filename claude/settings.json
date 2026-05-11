@@ -34,7 +34,8 @@
       "Bash(xcodebuild *)",
       "Bash(xcodegen *)",
       "Bash(git-cliff *)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "hooks": {
     "PostToolUse": [
@@ -56,8 +57,14 @@
   },
   "enabledPlugins": {
     "swift-lsp@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true
+    "frontend-design@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true
   },
+  "extraKnownMarketplaces": {},
   "effortLevel": "medium",
-  "theme": "dark-ansi"
+  "theme": "dark-ansi",
+  "skipAutoPermissionPrompt": true
 }

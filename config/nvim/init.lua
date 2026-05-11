@@ -405,6 +405,41 @@ require("lazy").setup({
     ft = "markdown",
     opts = {},
   },
+
+  -- ── Personal Wiki / Notes ──────────────────────────────────────────
+  -- Obsidian-style vault at ~/notes — plain markdown with [[wikilinks]],
+  -- frontmatter, and daily notes. Format is directly ingestible by local
+  -- LLMs (lm-studio, ollama, RAG tools) with no conversion.
+
+  {
+    "epwalsh/obsidian.nvim",
+    version = "*",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    event = {
+      "BufReadPre " .. vim.fn.expand("~") .. "/notes/*.md",
+      "BufNewFile " .. vim.fn.expand("~") .. "/notes/*.md",
+    },
+    cmd = { "ObsidianNew", "ObsidianOpen", "ObsidianToday", "ObsidianSearch", "ObsidianQuickSwitch" },
+    keys = {
+      { "<leader>ww", "<cmd>ObsidianQuickSwitch<cr>", desc = "Notes: quick switch" },
+      { "<leader>wn", "<cmd>ObsidianNew<cr>", desc = "Notes: new note" },
+      { "<leader>wt", "<cmd>ObsidianToday<cr>", desc = "Notes: today's daily" },
+      { "<leader>wf", "<cmd>ObsidianSearch<cr>", desc = "Notes: grep vault" },
+      { "<leader>wb", "<cmd>ObsidianBacklinks<cr>", desc = "Notes: backlinks" },
+      { "<leader>wo", "<cmd>ObsidianOpen<cr>", desc = "Notes: open in Obsidian app" },
+    },
+    opts = {
+      workspaces = {
+        { name = "notes", path = "~/notes" },
+      },
+      daily_notes = {
+        folder = "daily",
+        date_format = "%Y-%m-%d",
+      },
+      completion = { nvim_cmp = false, blink = true, min_chars = 2 },
+      ui = { enable = false },
+    },
+  },
 }, {
   install = { colorscheme = { "jellybeans" } },
   checker = { enabled = false },

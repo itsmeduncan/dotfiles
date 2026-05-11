@@ -21,7 +21,8 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Ghostty:** `config/ghostty/config` (terminal config — symlinked to `~/.config/ghostty/config`)
 - **Opencode:** `config/opencode/opencode.json` (opencode CLI agent config — symlinked to `~/.config/opencode/`)
 - **Shared skills:** `agents/skills/` (workflow skills shared across all AI tools — symlinked to `~/.agents/skills`, `~/.pi/agent/skills`, and `~/.claude/skills`). Two git submodules (`gstack/`, `greptile/`) provide the bulk; sibling repo `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/` is mounted via top-level symlinks for marketing/ops skills; the rest are local.
-- **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions, plugins, hooks), `claude/agents/` (reusable agents), `claude/rules/` (path-scoped rules), `claude/hooks/` (lifecycle hooks), `claude/statusline.sh`. `claude/skills` is a symlink → `../agents/skills`.
+- **Claude Code:** `claude/CLAUDE.md`, `claude/settings.json`, `claude/agents/`, `claude/rules/`, `claude/hooks/`, `claude/statusline.sh` (`claude/skills` is a symlink → `../agents/skills`).
+- **Codex / opencode:** profile-wide instructions for those tools live outside this repo (`~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md`). Both consume the shared `agents/skills/` via the symlinks above.
 - **Package managers:** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Scripts:** `bin/weather`, `bin/battery` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar)
 - **Other:** `gemrc`, `psqlrc`
@@ -98,37 +99,37 @@ Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 - Quick Claude Code pane: `prefix C` (30% right split)
 - Vi copy mode with pbcopy integration
 
-## Claude Code
+## AI Agent Configs
+
+This repo holds Claude Code config and a shared skills directory. Codex and opencode read profile-wide instructions from outside the repo but consume the same shared skills.
+
+### Claude Code (`claude/`)
 
 Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.sh`.
 
-- **`claude/CLAUDE.md`** — Profile-wide instructions (coding preferences, conventions). Universal rules loaded every session.
-- **`claude/settings.json`** — Pre-approved tool permissions, `defaultMode: auto` (continuous execution), status line, hooks (auto-format on Edit/Write), `effortLevel: medium`, `theme: dark-ansi`, and enabled plugins (`swift-lsp`, `frontend-design`, `superpowers`, `skill-creator`, `feature-dev`, `claude-code-setup`).
-- **`claude/rules/`** — Path-specific rules loaded only when working with matching files:
-  - `python.md` — Python conventions (uv, ruff, pyright, pytest). Triggers on `*.py`, `pyproject.toml`
-  - `typescript.md` — TypeScript/Node conventions (pnpm, prettier, eslint). Triggers on `*.ts`, `*.tsx`, `package.json`
-  - `swift.md` — iOS conventions (SwiftUI, swiftlint, swiftformat). Triggers on `*.swift`
-  - `kotlin.md` — Android conventions (Compose, ktlint, Gradle). Triggers on `*.kt`, `*.gradle.kts`
-  - `terraform.md` — Infra conventions. Triggers on `*.tf`
-- **`claude/agents/`** — Reusable agents with tool restrictions:
-  - `review.md` — Code review (read-only: Read, Grep, Glob, Bash)
-  - `test.md` — Write tests (Read, Grep, Glob, Bash, Edit, Write; high effort)
-  - `debug.md` — Diagnose and fix bugs (Read, Grep, Glob, Bash, Edit; high effort)
-  - `pr.md` — Create pull requests (read-only: Read, Grep, Glob, Bash)
-  - `scaffold.md` — Bootstrap new projects (Read, Grep, Glob, Bash, Write, Edit)
-- **`claude/skills/` → `agents/skills/`** (symlink) — Workflow skills shared across Claude, Codex, opencode, and pi. The directory is a mix of vendored submodules and symlinked sibling repos. Use `ls agents/skills/` for the live inventory. Categories:
-  - **Local skills** (authored in this repo): `audit`, `code-review`, `deep-review`, `doc-sync`, `sync-docs`, `sync-main`, `fix-ci`, `fix-pipeline`, `ship`, `release`, `unstick`, `cross-platform-review`, `investigate`.
-  - **Vendored gstack** (`agents/skills/gstack/`, git submodule) — fast headless browser plus plan/review/QA/ops/safety skills. Top-level entries (`browse`, `qa`, `qa-only`, `plan-*`, `design-*`, `codex`, `careful`, `freeze`, `guard`, `canary`, `cso`, `retro`, `health`, `document-release`, `office-hours`, `land-and-deploy`, `setup-deploy`, `setup-browser-cookies`, `connect-chrome`, `open-gstack-browser`, `pair-agent`, `benchmark`, `autoplan`, `checkpoint`, `gstack-upgrade`, `learn`, `devex-review`) re-expose individual gstack skills via `SKILL.md` symlinks for direct invocation.
-  - **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `greploop` and `check-pr` (PR/MR/CL automation against Greptile reviews) re-exposed at top level via symlinks.
-  - **Sibling-repo marketing/ops skills** (symlinked from `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/`): `autoresearch`, `content-ops`, `conversion-ops`, `deck-generator`, `eval`, `finance-ops`, `growth-engine`, `outbound-engine`, `podcast-ops`, `revenue-intelligence`, `sales-pipeline`, `sales-playbook`, `security`, `seo-ops`, `team-ops`, `telemetry`, `x-longform-post`, `yt-competitive-analysis`.
-- **`claude/statusline.sh`** — Custom status line script (shows directory, git branch, model, context usage, rate limits).
-- **`claude/hooks/`** — Lifecycle hooks:
-  - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
+- **`claude/CLAUDE.md`** — Profile-wide instructions (coding preferences, conventions).
+- **`claude/settings.json`** — Pre-approved tool permissions, `defaultMode: auto`, status line, hooks (auto-format on Edit/Write), `effortLevel: medium`, `theme: dark-ansi`, plugins (`swift-lsp`, `frontend-design`, `superpowers`, `skill-creator`, `feature-dev`, `claude-code-setup`).
+- **`claude/rules/`** — Path-scoped rules: `python.md`, `typescript.md`, `swift.md`, `kotlin.md`, `terraform.md`.
+- **`claude/agents/`** — Reusable agents with tool restrictions: `review.md`, `test.md`, `debug.md`, `pr.md`, `scaffold.md`.
+- **`claude/hooks/auto-format.sh`** — PostToolUse hook (ruff, prettier, swiftformat, ktlint).
+- **`claude/statusline.sh`** — Status line (directory, git branch, model, context usage, rate limits).
+- **`claude/skills`** — Symlink → `../agents/skills` (the shared directory below).
+
+### Shared skills (`agents/skills/`)
+
+The canonical skills directory shared across Claude, Codex, opencode, and pi. Symlinked into `~/.claude/skills`, `~/.agents/skills`, and `~/.pi/agent/skills` by `install.sh`. Categories:
+
+- **Local skills** (authored in this repo): `audit`, `code-review`, `deep-review`, `doc-sync`, `sync-docs`, `sync-main`, `fix-ci`, `fix-pipeline`, `ship`, `release`, `unstick`, `cross-platform-review`, `investigate`.
+- **Vendored gstack** (`agents/skills/gstack/`, git submodule) — fast headless browser plus plan/review/QA/ops/safety skills. Top-level entries (`browse`, `qa`, `qa-only`, `plan-*`, `design-*`, `codex`, `careful`, `freeze`, `guard`, `canary`, `cso`, `retro`, `health`, `document-release`, `office-hours`, `land-and-deploy`, `setup-deploy`, `setup-browser-cookies`, `connect-chrome`, `open-gstack-browser`, `pair-agent`, `benchmark`, `autoplan`, `checkpoint`, `gstack-upgrade`, `learn`, `devex-review`) re-expose individual gstack skills via `SKILL.md` symlinks.
+- **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `greploop` and `check-pr` re-exposed at top level.
+- **Sibling-repo marketing/ops skills** (symlinked from `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/`): `autoresearch`, `content-ops`, `conversion-ops`, `deck-generator`, `eval`, `finance-ops`, `growth-engine`, `outbound-engine`, `podcast-ops`, `revenue-intelligence`, `sales-pipeline`, `sales-playbook`, `security`, `seo-ops`, `team-ops`, `telemetry`, `x-longform-post`, `yt-competitive-analysis`.
+
+Use `ls agents/skills/` for the live inventory.
 
 ## Conventions
 
 - No secrets in dotfiles. Use `~/.bootstrap/env.sh` or direnv for secrets.
-- AI tool artifacts (`.claude/`, `.cursor/`, `.aider*`, `.env`) are globally gitignored.
+- AI tool artifacts (`.claude/`, `.codex/`, `.cursor/`, `.aider*`, `.env`) are globally gitignored.
 - Editor is `nvim` everywhere (shell, gitconfig). `vim` and `vi` are aliased to `nvim`.
 - `.editorconfig` enforces 2-space indent (4 for Python/Go/Swift/Kotlin), LF line endings, UTF-8.
 - Projects live in `~/Projects/src/github.com/<org>/<repo>`.
