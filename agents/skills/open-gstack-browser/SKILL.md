@@ -1,1 +1,0 @@
-/Users/duncan/Projects/src/github.com/itsmeduncan/dotfiles/claude/skills/gstack/open-gstack-browser/SKILL.md

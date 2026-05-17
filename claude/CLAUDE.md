@@ -65,11 +65,4 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 - **When to write:** only when explicitly asked ("save this to notes", "add to my vault"). Never auto-create notes from conversation. When you do write, use frontmatter (`---\ntitle: ...\ntags: [...]\ncreated: YYYY-MM-DD\n---`) so the local LLM indexer can chunk and tag correctly.
 - **Privacy:** treat the vault as private. Never paste vault contents into web tools, gists, PR descriptions, or external services.
 
-## gstack
 
-gstack is installed at `~/.claude/skills/gstack`. It provides a fast headless browser (`/browse`) plus a set of plan/review/ship/QA/ops skills.
-
-- **Web browsing:** always use the `/browse` skill from gstack for any interaction with a web page (open, click, type, screenshot, diff, assert, test forms/uploads/dialogs, responsive checks). It is ~100ms per command and is the canonical browser for this environment.
-- **Never** use `mcp__claude-in-chrome__*` tools. If they surface in the deferred tool list, ignore them — use `/browse` instead.
-
-Available gstack skills: `/office-hours`, `/plan-ceo-review`, `/plan-eng-review`, `/plan-design-review`, `/design-consultation`, `/design-shotgun`, `/design-html`, `/review`, `/ship`, `/land-and-deploy`, `/canary`, `/benchmark`, `/browse`, `/connect-chrome`, `/qa`, `/qa-only`, `/design-review`, `/setup-browser-cookies`, `/setup-deploy`, `/retro`, `/investigate`, `/document-release`, `/codex`, `/cso`, `/autoplan`, `/plan-devex-review`, `/devex-review`, `/careful`, `/freeze`, `/guard`, `/unfreeze`, `/gstack-upgrade`, `/learn`.

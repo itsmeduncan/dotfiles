@@ -1,1 +1,0 @@
-/Users/duncan/Projects/src/github.com/itsmeduncan/dotfiles/claude/skills/gstack/pair-agent/SKILL.md

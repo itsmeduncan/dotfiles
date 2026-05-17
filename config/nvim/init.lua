@@ -36,13 +36,15 @@ vim.opt.wildmenu = true
 vim.opt.wildignore = "*.pyc"
 vim.opt.termguicolors = true
 
+-- Default indent: 2 spaces (matches .editorconfig [*] rule)
+-- Language-specific overrides (4 for Python/Go/Swift/Kotlin) via FileType autocommands below
 vim.opt.backspace = "2"
 vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
+vim.opt.shiftwidth = 2
 vim.opt.cindent = true
 vim.opt.smarttab = true
-vim.opt.softtabstop = 4
-vim.opt.tabstop = 4
+vim.opt.softtabstop = 2
+vim.opt.tabstop = 2
 
 vim.opt.showmatch = true
 vim.opt.ignorecase = true
@@ -132,15 +134,19 @@ require("lazy").setup({
     cmd = "Mason",
     opts = {},
   },
+  -- Native Neovim 0.10+ LSP (replaces deprecated mason-lspconfig)
   {
-    "williamboman/mason-lspconfig.nvim",
-    dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+    "neovim/nvim-lspconfig",
+    dependencies = { "williamboman/mason.nvim" },
     event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      ensure_installed = { "pyright", "ts_ls", "kotlin_language_server", "lua_ls" },
-    },
-    config = function(_, opts)
-      require("mason-lspconfig").setup(opts)
+    config = function()
+      -- Ensure servers are installed via Mason
+      local mason_registry = require("mason-registry")
+      for _, server in ipairs({ "pyright", "ts_ls", "kotlin_language_server", "lua_ls" }) do
+        if not mason_registry.is_installed(server) then
+          mason_registry.get_package(server):install()
+        end
+      end
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
 
@@ -490,14 +496,15 @@ autocmd("LspAttach", {
   end,
 })
 
--- Smaller indents for web files
+-- Language-specific indents (matches .editorconfig)
+-- Default is 2; these set 4 for Python/Go/Swift/Kotlin
 autocmd("FileType", {
-  group = augroup("web_indent", { clear = true }),
-  pattern = { "css", "html", "javascript", "typescript", "typescriptreact", "javascriptreact" },
+  group = augroup("lang_indent", { clear = true }),
+  pattern = { "python", "go", "swift", "kotlin" },
   callback = function()
-    vim.opt_local.shiftwidth = 2
-    vim.opt_local.tabstop = 2
-    vim.opt_local.softtabstop = 2
+    vim.opt_local.shiftwidth = 4
+    vim.opt_local.tabstop = 4
+    vim.opt_local.softtabstop = 4
   end,
 })
 

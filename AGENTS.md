@@ -20,7 +20,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Bat:** `config/bat/config` (theme + style — symlinked to `~/.config/bat/config`)
 - **Ghostty:** `config/ghostty/config` (terminal config — symlinked to `~/.config/ghostty/config`)
 - **Opencode:** `config/opencode/opencode.json` (opencode CLI agent config — symlinked to `~/.config/opencode/`)
-- **Shared skills:** `agents/skills/` (workflow skills shared across all AI tools — symlinked to `~/.agents/skills`, `~/.pi/agent/skills`, and `~/.claude/skills`). Two git submodules (`gstack/`, `greptile/`) provide the bulk; sibling repo `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/` is mounted via top-level symlinks for marketing/ops skills; the rest are local.
+- **Shared skills:** `agents/skills/` (workflow skills shared across all AI tools — symlinked to `~/.agents/skills`, `~/.pi/agent/skills`, and `~/.claude/skills`). One git submodule (`greptile/`) provides `check-pr`; sibling repo `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/` is mounted via top-level symlinks for marketing/ops skills; the rest are local.
 - **Claude Code:** `claude/CLAUDE.md`, `claude/settings.json`, `claude/agents/`, `claude/rules/`, `claude/hooks/`, `claude/statusline.sh` (`claude/skills` is a symlink → `../agents/skills`).
 - **Codex / opencode:** profile-wide instructions for those tools live outside this repo (`~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md`). Both consume the shared `agents/skills/` via the symlinks above.
 - **Package managers:** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
@@ -64,7 +64,7 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 
 - Plugin manager: lazy.nvim (auto-bootstrapped)
 - Colorscheme: jellybeans.vim
-- LSP: Mason + mason-lspconfig (auto-install), nvim-lspconfig — pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
+- LSP: Mason (auto-install) + native vim.lsp — pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
 - Completion: blink.cmp
 - Fuzzy finder: fzf-lua (`<C-p>` files, `<leader>f` grep, `<leader>b` buffers)
 - Treesitter: syntax highlighting, text objects
@@ -120,8 +120,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
 The canonical skills directory shared across Claude, Codex, opencode, and pi. Symlinked into `~/.claude/skills`, `~/.agents/skills`, and `~/.pi/agent/skills` by `install.sh`. Categories:
 
 - **Local skills** (authored in this repo): `audit`, `code-review`, `deep-review`, `doc-sync`, `sync-docs`, `sync-main`, `fix-ci`, `fix-pipeline`, `ship`, `release`, `unstick`, `cross-platform-review`, `investigate`.
-- **Vendored gstack** (`agents/skills/gstack/`, git submodule) — fast headless browser plus plan/review/QA/ops/safety skills. Top-level entries (`browse`, `qa`, `qa-only`, `plan-*`, `design-*`, `codex`, `careful`, `freeze`, `guard`, `canary`, `cso`, `retro`, `health`, `document-release`, `office-hours`, `land-and-deploy`, `setup-deploy`, `setup-browser-cookies`, `connect-chrome`, `open-gstack-browser`, `pair-agent`, `benchmark`, `autoplan`, `checkpoint`, `gstack-upgrade`, `learn`, `devex-review`) re-expose individual gstack skills via `SKILL.md` symlinks.
-- **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `greploop` and `check-pr` re-exposed at top level.
+- **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `check-pr` re-exposed at top level.
 - **Sibling-repo marketing/ops skills** (symlinked from `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/`): `autoresearch`, `content-ops`, `conversion-ops`, `deck-generator`, `eval`, `finance-ops`, `growth-engine`, `outbound-engine`, `podcast-ops`, `revenue-intelligence`, `sales-pipeline`, `sales-playbook`, `security`, `seo-ops`, `team-ops`, `telemetry`, `x-longform-post`, `yt-competitive-analysis`.
 
 Use `ls agents/skills/` for the live inventory.

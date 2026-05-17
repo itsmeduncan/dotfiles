@@ -1,5 +1,6 @@
-export EDITOR='nvim'
-export VISUAL='nvim'
+# Guard: only set EDITOR if nvim is actually on PATH (install.sh symlinks zshrc
+# before Homebrew packages are installed, so a mid-install shell restart would break)
+command -v nvim &>/dev/null && export EDITOR='nvim' && export VISUAL='nvim'
 
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
@@ -45,7 +46,10 @@ setopt autopushd
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
-export JAVA_HOME=$(mise where java 2>/dev/null)
+# Only set JAVA_HOME if mise has java installed (avoids empty-string pitfalls)
+if mise where java >/dev/null 2>&1; then
+  export JAVA_HOME=$(mise where java)
+fi
 
 # fzf customizations (plugin handles init and FZF_DEFAULT_COMMAND)
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
@@ -55,9 +59,13 @@ export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 {}'"
 # atuin - shell history
 eval "$(atuin init zsh)"
 
-# Update tmux window name with project:branch
+# Update tmux window name with project:branch (throttled to avoid git latency on slow FS)
 _tmux_window_name() {
   [[ -n "$TMUX" ]] || return
+  # Skip if PWD hasn't changed since last run
+  [[ "$PWD" == "$_TMUX_LAST_PWD" ]] && return
+  _TMUX_LAST_PWD="$PWD"
+
   local repo branch name
   if repo=$(git rev-parse --show-toplevel 2>/dev/null); then
     branch=$(git symbolic-ref --short HEAD 2>/dev/null)
@@ -65,7 +73,7 @@ _tmux_window_name() {
   else
     name="${PWD:t}"
   fi
-  tmux rename-window "$name"
+  tmux rename-window "$name" 2>/dev/null
 }
 add-zsh-hook precmd _tmux_window_name
 
@@ -77,6 +85,7 @@ alias lg="lazygit"
 alias top="btm"
 alias du="dust"
 alias dc="docker compose"
+# zoxide (already installed) handles this better: `z p` auto-learns the path
 alias p="cd ~/Projects/src/github.com"
 
 [[ -s "$HOME/.bootstrap/env.sh" ]] && . "$HOME/.bootstrap/env.sh"

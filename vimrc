@@ -1,3 +1,7 @@
+# DEPRECATED: This legacy Vim config is kept only as a fallback for environments
+# where nvim isn't available. Primary editor is Neovim (config/nvim/init.lua).
+# vi and vim are aliased to nvim in zshrc. Consider removing this file entirely
+# if you never use Vim without the alias.
 "  Legacy Vim configuration (primary editor is Neovim)
 
 

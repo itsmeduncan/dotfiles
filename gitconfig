@@ -16,10 +16,16 @@
 	suf = submodule update --init --recursive --force
 	undo = reset --soft HEAD~1
 	amend = commit --amend --no-edit
-	wip = !git add -A && git commit -m 'wip'
+	wip = !git add -u && git commit -m 'wip'  # uses add -u (tracked only) to avoid committing secrets/artifacts
 	cleanup = !git branch --merged main | grep -v '\\*\\|main' | xargs -n 1 git branch -d
 	absorb = absorb --and-rebase
 	lg = log --oneline --graph --decorate -20
+# ---------------------------------------------------------------------------
+# WARNING: Personal identity — forkers MUST change these or use includeIf
+# with a local ~/.gitconfig.personal. See git help config.
+# ---------------------------------------------------------------------------
+# WARNING: Personal identity — forkers MUST change name/email or use
+# includeIf with a local gitconfig (see `git help config`).
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@users.noreply.github.com

@@ -1,7 +1,8 @@
 #!/bin/sh
 cache="/tmp/tmux_weather"
-# Refresh every 30 minutes
-if [ ! -f "$cache" ] || [ $(($(date +%s) - $(stat -f %m "$cache"))) -gt 1800 ]; then
+tmp_cache="/tmp/tmux_weather.tmp.$$"
+# Refresh every 30 minutes; atomic write (write to tmp, then mv) avoids races
+if [ ! -f "$cache" ] || [ $(($(date +%s) - $(stat -f %m "$cache" 2>/dev/null))) -gt 1800 ]; then
   loc=$(curl -s --max-time 3 'https://ipinfo.io/loc' 2>/dev/null)
   if [ -n "$loc" ]; then
     lat=${loc%%,*}
@@ -27,8 +28,10 @@ if [ ! -f "$cache" ] || [ $(($(date +%s) - $(stat -f %m "$cache"))) -gt 1800 ]; 
         96|99)     icon="⛈️" ;;   # Thunderstorm with hail
         *)         icon="🌡️" ;;  # Fallback
       esac
-      printf "%s %.0f°F" "$icon" "$temp" > "$cache"
+      printf "%s %.0f°F" "$icon" "$temp" > "$tmp_cache"
+      mv -f "$tmp_cache" "$cache"
     fi
   fi
+  rm -f "$tmp_cache"
 fi
 cat "$cache" 2>/dev/null

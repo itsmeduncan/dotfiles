@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -87,13 +87,19 @@ if ! brew list --cask font-meslo-lg-nerd-font &>/dev/null; then
   brew install --cask font-meslo-lg-nerd-font
 fi
 
-# SSH key
+# SSH key (unencrypted — convenient but less secure; use a passphrase for sensitive machines)
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
-  mkdir -p "$HOME/.ssh"
-  ssh-keygen -t ed25519 -C "$(git config user.email)" -N "" -f "$HOME/.ssh/id_ed25519"
-  eval "$(ssh-agent -s)"
-  ssh-add "$HOME/.ssh/id_ed25519"
-  echo "Add your SSH key to GitHub: pbcopy < ~/.ssh/id_ed25519.pub"
+  echo "No SSH key found. Generate one? (y/N)"
+  read -r ssh_answer
+  if [ "$ssh_answer" = "y" ] || [ "$ssh_answer" = "Y" ]; then
+    mkdir -p "$HOME/.ssh"
+    ssh-keygen -t ed25519 -C "$(git config user.email 2>/dev/null || echo 'user@host')" -N "" -f "$HOME/.ssh/id_ed25519"
+    eval "$(ssh-agent -s)"
+    ssh-add "$HOME/.ssh/id_ed25519"
+    echo "Add your SSH key to GitHub: pbcopy < ~/.ssh/id_ed25519.pub"
+  else
+    echo "Skipping SSH key generation."
+  fi
 fi
 
 # Symlink dotfiles
@@ -170,6 +176,8 @@ mise install java@temurin-17 2>/dev/null || true
 mise use -g java@temurin-17 2>/dev/null || true
 
 # Install Android SDK via Homebrew (Android Studio not required)
+# Note: sdkmanager --licenses is auto-accepted with `yes |` for convenience.
+# Review licenses manually if needed: sdkmanager --sdk_root="$HOME/Library/Android/sdk" --licenses
 if [ ! -d "$HOME/Library/Android/sdk" ]; then
   brew install --cask android-commandlinetools
   yes | sdkmanager --sdk_root="$HOME/Library/Android/sdk" \
@@ -193,13 +201,17 @@ fi
 
 # Install tmux plugins headlessly
 if [ -f "$HOME/.tmux/plugins/tpm/bin/install_plugins" ]; then
-  "$HOME/.tmux/plugins/tpm/bin/install_plugins"
+  if ! "$HOME/.tmux/plugins/tpm/bin/install_plugins"; then
+    echo "WARNING: tmux plugin installation failed."
+  fi
 fi
 
 # Install Neovim plugins headlessly
-nvim --headless "+Lazy! sync" +qa 2>/dev/null || true
+if ! nvim --headless "+Lazy! sync" +qa 2>&1; then
+  echo "WARNING: Neovim plugin installation failed."
+fi
 
-# Rust
+# Rust (auto-accepts installation; review rustup terms if needed)
 if ! command -v rustup &>/dev/null; then
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 fi
@@ -249,6 +261,7 @@ if ! /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate 2>/dev/nul
 fi
 
 # Restart Finder and Dock only if defaults changed
+# Note: this closes all open Finder windows. Use --no-restart to skip.
 if [ "$defaults_changed" = true ]; then
   killall Finder 2>/dev/null || true
   killall Dock 2>/dev/null || true

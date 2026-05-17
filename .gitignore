@@ -1,45 +1,10 @@
-vim/bundle/*
-!vim/bundle/vundle
+# AI tool artifacts (also ignored globally via ~/.gitignore)
+.claude/
+.codex/
+.cursor/
+.aider*
+.env
+config/opencode/auth.json
+config/opencode/package-lock.json
 
-atom/packages
-atom/.apm/
-atom/blob-store
-
-# gstack installer deploys skills as top-level dirs under claude/skills/
-# mirroring claude/skills/gstack/<name>/. Track the source in gstack/ only.
-claude/skills/autoplan/
-claude/skills/benchmark/
-claude/skills/browse/
-claude/skills/canary/
-claude/skills/careful/
-claude/skills/checkpoint/
-claude/skills/codex/
-claude/skills/connect-chrome/
-claude/skills/cso/
-claude/skills/design-consultation/
-claude/skills/design-html/
-claude/skills/design-review/
-claude/skills/design-shotgun/
-claude/skills/devex-review/
-claude/skills/document-release/
-claude/skills/freeze/
-claude/skills/gstack-upgrade/
-claude/skills/guard/
-claude/skills/health/
-claude/skills/investigate/
-claude/skills/land-and-deploy/
-claude/skills/learn/
-claude/skills/office-hours/
-claude/skills/open-gstack-browser/
-claude/skills/pair-agent/
-claude/skills/plan-ceo-review/
-claude/skills/plan-design-review/
-claude/skills/plan-devex-review/
-claude/skills/plan-eng-review/
-claude/skills/qa/
-claude/skills/qa-only/
-claude/skills/retro/
-claude/skills/review/
-claude/skills/setup-browser-cookies/
-claude/skills/setup-deploy/
-claude/skills/unfreeze/
+# gstack removed 2026-05-16 — no longer using these skills
