@@ -8,3 +8,10 @@ config/opencode/auth.json
 config/opencode/package-lock.json
 
 # gstack removed 2026-05-16 — no longer using these skills
+
+
+# >>> claude-agents managed (DO NOT EDIT THIS BLOCK) >>>
+.claude/.toolkit-last-seen-sha
+.claude/.toolkit-setup-done
+.claude/.claude-agents.conf
+# <<< claude-agents managed <<<
