@@ -22,6 +22,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Opencode:** `config/opencode/opencode.json` (opencode CLI agent config — symlinked to `~/.config/opencode/`)
 - **Shared skills:** `agents/skills/` (workflow skills shared across all AI tools — symlinked to `~/.agents/skills`, `~/.pi/agent/skills`, and `~/.claude/skills`). One git submodule (`greptile/`) provides `check-pr`; sibling repo `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/` is mounted via top-level symlinks for marketing/ops skills; the rest are local.
 - **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions, plugins, hooks), `claude/agents/` (reusable agents), `claude/rules/` (path-scoped rules), `claude/hooks/` (lifecycle hooks), `claude/statusline.sh`. `claude/skills` is a symlink → `../agents/skills`.
+- **Codex / opencode:** profile-wide instructions for those tools live outside this repo (`~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md`). Both consume the shared `agents/skills/` via the symlinks above.
 - **Tool versions:** `mise.toml` (all language runtimes + most CLI tools, pinned — symlinked to `~/.config/mise/config.toml`)
 - **Package managers (supply-chain hygiene for project-level installs):** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Scripts:** `bin/weather`, `bin/battery` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar)
@@ -30,7 +31,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 ## Key tools
 
 - **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
-- **Primary dependency manager:** mise — all language runtimes (Node, Python, Ruby, Go, Java, Bun) AND most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin). Versions pinned in `mise.toml` at the repo root. Upgrade with `mise upgrade --bump`.
+- **Primary dependency manager:** mise — all language runtimes (Node, Python, Ruby, Go, Java, Bun) AND most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin, `npm:@mariozechner/pi-coding-agent`). Versions pinned in `mise.toml` at the repo root. Upgrade with `mise upgrade --bump`.
 - **Homebrew (`/opt/homebrew`):** secondary, used only for: mise itself (bootstrap), GUI casks, tmux, zsh plugin assets, postgresql, watchman, system networking tools (mosh, nmap, wget), tldr, yazi, git-absorb, cocoapods (ruby gem).
 - **AI:** opencode (CLI agent), lm-studio (local LLMs)
 - **Go:** GOPATH at `$HOME/Projects/`
@@ -64,7 +65,7 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 
 - Plugin manager: lazy.nvim (auto-bootstrapped)
 - Colorscheme: jellybeans.vim
-- LSP: Mason + mason-lspconfig (auto-install), nvim-lspconfig — pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
+- LSP: Mason (auto-install) + native vim.lsp — pyright (Python), ts_ls (TypeScript/JS), kotlin_language_server (Kotlin), lua_ls (Lua), sourcekit (Swift via Xcode)
 - Completion: blink.cmp
 - Fuzzy finder: fzf-lua (`<C-p>` files, `<leader>f` grep, `<leader>b` buffers)
 - Treesitter: syntax highlighting, text objects
