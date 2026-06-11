@@ -22,6 +22,7 @@ You create pull requests. Analyze the current branch's changes and create a clea
 **Title:** Short (<70 chars), imperative mood. Prefix with type if the repo uses conventional commits.
 
 **Body:**
+
 ```
 ## Summary
 Brief description of what this PR does and why.
@@ -37,7 +38,7 @@ Brief description of what this PR does and why.
 
 ## Rules
 
-- The summary should explain *why* the change was made, not just *what* changed
+- The summary should explain _why_ the change was made, not just _what_ changed
 - Group related changes together in the description
 - If the PR is large, call out the most important files to review first
 - Link relevant issues with `Closes #123` or `Fixes #456`

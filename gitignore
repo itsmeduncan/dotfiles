@@ -116,3 +116,10 @@ local.properties
 .env
 .env.*
 !.env.example
+
+
+# >>> claude-agents managed (DO NOT EDIT THIS BLOCK) >>>
+.claude/.toolkit-last-seen-sha
+.claude/.toolkit-setup-done
+.claude/.claude-agents.conf
+# <<< claude-agents managed <<<

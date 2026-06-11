@@ -1,0 +1,65 @@
+# Global mise config — symlinked to ~/.config/mise/config.toml by install.sh.
+#
+# To upgrade a tool:
+#   mise latest <tool>           # see what's available
+#   # bump the version below, then:
+#   mise install
+#
+# To upgrade everything to latest (and update this file):
+#   mise upgrade --bump
+
+[tools]
+# Language runtimes
+node    = "24.16.0"
+python  = "3.14.5"
+ruby    = "3.4.9"
+go      = "1.26.4"
+java    = "temurin-17.0.19+10"
+bun     = "1.3.12"
+
+# Editors
+neovim  = "0.12.2"
+
+# Modern CLI replacements
+eza     = "0.23.4"
+bat     = "0.26.1"
+ripgrep = "15.1.0"
+fd      = "10.4.2"
+zoxide  = "0.9.9"
+fzf     = "0.73.1"
+delta   = "0.19.2"
+direnv  = "2.37.1"
+
+# Git / GitHub
+gh      = "2.93.0"
+lazygit = "0.62.2"
+"pre-commit" = "4.6.0"
+
+# Package managers / build tooling
+uv      = "0.11.19"
+pnpm    = "11.5.2"
+just    = "1.52.0"
+
+# Data tools
+jq      = "1.8.1"
+yq      = "4.53.3"
+
+# Performance / inspection
+hyperfine = "1.20.0"
+dust    = "1.2.4"
+bottom  = "0.12.3"
+tokei   = "14.0.0"
+
+# Cloud & infra
+awscli    = "2.35.0"
+terraform = "1.15.5"
+
+# AI / agents
+opencode  = "1.16.2"
+"npm:@mariozechner/pi-coding-agent" = "0.73.1"
+
+# Mobile
+swiftlint = "0.63.3"
+
+# Shell history
+atuin   = "18.16.1"

@@ -61,10 +61,19 @@
     "superpowers@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
-    "claude-code-setup@claude-plugins-official": true
+    "claude-code-setup@claude-plugins-official": true,
+    "prime@arthai": true
   },
-  "extraKnownMarketplaces": {},
+  "extraKnownMarketplaces": {
+    "arthai": {
+      "source": {
+        "source": "github",
+        "repo": "ArthTech-AI/arthai-plugins"
+      }
+    }
+  },
   "effortLevel": "medium",
   "theme": "dark-ansi",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "model": "claude-fable-5[1m]"
 }

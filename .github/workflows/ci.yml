@@ -1,0 +1,114 @@
+name: ci
+
+# Two tiers:
+# - tier1 (lint): always cheap; bash -n, shellcheck, shfmt, prettier check, json/yaml validation, gitleaks
+# - tier2 (install): expensive; runs ./install.sh end-to-end on a clean macos-latest runner.
+#                    Triggered only on PRs to main and on workflow_dispatch.
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tier1-lint:
+    name: Tier-1 lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          # gitleaks diffs BASE^..HEAD; needs full history.
+          fetch-depth: 0
+
+      - name: Install shellcheck + shfmt
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+          curl -sSfL -o /usr/local/bin/shfmt \
+            https://github.com/mvdan/sh/releases/download/v3.12.0/shfmt_v3.12.0_linux_amd64
+          chmod +x /usr/local/bin/shfmt
+
+      - name: bash -n (syntax check)
+        run: |
+          for f in install.sh lib/*.sh; do
+            echo "::group::bash -n $f"
+            bash -n "$f"
+            echo "::endgroup::"
+          done
+
+      - name: shellcheck
+        run: |
+          shellcheck install.sh lib/*.sh
+
+      - name: shfmt (formatting check)
+        run: |
+          shfmt -d -i 2 -ci -bn install.sh lib/*.sh
+
+      - name: JSON / YAML validation
+        run: |
+          # claude/settings.json (tracked), all top-level json/yaml files
+          for f in claude/settings.json config/opencode/opencode.json; do
+            [ -f "$f" ] || continue
+            python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$f"
+            echo "ok: $f"
+          done
+
+      - name: .tool-versions in sync with mise.toml
+        run: bin/sync-tool-versions --check
+
+      - name: Prettier check (markdown)
+        run: |
+          npx --yes prettier@3 --check '**/*.{md,markdown,yaml,yml}' \
+            '!agents/skills/**' '!claude/skills/**' '!CHANGELOG.md'
+
+      - name: Gitleaks (secret scan)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  tier2-install:
+    name: Tier-2 install (e2e on macOS)
+    runs-on: macos-latest
+    needs: tier1-lint
+    # Run on PRs to main and on manual dispatch — not on every push.
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Force HTTPS for all github.com clones
+        # The macOS runner image has no SSH key for github.com, but several
+        # downstream installers (mise's pyenv/eza plugins, oh-my-zsh) default
+        # to git@github.com: URLs. Rewrite to HTTPS at the git layer.
+        run: |
+          git config --global url.https://github.com/.insteadOf git@github.com:
+          git config --global url.https://github.com/.insteadOf ssh://git@github.com/
+
+      - name: Dry-run installer (catch wiring bugs cheaply)
+        run: |
+          ./install.sh --dry-run
+
+      - name: Real installer (skip phases that need interactive input or root)
+        # Skipped phases:
+        # - macos:    needs sudo for firewall; not worth the runner perms grant
+        # - ssh:      interactive prompt; not portable to CI
+        # - android:  10+ min SDK download; gated by directory check
+        # - runtimes: oh-my-zsh + rustup + tmux/nvim plugin sync — editor
+        #             sugar, not core dotfiles bootstrap. Brittle in CI.
+        env:
+          # mise's aqua backend hits api.github.com per tool resolve; without a
+          # token the unauthenticated rate limit (60/hr) is exhausted in seconds.
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DOTFILES_CI: "1"
+        run: |
+          ./install.sh --skip=macos,ssh,android,runtimes
+
+      - name: Verify symlinks landed
+        run: |
+          ./install.sh --check
