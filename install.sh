@@ -15,22 +15,26 @@ fi
 # Dotfiles to symlink into $HOME
 files=(bunfig.toml gemrc gitconfig gitignore gitmessage npmrc psqlrc tmux.conf vimrc zprofile zshrc)
 
-# Homebrew dependencies
+# Homebrew dependencies — only tools that mise can't manage or that are tightly
+# integrated with brew (services, zsh plugin assets sourced from brew paths,
+# system networking utilities). Everything else lives in mise.toml.
 brews=(
-  # Core
-  neovim mise eza bat ripgrep fd zoxide fzf git-delta direnv tmux gh pre-commit
-  # Shell
-  spaceship zsh-autosuggestions zsh-syntax-highlighting atuin
-  # Dev tools
-  uv pnpm lazygit jq yq watchman git-absorb yazi just hyperfine dust bottom tokei postgresql
-  # Cloud & infra
-  awscli terraform
+  # Bootstrap (mise itself can't be installed via mise)
+  mise
+  # Terminal multiplexer (system integration)
+  tmux
+  # zsh plugins (zshrc sources from brew paths)
+  spaceship zsh-autosuggestions zsh-syntax-highlighting
+  # Services / system tooling
+  postgresql watchman
   # Networking
-  mosh nmap
-  # Additional tools
-  wget tldr opencode
-  # Mobile
-  cocoapods swiftlint
+  mosh nmap wget
+  # Docs
+  tldr
+  # Not in mise registry
+  yazi git-absorb
+  # Ruby gem (brew tap is canonical)
+  cocoapods
 )
 
 # GUI applications
@@ -60,20 +64,24 @@ for pkg in "${brews[@]}"; do
   brew list "$pkg" &>/dev/null || brew install "$pkg"
 done
 
-# Map cask tokens to their .app names for detecting non-Homebrew installs
-declare -A cask_app_names=(
-  [ghostty]="Ghostty"
-  [orbstack]="OrbStack"
-  [1password]="1Password"
-  [slack]="Slack"
-  [notion]="Notion"
-  [tailscale]="Tailscale"
-  [lm-studio]="LM Studio"
-)
+# Map cask tokens to their .app names for detecting non-Homebrew installs.
+# Uses a case statement for compatibility with stock macOS bash 3.2 (no assoc arrays).
+cask_app_name() {
+  case "$1" in
+    ghostty)    echo "Ghostty" ;;
+    orbstack)   echo "OrbStack" ;;
+    1password)  echo "1Password" ;;
+    slack)      echo "Slack" ;;
+    notion)     echo "Notion" ;;
+    tailscale)  echo "Tailscale" ;;
+    lm-studio)  echo "LM Studio" ;;
+    *)          echo "" ;;
+  esac
+}
 
 # Install cask applications (skip if already installed via brew or directly)
 for app in "${casks[@]}"; do
-  app_name="${cask_app_names[$app]}"
+  app_name="$(cask_app_name "$app")"
   if brew list --cask "$app" &>/dev/null; then
     continue
   elif [ -n "$app_name" ] && [ -d "/Applications/${app_name}.app" ]; then
@@ -164,16 +172,16 @@ if [ ! -d "$HOME/.oh-my-zsh" ]; then
   sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 fi
 
-# Install runtimes via mise
+# Symlink global mise config so `mise install` picks up the full tool list
+mkdir -p "$HOME/.config/mise"
+ln -sf "$DOTFILES_DIR/mise.toml" "$HOME/.config/mise/config.toml"
+
+# Install everything declared in mise.toml (runtimes + CLI tools)
 eval "$(mise activate bash)"
-mise use -g node@lts python@3 ruby@3 go@latest 2>/dev/null || true
+mise install
 
 # Install global Python packages via mise
 mise pip install pidev 2>/dev/null || true
-
-# Install Android development tools via mise
-mise install java@temurin-17 2>/dev/null || true
-mise use -g java@temurin-17 2>/dev/null || true
 
 # Install Android SDK via Homebrew (Android Studio not required)
 # Note: sdkmanager --licenses is auto-accepted with `yes |` for convenience.
