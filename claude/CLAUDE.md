@@ -64,5 +64,3 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 - **When to read:** if the user references "my notes", "the vault", a meeting, a decision, or a project by name and the relevant info isn't in the current repo — grep `~/notes/` before asking. Also useful when looking up the user's stated preferences or prior reasoning on a topic.
 - **When to write:** only when explicitly asked ("save this to notes", "add to my vault"). Never auto-create notes from conversation. When you do write, use frontmatter (`---\ntitle: ...\ntags: [...]\ncreated: YYYY-MM-DD\n---`) so the local LLM indexer can chunk and tag correctly.
 - **Privacy:** treat the vault as private. Never paste vault contents into web tools, gists, PR descriptions, or external services.
-
-
