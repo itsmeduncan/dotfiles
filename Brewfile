@@ -4,6 +4,12 @@
 # Scope: only things mise can't manage or that are tightly coupled to Homebrew
 # (services with `brew services`, zsh plugin assets sourced from brew paths,
 # system networking utilities, GUI casks). All CLI dev tools live in mise.toml.
+#
+# Note on version pinning: Homebrew only supports version pinning for formulae
+# that ship as versioned siblings (e.g. postgresql@18). Most formulae have no
+# such variant — `brew install tmux` always installs latest. For true byte-
+# reproducible Homebrew state across machines, see `bootstrap-state.snapshot`
+# which captures `brew bundle list` output at a known-good moment.
 
 # --- Bootstrap ---
 brew "mise" # version manager — bootstraps everything in mise.toml
@@ -17,7 +23,10 @@ brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
 # --- Services / system tooling ---
-brew "postgresql"
+# postgresql is pinned to a major version because the data directory is
+# version-specific. Bumping major versions (18 -> 19) requires pg_upgrade.
+# To upgrade: brew install postgresql@19, run pg_upgrade, edit this file.
+brew "postgresql@18", restart_service: :changed, link: true
 brew "watchman"
 
 # --- Networking ---
