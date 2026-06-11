@@ -5,7 +5,7 @@ Personal dotfiles for macOS (Apple Silicon). Managed by symlinks via `install.sh
 ## Setup
 
 1. Clone the repo and run `./install.sh`
-2. The script handles everything: Homebrew, dependencies, GUI apps (casks), symlinks, SSH key, oh-my-zsh, tpm, runtimes (mise + Rust), Neovim plugins, macOS defaults, firewall, and Claude Code config
+2. The script handles everything: Homebrew (bootstrap + casks + a small set of system tools), mise (all runtimes + CLI tools, declared in `mise.toml`), symlinks, SSH key, oh-my-zsh, tpm, rustup, Neovim plugins, macOS defaults, firewall, and Claude Code config
 
 ## Structure
 
@@ -23,15 +23,16 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Shared skills:** `agents/skills/` (workflow skills shared across all AI tools — symlinked to `~/.agents/skills`, `~/.pi/agent/skills`, and `~/.claude/skills`). One git submodule (`greptile/`) provides `check-pr`; sibling repo `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/` is mounted via top-level symlinks for marketing/ops skills; the rest are local.
 - **Claude Code:** `claude/CLAUDE.md`, `claude/settings.json`, `claude/agents/`, `claude/rules/`, `claude/hooks/`, `claude/statusline.sh` (`claude/skills` is a symlink → `../agents/skills`).
 - **Codex / opencode:** profile-wide instructions for those tools live outside this repo (`~/.codex/AGENTS.md`, `~/.config/opencode/AGENTS.md`). Both consume the shared `agents/skills/` via the symlinks above.
-- **Package managers:** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
+- **Tool versions:** `mise.toml` (all language runtimes + most CLI tools, pinned — symlinked to `~/.config/mise/config.toml`)
+- **Package managers (supply-chain hygiene for project-level installs):** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Scripts:** `bin/weather`, `bin/battery` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar)
 - **Other:** `gemrc`, `psqlrc`
 
 ## Key tools
 
 - **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
-- **Package manager:** Homebrew (`/opt/homebrew`)
-- **Version manager:** mise (manages Node, Python, Ruby, Java, Go, and other runtimes)
+- **Primary dependency manager:** mise — all language runtimes (Node, Python, Ruby, Go, Java, Bun) AND most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin, `npm:@mariozechner/pi-coding-agent`). Versions pinned in `mise.toml` at the repo root. Upgrade with `mise upgrade --bump`.
+- **Homebrew (`/opt/homebrew`):** secondary, used only for: mise itself (bootstrap), GUI casks, tmux, zsh plugin assets, postgresql, watchman, system networking tools (mosh, nmap, wget), tldr, yazi, git-absorb, cocoapods (ruby gem).
 - **AI:** opencode (CLI agent), lm-studio (local LLMs)
 - **Go:** GOPATH at `$HOME/Projects/`
 - **Rust:** rustup (installed by `install.sh` if missing)
@@ -42,7 +43,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
 - **Cloud & infra:** awscli, terraform, gcloud-cli (Google Cloud CLI)
 - **Networking:** mosh, nmap
-- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale
+- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale, LM Studio, gcloud-cli
 - **Git workflow:** gh (GitHub CLI), pre-commit (hook framework), git-absorb (auto-fixup commits)
 
 ## Git config highlights
@@ -119,7 +120,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
 
 The canonical skills directory shared across Claude, Codex, opencode, and pi. Symlinked into `~/.claude/skills`, `~/.agents/skills`, and `~/.pi/agent/skills` by `install.sh`. Categories:
 
-- **Local skills** (authored in this repo): `audit`, `code-review`, `deep-review`, `doc-sync`, `sync-docs`, `sync-main`, `fix-ci`, `fix-pipeline`, `ship`, `release`, `unstick`, `cross-platform-review`, `investigate`.
+- **Local skills** (authored in this repo): `audit`, `code-review`, `cross-platform-review`, `deep-review`, `doc-sync`, `fix-ci`, `fix-pipeline`, `release`, `sync-docs`, `sync-main`, `unstick`.
 - **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `check-pr` re-exposed at top level.
 - **Sibling-repo marketing/ops skills** (symlinked from `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/`): `autoresearch`, `content-ops`, `conversion-ops`, `deck-generator`, `eval`, `finance-ops`, `growth-engine`, `outbound-engine`, `podcast-ops`, `revenue-intelligence`, `sales-pipeline`, `sales-playbook`, `security`, `seo-ops`, `team-ops`, `telemetry`, `x-longform-post`, `yt-competitive-analysis`.
 

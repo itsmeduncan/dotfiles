@@ -5,7 +5,7 @@ Personal dotfiles for macOS (Apple Silicon). Managed by symlinks via `install.sh
 ## Setup
 
 1. Clone the repo and run `./install.sh`
-2. The script handles everything: Homebrew, dependencies, GUI apps (casks), symlinks, SSH key, oh-my-zsh, tpm, runtimes (mise + Rust), Neovim plugins, macOS defaults, firewall, and Claude Code config
+2. The script handles everything: Homebrew (bootstrap + casks + a small set of system tools), mise (all runtimes + CLI tools, declared in `mise.toml`), symlinks, SSH key, oh-my-zsh, tpm, rustup, Neovim plugins, macOS defaults, firewall, and Claude Code config
 
 ## Structure
 
@@ -22,15 +22,16 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Opencode:** `config/opencode/opencode.json` (opencode CLI agent config — symlinked to `~/.config/opencode/`)
 - **Shared skills:** `agents/skills/` (workflow skills shared across all AI tools — symlinked to `~/.agents/skills`, `~/.pi/agent/skills`, and `~/.claude/skills`). One git submodule (`greptile/`) provides `check-pr`; sibling repo `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/` is mounted via top-level symlinks for marketing/ops skills; the rest are local.
 - **Claude Code:** `claude/CLAUDE.md` (profile-wide instructions), `claude/settings.json` (permissions, plugins, hooks), `claude/agents/` (reusable agents), `claude/rules/` (path-scoped rules), `claude/hooks/` (lifecycle hooks), `claude/statusline.sh`. `claude/skills` is a symlink → `../agents/skills`.
-- **Package managers:** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
+- **Tool versions:** `mise.toml` (all language runtimes + most CLI tools, pinned — symlinked to `~/.config/mise/config.toml`)
+- **Package managers (supply-chain hygiene for project-level installs):** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Scripts:** `bin/weather`, `bin/battery` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar)
 - **Other:** `gemrc`, `psqlrc`
 
 ## Key tools
 
 - **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
-- **Package manager:** Homebrew (`/opt/homebrew`)
-- **Version manager:** mise (manages Node, Python, Ruby, Java, Go, and other runtimes)
+- **Primary dependency manager:** mise — all language runtimes (Node, Python, Ruby, Go, Java, Bun) AND most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin). Versions pinned in `mise.toml` at the repo root. Upgrade with `mise upgrade --bump`.
+- **Homebrew (`/opt/homebrew`):** secondary, used only for: mise itself (bootstrap), GUI casks, tmux, zsh plugin assets, postgresql, watchman, system networking tools (mosh, nmap, wget), tldr, yazi, git-absorb, cocoapods (ruby gem).
 - **AI:** opencode (CLI agent), lm-studio (local LLMs)
 - **Go:** GOPATH at `$HOME/Projects/`
 - **Rust:** rustup (installed by `install.sh` if missing)
@@ -41,7 +42,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
 - **Cloud & infra:** awscli, terraform, gcloud-cli (Google Cloud CLI)
 - **Networking:** mosh, nmap
-- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale
+- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale, LM Studio, gcloud-cli
 - **Git workflow:** gh (GitHub CLI), pre-commit (hook framework), git-absorb (auto-fixup commits)
 
 ## Git config highlights
@@ -117,7 +118,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `pr.md` — Create pull requests (read-only: Read, Grep, Glob, Bash)
   - `scaffold.md` — Bootstrap new projects (Read, Grep, Glob, Bash, Write, Edit)
 - **`claude/skills/` → `agents/skills/`** (symlink) — Workflow skills shared across Claude, Codex, opencode, and pi. The directory is a mix of vendored submodules and symlinked sibling repos. Use `ls agents/skills/` for the live inventory. Categories:
-  - **Local skills** (authored in this repo): `audit`, `code-review`, `deep-review`, `doc-sync`, `sync-docs`, `sync-main`, `fix-ci`, `fix-pipeline`, `ship`, `release`, `unstick`, `cross-platform-review`, `investigate`.
+  - **Local skills** (authored in this repo): `audit`, `code-review`, `cross-platform-review`, `deep-review`, `doc-sync`, `fix-ci`, `fix-pipeline`, `release`, `sync-docs`, `sync-main`, `unstick`.
   - **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `check-pr` (PR/MR/CL automation against Greptile reviews) re-exposed at top level via symlink.
   - **Sibling-repo marketing/ops skills** (symlinked from `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/`): `autoresearch`, `content-ops`, `conversion-ops`, `deck-generator`, `eval`, `finance-ops`, `growth-engine`, `outbound-engine`, `podcast-ops`, `revenue-intelligence`, `sales-pipeline`, `sales-playbook`, `security`, `seo-ops`, `team-ops`, `telemetry`, `x-longform-post`, `yt-competitive-analysis`.
 - **`claude/statusline.sh`** — Custom status line script (shows directory, git branch, model, context usage, rate limits).
@@ -132,30 +133,34 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
 - `.editorconfig` enforces 2-space indent (4 for Python/Go/Swift/Kotlin), LF line endings, UTF-8.
 - Projects live in `~/Projects/src/github.com/<org>/<repo>`.
 
-
 <!-- >>> claude-agents toolkit (DO NOT EDIT THIS BLOCK) >>> -->
 <!-- version: 1.0.41 -->
+
 ## Engineering Principles (MANDATORY — applies to ALL work)
 
 ### Research Before Fixing
+
 - **Never guess.** Before changing code, read the relevant source files, docs, and configs.
 - Understand WHY something is broken before attempting a fix.
 - If your first fix doesn't work, STOP. Don't try another guess. Re-read the code.
 - Use explore-light (Haiku, 1x cost) to scan the codebase before expensive agents investigate.
 
 ### No Over-Engineering
+
 - **Do exactly what's needed.** Don't add abstractions, utilities, or frameworks unless the code already uses them.
 - Match existing patterns — run explore-light to find how similar code is structured before writing new code.
 - A bug fix touches the minimum files possible. A feature matches the existing architecture.
 - If you're creating a new class/helper/utility that nothing else in the codebase uses, you're over-engineering.
 
 ### Test Before Shipping
+
 - **Run tests locally before pushing.** Never push untested code.
 - If the project has `/precheck`, run it. If it has `/qa`, run it in commit mode.
 - After fixing a bug, verify the fix AND verify nothing else broke (differential testing).
 - If 3+ consecutive fix attempts fail, STOP. Step back and reassess the root cause from scratch.
 
 ### Deployment Safety
+
 - **Never modify production systems without explicit confirmation.**
 - Don't change deploy targets, CI pipeline structure, or infrastructure config silently.
 - Don't overwrite existing files during deployment without asking.
@@ -184,6 +189,7 @@ agents, skills, and hooks that handle domain-specific work better and cheaper.
 table and SPEED score. Use it to decide: toolkit or you?
 
 ### When to use the toolkit (SPEED score 2+):
+
 - **Multi-step workflows**: `/pr`, `/deploy`, `/planning`, `/implement`, `/qa`, `/ci-fix`
   encode battle-tested sequences you'd otherwise do manually and forget steps
 - **Domain expertise**: SRE, QA, frontend, backend agents have project context baked in
@@ -191,6 +197,7 @@ table and SPEED score. Use it to decide: toolkit or you?
 - **Parallelism**: Team skills spawn multiple agents working simultaneously
 
 ### When to use YOU directly (SPEED score 0-1):
+
 - **Quick lookups**: Read/Grep/Glob for finding a file, checking a value, reading code
 - **Small targeted edits**: 1-2 file changes where you already know what to do
 - **Complex reasoning**: Architecture decisions, debugging novel problems, nuanced tradeoffs
@@ -199,6 +206,7 @@ table and SPEED score. Use it to decide: toolkit or you?
 - **Judgment calls**: Security reviews, design decisions, "should we even do this?"
 
 ### The balance:
+
 The toolkit handles **process** (repeatable workflows, domain-specific checks, multi-step
 sequences). You handle **judgment** (reasoning, creativity, novel problems, architecture).
 
@@ -229,15 +237,18 @@ If this project has been calibrated (`/calibrate`), deep context is available:
 
 On your FIRST response in every new session, ALWAYS start with a brief status line
 using context from the SessionStart hook. Include:
+
 - Current branch + uncommitted file count
 - Docker/infra status (if problems detected)
 - Open PRs or assigned issues (if any)
 - Any red flags (pending migrations, expired tokens)
 
 Format: 1-3 compact lines before addressing the user's request. Example:
+
 ```
 📋 project — main | 5 uncommitted | Docker: postgres ✓ redis ✓ | 2 open PRs
 ```
+
 Then proceed with the user's actual request.
 
 **CRITICAL — Greetings and vague first messages**: If the user's first message is a
@@ -258,16 +269,19 @@ path. Place it at the end of your response in a dimmed block:
 ```
 
 Examples:
+
 ```
 🔀 Routing: backend bug fix → python-backend agent (Sonnet, 10x)
    Why: touches backend/app/services/, needs CLAUDE.md context, SPEED=4
 ```
+
 ```
 🔀 Routing: file lookup → Grep (built-in, 0x)
    Why: single-file search, no project context needed, SPEED=0
 ```
 
 Rules:
+
 - Always show the SPEED score breakdown if score >= 2
 - Show which hook provided the context (triage-router, bootstrap, etc.)
 - If you chose NOT to use the triage router's suggestion, explain why
