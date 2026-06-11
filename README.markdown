@@ -12,12 +12,10 @@ cd dotfiles
 
 ### Flags
 
-| Flag                  | What it does                                                                       |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| `--dry-run`           | Preview every mutating action as `[DRY] would: ...` without executing               |
-| `--check`             | Audit mode: report drift (symlinks, Brewfile, mise, macOS defaults), change nothing |
-| `--skip=a,b` / `--only=a,b` | Skip or isolate phases: `preflight brew symlinks mise agents runtimes android macos ssh` |
-| `--snapshot`          | Write `bootstrap-state.snapshot` recording current versions of every brew/mise tool, submodule, and plugin |
+- `--dry-run` — preview every mutating action as `[DRY] would: ...` without executing
+- `--check` — audit mode: report drift (symlinks, Brewfile, mise, macOS defaults), change nothing
+- `--skip=a,b` / `--only=a,b` — skip or isolate phases: `preflight brew symlinks mise agents runtimes android macos ssh`
+- `--snapshot` — write `bootstrap-state.snapshot` recording current versions of every brew/mise tool, submodule, and plugin
 
 The installer is idempotent and skips already-satisfied work (Brewfile check, nvim lazy-lock hash, tmux plugin dirs).
 
