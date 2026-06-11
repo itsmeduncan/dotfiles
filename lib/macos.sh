@@ -14,13 +14,27 @@ _DEFAULTS_CHANGED=false
 # the current macOS major is lower, the write is skipped (with a debug note).
 set_default() {
   local domain="$1" key="$2" type="$3" value="$4" min_major="${5:-}"
-  local current major
+  local current major canonical
   major="$(macos_major)"
   if [ -n "$min_major" ] && [ -n "$major" ] && [ "$major" -lt "$min_major" ]; then
     return 0
   fi
   current=$(defaults read "$domain" "$key" 2>/dev/null) || current=""
-  if [ "$current" = "$value" ]; then
+
+  # `defaults read` returns canonical "1"/"0" for bools and unquoted strings.
+  # Normalize the desired value to match before comparing, so we don't write
+  # on every run when nothing actually changed.
+  canonical="$value"
+  case "$type" in
+    -bool)
+      case "$value" in
+        true | TRUE | yes | YES | 1) canonical=1 ;;
+        false | FALSE | no | NO | 0) canonical=0 ;;
+      esac
+      ;;
+  esac
+
+  if [ "$current" = "$canonical" ]; then
     return 0
   fi
   if [ "${CHECK_MODE:-0}" = "1" ]; then
@@ -53,7 +67,7 @@ macos_run() {
   set_default com.apple.dock autohide -bool true
   set_default com.apple.dock tilesize -int 48
   set_default com.apple.dock show-recents -bool false
-  set_default com.apple.NSScrollAnimationEnabled -bool false
+  set_default NSGlobalDomain NSScrollAnimationEnabled -bool false
 
   # Smart quotes / dashes
   set_default NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
