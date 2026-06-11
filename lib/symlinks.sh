@@ -20,7 +20,7 @@ symlinks_run() {
   # ~/.dotfiles/bin (stale dir cleanup before symlinking)
   if [ -d "$HOME/.dotfiles/bin" ] && [ ! -L "$HOME/.dotfiles/bin" ]; then
     if [ "${CHECK_MODE:-0}" = "1" ]; then
-      warn "~/.dotfiles/bin exists as a directory (should be a symlink)"
+      warn "\$HOME/.dotfiles/bin exists as a directory (should be a symlink)"
     else
       run "rm -rf ~/.dotfiles/bin (stale dir)" rm -rf "$HOME/.dotfiles/bin"
     fi
@@ -28,13 +28,13 @@ symlinks_run() {
   link "$DOTFILES_DIR/bin" "$HOME/.dotfiles/bin"
 
   # ~/.config/* symlinks
-  link "$DOTFILES_DIR/config/nvim"            "$HOME/.config/nvim"
-  link "$DOTFILES_DIR/config/yazi"            "$HOME/.config/yazi"
-  link "$DOTFILES_DIR/config/ghostty/config"  "$HOME/.config/ghostty/config"
-  link "$DOTFILES_DIR/config/bat/config"      "$HOME/.config/bat/config"
-  link "$DOTFILES_DIR/config/uv"              "$HOME/.config/uv"
+  link "$DOTFILES_DIR/config/nvim" "$HOME/.config/nvim"
+  link "$DOTFILES_DIR/config/yazi" "$HOME/.config/yazi"
+  link "$DOTFILES_DIR/config/ghostty/config" "$HOME/.config/ghostty/config"
+  link "$DOTFILES_DIR/config/bat/config" "$HOME/.config/bat/config"
+  link "$DOTFILES_DIR/config/uv" "$HOME/.config/uv"
   link "$DOTFILES_DIR/config/opencode/opencode.json" \
-                                              "$HOME/.config/opencode/opencode.json"
+    "$HOME/.config/opencode/opencode.json"
 
   # pnpm config lives under ~/Library/Preferences on macOS
   link "$DOTFILES_DIR/config/pnpm" "$HOME/Library/Preferences/pnpm"

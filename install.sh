@@ -32,11 +32,18 @@ usage() {
 while [ $# -gt 0 ]; do
   case "$1" in
     --dry-run) DRY_RUN=1 ;;
-    --check)   CHECK_MODE=1 ;;
-    --skip=*)  SKIP_PHASES="${1#--skip=}" ;;
-    --only=*)  ONLY_PHASES="${1#--only=}" ;;
-    --help|-h) usage; exit 0 ;;
-    *) echo "Unknown flag: $1" >&2; usage; exit 64 ;;
+    --check) CHECK_MODE=1 ;;
+    --skip=*) SKIP_PHASES="${1#--skip=}" ;;
+    --only=*) ONLY_PHASES="${1#--only=}" ;;
+    --help | -h)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown flag: $1" >&2
+      usage
+      exit 64
+      ;;
   esac
   shift
 done

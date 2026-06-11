@@ -54,7 +54,7 @@ runtimes_run() {
 
   # tmux plugin install (headless)
   if [ -f "$HOME/.tmux/plugins/tpm/bin/install_plugins" ] \
-       && [ "${CHECK_MODE:-0}" != "1" ]; then
+    && [ "${CHECK_MODE:-0}" != "1" ]; then
     if [ "${DRY_RUN:-0}" = "1" ]; then
       would "install tmux plugins via tpm"
     else

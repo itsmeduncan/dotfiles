@@ -12,7 +12,7 @@ mise_run() {
   fi
 
   if [ "${CHECK_MODE:-0}" = "1" ]; then
-    if mise current &>/dev/null && [ -z "$(mise current 2>&1 | grep -iE 'missing|not installed')" ]; then
+    if mise current &>/dev/null && ! mise current 2>&1 | grep -qiE 'missing|not installed'; then
       ok "mise tools satisfied"
     else
       warn "mise tools drift — run 'mise install'"

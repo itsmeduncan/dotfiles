@@ -70,7 +70,7 @@ macos_run() {
   macos_firewall
 
   if [ "$_DEFAULTS_CHANGED" = true ] && [ "${DRY_RUN:-0}" != "1" ] \
-       && [ "${CHECK_MODE:-0}" != "1" ]; then
+    && [ "${CHECK_MODE:-0}" != "1" ]; then
     # This closes all open Finder windows.
     killall Finder 2>/dev/null || true
     killall Dock 2>/dev/null || true
@@ -79,7 +79,7 @@ macos_run() {
 
 macos_firewall() {
   if ! /usr/libexec/ApplicationFirewall/socketfilterfw --getglobalstate 2>/dev/null \
-       | grep -q "enabled"; then
+    | grep -q "enabled"; then
     if [ "${CHECK_MODE:-0}" = "1" ]; then
       warn "macOS firewall is disabled"
       return 0

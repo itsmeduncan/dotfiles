@@ -26,7 +26,7 @@ agents_run() {
       would "seed ~/.local/share/opencode/auth.json with lm-studio placeholder"
     else
       mkdir -p "$HOME/.local/share/opencode"
-      cat > "$HOME/.local/share/opencode/auth.json" << 'EOF'
+      cat >"$HOME/.local/share/opencode/auth.json" <<'EOF'
 {
   "lm-studio": {
     "type": "api",
@@ -39,10 +39,10 @@ EOF
   fi
 
   # Claude Code profile-wide config.
-  link "$DOTFILES_DIR/claude/CLAUDE.md"     "$HOME/.claude/CLAUDE.md"
+  link "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
   link "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
-  link "$DOTFILES_DIR/claude/agents"        "$HOME/.claude/agents"
-  link "$DOTFILES_DIR/claude/rules"         "$HOME/.claude/rules"
-  link "$DOTFILES_DIR/claude/hooks"         "$HOME/.claude/hooks"
+  link "$DOTFILES_DIR/claude/agents" "$HOME/.claude/agents"
+  link "$DOTFILES_DIR/claude/rules" "$HOME/.claude/rules"
+  link "$DOTFILES_DIR/claude/hooks" "$HOME/.claude/hooks"
   link "$DOTFILES_DIR/claude/statusline.sh" "$HOME/.claude/statusline.sh"
 }

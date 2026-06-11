@@ -16,16 +16,25 @@
 
 # Colors only when stderr is a TTY.
 if [ -t 2 ]; then
-  _C_DIM=$'\033[2m'; _C_RED=$'\033[31m'; _C_YEL=$'\033[33m'
-  _C_GRN=$'\033[32m'; _C_CYN=$'\033[36m'; _C_RST=$'\033[0m'
+  _C_DIM=$'\033[2m'
+  _C_RED=$'\033[31m'
+  _C_YEL=$'\033[33m'
+  _C_GRN=$'\033[32m'
+  _C_CYN=$'\033[36m'
+  _C_RST=$'\033[0m'
 else
-  _C_DIM=""; _C_RED=""; _C_YEL=""; _C_GRN=""; _C_CYN=""; _C_RST=""
+  _C_DIM=""
+  _C_RED=""
+  _C_YEL=""
+  _C_GRN=""
+  _C_CYN=""
+  _C_RST=""
 fi
 
-log()  { printf "%s[INFO]%s %s\n" "$_C_CYN" "$_C_RST" "$*" >&2; }
-ok()   { printf "%s[ OK ]%s %s\n" "$_C_GRN" "$_C_RST" "$*" >&2; }
+log() { printf "%s[INFO]%s %s\n" "$_C_CYN" "$_C_RST" "$*" >&2; }
+ok() { printf "%s[ OK ]%s %s\n" "$_C_GRN" "$_C_RST" "$*" >&2; }
 warn() { printf "%s[WARN]%s %s\n" "$_C_YEL" "$_C_RST" "$*" >&2; }
-err()  { printf "%s[ERR ]%s %s\n" "$_C_RED" "$_C_RST" "$*" >&2; }
+err() { printf "%s[ERR ]%s %s\n" "$_C_RED" "$_C_RST" "$*" >&2; }
 
 would() {
   printf "%s[DRY ]%s would: %s\n" "$_C_DIM" "$_C_RST" "$*" >&2
@@ -34,7 +43,8 @@ would() {
 # run "<description>" cmd args...
 # Executes cmd unless DRY_RUN=1.
 run() {
-  local desc="$1"; shift
+  local desc="$1"
+  shift
   if [ "${DRY_RUN:-0}" = "1" ]; then
     would "$desc"
     return 0

@@ -23,8 +23,11 @@ ssh_run() {
   printf "No SSH key found. Generate one? (y/N) "
   read -r ssh_answer
   case "$ssh_answer" in
-    y|Y) ;;
-    *)   log "Skipping SSH key generation."; return 0 ;;
+    y | Y) ;;
+    *)
+      log "Skipping SSH key generation."
+      return 0
+      ;;
   esac
 
   printf "Use a passphrase (recommended)? (Y/unencrypted) "
