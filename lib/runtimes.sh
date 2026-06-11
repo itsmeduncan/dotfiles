@@ -52,10 +52,14 @@ runtimes_run() {
     [ -f "$HOME/.tmux/resurrect/last" ] || touch "$HOME/.tmux/resurrect/last"
   fi
 
-  # tmux plugin install (headless)
+  # tmux plugin install (headless). Skip if every plugin declared in
+  # tmux.conf already has a directory under ~/.tmux/plugins — `install_plugins`
+  # would otherwise re-clone-or-noop every install run (cheap but noisy).
   if [ -f "$HOME/.tmux/plugins/tpm/bin/install_plugins" ] \
     && [ "${CHECK_MODE:-0}" != "1" ]; then
-    if [ "${DRY_RUN:-0}" = "1" ]; then
+    if _tmux_plugins_satisfied; then
+      ok "tmux plugins satisfied"
+    elif [ "${DRY_RUN:-0}" = "1" ]; then
       would "install tmux plugins via tpm"
     else
       log "Installing tmux plugins..."
@@ -64,14 +68,53 @@ runtimes_run() {
     fi
   fi
 
-  # Neovim plugins (headless via lazy.nvim)
+  # Neovim plugins (headless via lazy.nvim). Skip if lazy-lock.json hasn't
+  # changed since the last sync — `Lazy! sync` is a 5-30s no-op when up to
+  # date, and that's the common case across re-runs.
   if command -v nvim &>/dev/null && [ "${CHECK_MODE:-0}" != "1" ]; then
-    if [ "${DRY_RUN:-0}" = "1" ]; then
+    if _nvim_plugins_satisfied; then
+      ok "nvim plugins satisfied (lazy-lock unchanged since last sync)"
+    elif [ "${DRY_RUN:-0}" = "1" ]; then
       would "nvim --headless +Lazy! sync +qa"
     else
       log "Syncing Neovim plugins..."
-      nvim --headless "+Lazy! sync" +qa 2>&1 \
-        || warn "Neovim plugin installation failed"
+      if nvim --headless "+Lazy! sync" +qa 2>&1; then
+        _nvim_record_sync
+      else
+        warn "Neovim plugin installation failed"
+      fi
     fi
   fi
+}
+
+_tmux_plugins_satisfied() {
+  # Cheap heuristic: tpm + tmux-resurrect + tmux-continuum + tmux-yank +
+  # tmux-sensible + vim-tmux-navigator are the declared plugins in tmux.conf.
+  # If all six dirs exist, declare satisfied.
+  local expected=(tpm tmux-resurrect tmux-continuum tmux-yank tmux-sensible vim-tmux-navigator)
+  for p in "${expected[@]}"; do
+    [ -d "$HOME/.tmux/plugins/$p" ] || return 1
+  done
+  return 0
+}
+
+_nvim_satisfied_marker() {
+  echo "$HOME/.cache/dotfiles-install/nvim-lazy-lock.sha256"
+}
+
+_nvim_plugins_satisfied() {
+  local marker current
+  marker="$(_nvim_satisfied_marker)"
+  [ -f "$marker" ] || return 1
+  current="$(shasum -a 256 "$DOTFILES_DIR/config/nvim/lazy-lock.json" 2>/dev/null | awk '{print $1}')"
+  [ -n "$current" ] || return 1
+  [ "$(cat "$marker" 2>/dev/null)" = "$current" ]
+}
+
+_nvim_record_sync() {
+  local marker
+  marker="$(_nvim_satisfied_marker)"
+  mkdir -p "$(dirname "$marker")"
+  shasum -a 256 "$DOTFILES_DIR/config/nvim/lazy-lock.json" 2>/dev/null \
+    | awk '{print $1}' >"$marker"
 }

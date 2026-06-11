@@ -13,6 +13,8 @@
 #               mise, agents, runtimes, android, macos, ssh.
 #   --only=<phase>[,<phase>...]
 #               Inverse of --skip: run only these phases.
+#   --snapshot  Write bootstrap-state.snapshot recording current versions of
+#               every brew/mise tool, submodule, and plugin.
 #   --help      Show this help.
 
 set -euo pipefail
@@ -24,6 +26,7 @@ DRY_RUN=0
 CHECK_MODE=0
 SKIP_PHASES=""
 ONLY_PHASES=""
+SNAPSHOT_ONLY=0
 
 usage() {
   sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//'
@@ -35,6 +38,7 @@ while [ $# -gt 0 ]; do
     --check) CHECK_MODE=1 ;;
     --skip=*) SKIP_PHASES="${1#--skip=}" ;;
     --only=*) ONLY_PHASES="${1#--only=}" ;;
+    --snapshot) SNAPSHOT_ONLY=1 ;;
     --help | -h)
       usage
       exit 0
@@ -52,6 +56,21 @@ export DRY_RUN CHECK_MODE
 
 # shellcheck source=lib/_common.sh
 . "$DOTFILES_DIR/lib/_common.sh"
+
+# --snapshot is a standalone mode: write (or, with --check, verify) the
+# bootstrap-state.snapshot file and exit. Does not run install phases.
+if [ "$SNAPSHOT_ONLY" = "1" ]; then
+  # shellcheck source=lib/snapshot.sh
+  . "$DOTFILES_DIR/lib/snapshot.sh"
+  if [ "$CHECK_MODE" = "1" ]; then
+    SNAPSHOT_MODE="check"
+  else
+    SNAPSHOT_MODE="write"
+  fi
+  export SNAPSHOT_MODE
+  snapshot_run
+  exit $?
+fi
 
 # Phase ordering matters:
 #   preflight → brew (provides mise) → symlinks (cheap, no deps) → mise →

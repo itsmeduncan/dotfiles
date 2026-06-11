@@ -30,6 +30,14 @@ brew_run() {
     return 0
   fi
 
+  # Skip the install pass entirely when Brewfile is already satisfied —
+  # `brew bundle check` is ~1s, `brew bundle install` is ~5s + network even
+  # in the no-op case. Saves repeated work on re-runs.
+  if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+    ok "Brewfile already satisfied — skipping install"
+    return 0
+  fi
+
   log "Syncing Brewfile..."
   if [ "${DRY_RUN:-0}" = "1" ]; then
     would "brew bundle install --file=$DOTFILES_DIR/Brewfile"
