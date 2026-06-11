@@ -37,6 +37,7 @@
     ],
     "defaultMode": "auto"
   },
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "PostToolUse": [
       {
@@ -74,6 +75,5 @@
   },
   "effortLevel": "medium",
   "theme": "dark-ansi",
-  "skipAutoPermissionPrompt": true,
-  "model": "claude-fable-5[1m]"
+  "skipAutoPermissionPrompt": true
 }
