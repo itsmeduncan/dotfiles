@@ -58,6 +58,9 @@ jobs:
             echo "ok: $f"
           done
 
+      - name: .tool-versions in sync with mise.toml
+        run: bin/sync-tool-versions --check
+
       - name: Prettier check (markdown)
         run: |
           npx --yes prettier@3 --check '**/*.{md,markdown,yaml,yml}' \
