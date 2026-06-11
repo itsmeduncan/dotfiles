@@ -29,6 +29,35 @@
 [user]
 	name = Duncan Grazier
 	email = itsmeduncan@users.noreply.github.com
+# ---------------------------------------------------------------------------
+# SSH commit signing via 1Password.
+#
+# Tracked config sets up the SIGNER (op-ssh-sign) but does NOT enable signing
+# by default — that's opt-in per-machine to avoid breaking commits on fresh
+# clones where 1Password / the SSH key haven't been set up yet.
+#
+# To enable on this machine, run:
+#   git config --global user.signingKey "ssh-ed25519 AAAA... your-key"
+#   git config --global commit.gpgsign true
+#   git config --global tag.gpgsign true
+#
+# Or drop into ~/.gitconfig.local (loaded below via includeIf):
+#   [user]
+#       signingKey = ssh-ed25519 AAAA... your-key
+#   [commit]
+#       gpgsign = true
+#   [tag]
+#       gpgsign = true
+# ---------------------------------------------------------------------------
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	# 1Password's SSH-sign helper. Cask `1password-cli` provides this on macOS.
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
+[includeIf "gitdir:~/"]
+	# Per-machine overrides: signing key, commit.gpgsign, work-vs-personal identity.
+	# Not tracked. Safe to be missing.
+	path = ~/.gitconfig.local
 [color]
 	ui = auto
 [core]
