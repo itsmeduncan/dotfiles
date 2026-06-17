@@ -18,9 +18,11 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **`.github/workflows/ci.yml`** — Tier-1 lint (Ubuntu, every push/PR): bash -n, shellcheck, shfmt, prettier check, JSON/YAML validation, gitleaks. Tier-2 install (macOS, on PR to main / dispatch): dry-run + real installer end-to-end + `--check` verification.
 - **1Password SSH commit signing** — gitconfig now has `commit.gpgsign = true`, `gpg.format = ssh`, and points at 1Password's `op-ssh-sign`. Placeholder `signingKey` — override locally.
 - **`CHANGELOG.md`** — this file.
+- **Pi config tracked under `pi/`** — `pi/models.json` (lmstudio + darksaber local providers, Anthropic key via `!op read` from 1Password) and `pi/settings.json` (local-first default model) are now symlinked into `~/.pi/agent/` by the agents phase. Reproducible on a new machine; no secrets in the repo (`auth.json` stays machine-local).
 
 ### Changed
 
+- **Tailscale moved to the `tailscale-app` cask** — was installed via the Mac App Store, which Homebrew can't see, so `brew bundle check` reported permanent drift and re-ran `brew bundle install` every time. Now brew-owned and reproducible.
 - **Homebrew scope reduced** from ~30 packages to 12: only what mise can't manage or what's tightly coupled to brew (services, zsh plugin assets, system networking, GUI casks).
 - **`mise install` failures are now warnings**, not fatal — downstream symlinks and config still land.
 - **SSH keygen defaults to passphrase-protected key.** Typing `unencrypted` at the second prompt is required to opt into the convenience-only default.

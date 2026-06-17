@@ -1,0 +1,7 @@
+{
+  "lastChangelogVersion": "0.79.4",
+  "defaultProvider": "lmstudio",
+  "defaultModel": "qwen3.6-27b-ud-mlx",
+  "theme": "dark",
+  "defaultThinkingLevel": "medium"
+}

@@ -38,6 +38,12 @@ EOF
     fi
   fi
 
+  # Pi (earendil-works/pi) profile-wide config.
+  # Only non-secret, reproducible config is tracked. auth.json holds secrets and
+  # stays machine-local; the Anthropic key resolves from 1Password via models.json.
+  link "$DOTFILES_DIR/pi/models.json" "$HOME/.pi/agent/models.json"
+  link "$DOTFILES_DIR/pi/settings.json" "$HOME/.pi/agent/settings.json"
+
   # Claude Code profile-wide config.
   link "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
   link "$DOTFILES_DIR/claude/settings.json" "$HOME/.claude/settings.json"
