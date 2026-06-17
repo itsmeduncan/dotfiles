@@ -51,7 +51,7 @@ cask "1password"
 cask "1password-cli" # required for SSH-agent commit signing (see gitconfig)
 cask "slack"
 cask "notion"
-cask "tailscale"
+cask "tailscale-app"
 cask "lm-studio"
 cask "gcloud-cli"
 
