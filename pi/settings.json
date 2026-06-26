@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.80.2",
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-8",
+  "defaultProvider": "lmstudio",
+  "defaultModel": "qwen3-coder-30b-a3b-instruct-mlx",
   "theme": "dark",
   "defaultThinkingLevel": "medium",
   "packages": [
