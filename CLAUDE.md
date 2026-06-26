@@ -102,8 +102,9 @@ Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 - Plugins: tmux-resurrect (session persistence), tmux-sensible (sensible defaults), tmux-continuum (auto-restore every 15min), tmux-yank (clipboard integration)
 - Ghostty terminal support: RGB color override, passthrough enabled
 - Vim-style pane navigation (`C-h/j/k/l`) via vim-tmux-navigator integration
-- Status bar: session name, window tabs, weather, battery, date/time
+- Status bar: session name (turns amber while prefix is armed), window tabs, weather, battery (red when low), date/time
 - Quick Claude Code pane: `prefix C` (30% right split)
+- Popups: `prefix g` (lazygit, 90%), `prefix f` (fzf session switcher, 40%)
 - Vi copy mode with pbcopy integration
 
 ## Claude Code
@@ -128,7 +129,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - **Local skills** (authored in this repo): `audit`, `code-review`, `cross-platform-review`, `deep-review`, `doc-sync`, `fix-ci`, `fix-pipeline`, `release`, `sync-docs`, `sync-main`, `unstick`.
   - **Vendored greptile** (`agents/skills/greptile/`, git submodule) — `check-pr` (PR/MR/CL automation against Greptile reviews) re-exposed at top level via symlink.
   - **Sibling-repo marketing/ops skills** (symlinked from `~/Projects/src/github.com/itsmeduncan/ai-marketing-skills/`): `autoresearch`, `content-ops`, `conversion-ops`, `deck-generator`, `eval`, `finance-ops`, `growth-engine`, `outbound-engine`, `podcast-ops`, `revenue-intelligence`, `sales-pipeline`, `sales-playbook`, `security`, `seo-ops`, `team-ops`, `telemetry`, `x-longform-post`, `yt-competitive-analysis`.
-- **`claude/statusline.sh`** — Custom status line script (shows directory, git branch, model, context usage, rate limits).
+- **`claude/statusline.sh`** — Custom status line script (shows directory, git branch + dirty/ahead-behind markers, model, color-graded context usage, rate limits).
 - **`claude/hooks/`** — Lifecycle hooks:
   - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
 

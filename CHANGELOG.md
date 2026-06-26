@@ -19,6 +19,10 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **1Password SSH commit signing** — gitconfig now has `commit.gpgsign = true`, `gpg.format = ssh`, and points at 1Password's `op-ssh-sign`. Placeholder `signingKey` — override locally.
 - **`CHANGELOG.md`** — this file.
 - **Pi config tracked under `pi/`** — `pi/models.json` (lmstudio + darksaber local providers, Anthropic key via `!op read` from 1Password) and `pi/settings.json` (local-first default model) are now symlinked into `~/.pi/agent/` by the agents phase. Reproducible on a new machine; no secrets in the repo (`auth.json` stays machine-local).
+- **tmux popups** — `prefix g` opens lazygit in a 90% centered popup at the current pane's path; `prefix f` opens an fzf session switcher.
+- **tmux prefix indicator** — the session block in the status bar turns amber while the prefix key is armed, for visual feedback.
+- **Statusline git state + color** — `claude/statusline.sh` now shows a `✱` dirty marker and `↑↓` ahead/behind counts next to the branch, and color-grades context usage (green < 50%, yellow < 80%, red ≥ 80%).
+- **Battery low-charge color** — `bin/battery` flags the status-bar reading red when below 20% and unplugged.
 
 ### Changed
 

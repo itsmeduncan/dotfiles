@@ -1,5 +1,6 @@
 #!/bin/sh
-# Output a battery emoji based on current charge level (macOS)
+# Output a battery indicator for the tmux status bar (macOS).
+# Emits tmux #[fg=...] markup so a low charge shows red; resets to grey after.
 level=$(pmset -g batt | grep -Eo '[0-9]+%' | tr -d '%')
 charging=$(pmset -g batt | grep -c 'AC Power')
 
@@ -10,12 +11,9 @@ fi
 
 if [ "$charging" -gt 0 ] && [ "$level" -lt 100 ]; then
   echo "⚡ ${level}%"
-elif [ "$level" -ge 80 ]; then
-  echo "🔋 ${level}%"
-elif [ "$level" -ge 50 ]; then
-  echo "🔋 ${level}%"
 elif [ "$level" -ge 20 ]; then
-  echo "🪫 ${level}%"
+  echo "🔋 ${level}%"
 else
-  echo "🪫 ${level}%"
+  # Low and unplugged — flag it red, then restore the bar's grey
+  echo "#[fg=#d75f5f,bold]🪫 ${level}%#[fg=#707070,nobold]"
 fi
