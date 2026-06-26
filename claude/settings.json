@@ -62,7 +62,8 @@
     "skill-creator@claude-plugins-official": true,
     "feature-dev@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
-    "prime@arthai": true
+    "prime@arthai": true,
+    "figma@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {
     "arthai": {
@@ -73,6 +74,7 @@
     }
   },
   "effortLevel": "xhigh",
+  "tui": "fullscreen",
   "theme": "dark-ansi",
   "skipAutoPermissionPrompt": true
 }
