@@ -38,4 +38,35 @@ symlinks_run() {
 
   # pnpm config lives under ~/Library/Preferences on macOS
   link "$DOTFILES_DIR/config/pnpm" "$HOME/Library/Preferences/pnpm"
+
+  # Obsidian notes vault, synced via iCloud Drive
+  _link_notes_vault
+}
+
+# Link ~/notes to the iCloud-synced Obsidian vault.
+# Unlike the repo symlinks, the target lives in iCloud (not this repo) and the
+# source may hold real data — so this never clobbers a non-symlink ~/notes.
+_link_notes_vault() {
+  local target="$HOME/Library/Mobile Documents/com~apple~CloudDocs/notes"
+  local dst="$HOME/notes"
+
+  # Already the correct symlink — idempotent no-op.
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$target" ]; then
+    if [ "${CHECK_MODE:-0}" = "1" ]; then ok "notes vault OK: $dst → iCloud"; fi
+    return 0
+  fi
+
+  # Something else occupies ~/notes — never destroy a real data dir.
+  if [ -e "$dst" ] || [ -L "$dst" ]; then
+    warn "$dst is not the iCloud symlink — leaving as-is (migrate the vault manually)"
+    return 0
+  fi
+
+  # iCloud vault hasn't synced to this machine yet — nothing to link.
+  if [ ! -d "$target" ]; then
+    if [ "${CHECK_MODE:-0}" = "1" ]; then warn "notes vault: iCloud folder not synced yet"; fi
+    return 0
+  fi
+
+  link "$target" "$dst"
 }

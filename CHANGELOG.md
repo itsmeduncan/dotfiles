@@ -24,6 +24,8 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **Statusline git state + color** — `claude/statusline.sh` now shows a `✱` dirty marker and `↑↓` ahead/behind counts next to the branch, and color-grades context usage (green < 50%, yellow < 80%, red ≥ 80%).
 - **Battery low-charge color** — `bin/battery` flags the status-bar reading red when below 20% and unplugged.
 - **Pi local-first default** — `Qwen3-Coder-30B-A3B-Instruct-MLX` is now the first lmstudio model and the default provider/model for Pi (agentic coding tuned, runs on the M5 Max).
+- **Obsidian cask** — the Obsidian desktop app is now brew-managed, alongside the existing `obsidian.nvim` workflow over the `~/notes/` vault.
+- **iCloud notes vault** — the `~/notes/` Obsidian vault now lives in iCloud Drive (`com~apple~CloudDocs/notes`), with `~/notes` symlinked to it. The symlinks phase links it idempotently on new machines once iCloud has synced, and never clobbers a real `~/notes` directory.
 
 ### Changed
 

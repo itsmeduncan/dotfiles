@@ -48,7 +48,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
 - **Cloud & infra:** awscli, terraform, gcloud-cli (Google Cloud CLI)
 - **Networking:** mosh, nmap
-- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Tailscale, LM Studio, gcloud-cli
+- **GUI apps (casks):** Ghostty, OrbStack, 1Password, Slack, Notion, Obsidian, Tailscale, LM Studio, gcloud-cli
 - **Git workflow:** gh (GitHub CLI), pre-commit (hook framework), git-absorb (auto-fixup commits)
 
 ## Git config highlights

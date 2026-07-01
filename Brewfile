@@ -51,6 +51,7 @@ cask "1password"
 cask "1password-cli" # required for SSH-agent commit signing (see gitconfig)
 cask "slack"
 cask "notion"
+cask "obsidian" # markdown notes vault at ~/notes/ (also edited via obsidian.nvim)
 cask "tailscale-app"
 cask "lm-studio"
 cask "gcloud-cli"
