@@ -140,11 +140,19 @@ require("lazy").setup({
     dependencies = { "williamboman/mason.nvim" },
     event = { "BufReadPre", "BufNewFile" },
     config = function()
-      -- Ensure servers are installed via Mason
+      -- Ensure servers are installed via Mason.
+      -- Keys are lspconfig server names; values are Mason package names
+      -- (these differ, which is what the removed mason-lspconfig used to bridge).
+      local mason_packages = {
+        pyright = "pyright",
+        ts_ls = "typescript-language-server",
+        kotlin_language_server = "kotlin-language-server",
+        lua_ls = "lua-language-server",
+      }
       local mason_registry = require("mason-registry")
-      for _, server in ipairs({ "pyright", "ts_ls", "kotlin_language_server", "lua_ls" }) do
-        if not mason_registry.is_installed(server) then
-          mason_registry.get_package(server):install()
+      for _, package_name in pairs(mason_packages) do
+        if not mason_registry.is_installed(package_name) then
+          mason_registry.get_package(package_name):install()
         end
       end
 
