@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/badlogic/pi-mono/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "jellybeans-oled",
+  "vars": {
+    "bg": "#000000",
+    "bgLight": "#151515",
+    "bgCursorLine": "#0a0a0a",
+    "text": "#e8e8d3",
+    "mutedText": "#888888",
+    "dimText": "#605958",
+    "accent": "#fad07a",
+    "blue": "#8fbfdc",
+    "lavender": "#c6b6ee",
+    "green": "#99ad6a",
+    "orange": "#cf6a4c",
+    "pink": "#f0a0c0",
+    "darkBlue": "#8197bf"
+  },
+  "colors": {
+    "accent": "#fad07a",
+    "border": "#8fbfdc",
+    "borderAccent": "#c6b6ee",
+    "borderMuted": "#333333",
+    "success": "#99ad6a",
+    "error": "#cf6a4c",
+    "warning": "#fad07a",
+    "muted": "#888888",
+    "dim": "#605958",
+    "text": "",
+    "thinkingText": "#888888",
+
+    "selectedBg": "#0a0a0a",
+    "userMessageBg": "#151515",
+    "userMessageText": "",
+    "customMessageBg": "#0d0d1a",
+    "customMessageText": "",
+    "customMessageLabel": "#c6b6ee",
+    "toolPendingBg": "#0a0a12",
+    "toolSuccessBg": "#0a120a",
+    "toolErrorBg": "#140a0a",
+    "toolTitle": "",
+    "toolOutput": "#888888",
+
+    "mdHeading": "#fad07a",
+    "mdLink": "#8fbfdc",
+    "mdLinkUrl": "#605958",
+    "mdCode": "#fad07a",
+    "mdCodeBlock": "",
+    "mdCodeBlockBorder": "#333333",
+    "mdQuote": "#888888",
+    "mdQuoteBorder": "#333333",
+    "mdHr": "#333333",
+    "mdListBullet": "#fad07a",
+
+    "toolDiffAdded": "#99ad6a",
+    "toolDiffRemoved": "#cf6a4c",
+    "toolDiffContext": "#888888",
+
+    "syntaxComment": "#888888",
+    "syntaxKeyword": "#8197bf",
+    "syntaxFunction": "#fad07a",
+    "syntaxVariable": "#c6b6ee",
+    "syntaxString": "#99ad6a",
+    "syntaxNumber": "#ffb964",
+    "syntaxType": "#ffb964",
+    "syntaxOperator": "#e8e8d3",
+    "syntaxPunctuation": "#e8e8d3",
+
+    "thinkingOff": "#333333",
+    "thinkingMinimal": "#4a4a4a",
+    "thinkingLow": "#8197bf",
+    "thinkingMedium": "#8fbfdc",
+    "thinkingHigh": "#c6b6ee",
+    "thinkingXhigh": "#f0a0c0",
+
+    "bashMode": "#99ad6a"
+  },
+  "export": {
+    "pageBg": "#000000",
+    "cardBg": "#151515",
+    "infoBg": "#1a1508"
+  }
+}

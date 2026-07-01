@@ -62,8 +62,11 @@ jobs:
         run: bin/sync-tool-versions --check
 
       - name: Prettier check (markdown)
+        # Pin the exact version. An unpinned `prettier@3` lets a newer release
+        # reformat markdown and break CI on unrelated commits. Keep this in sync
+        # with the min-release-age-capped version used locally / by pre-commit.
         run: |
-          npx --yes prettier@3 --check '**/*.{md,markdown,yaml,yml}' \
+          npx --yes prettier@3.8.4 --check '**/*.{md,markdown,yaml,yml}' \
             '!agents/skills/**' '!claude/skills/**' '!CHANGELOG.md'
 
       - name: Gitleaks (secret scan)
