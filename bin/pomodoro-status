@@ -1,0 +1,14 @@
+#!/bin/sh
+# tmux status-bar segment for tmux-pomodoro-plus.
+# The plugin prints its live countdown/break/paused status, but nothing when
+# idle. Emit a placeholder in that case so the segment is always visible.
+plugin="$HOME/.tmux/plugins/tmux-pomodoro-plus/scripts/pomodoro.sh"
+
+status=""
+[ -x "$plugin" ] && status=$("$plugin" 2>/dev/null)
+
+if [ -n "$status" ]; then
+  printf '%s' "$status"
+else
+  printf ' 🍅 --'
+fi

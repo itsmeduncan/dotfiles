@@ -26,6 +26,7 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **Pi local-first default** — `Qwen3-Coder-30B-A3B-Instruct-MLX` is now the first lmstudio model and the default provider/model for Pi (agentic coding tuned, runs on the M5 Max).
 - **Obsidian cask** — the Obsidian desktop app is now brew-managed, alongside the existing `obsidian.nvim` workflow over the `~/notes/` vault.
 - **iCloud notes vault** — the `~/notes/` Obsidian vault now lives in iCloud Drive (`com~apple~CloudDocs/notes`), with `~/notes` symlinked to it. The symlinks phase links it idempotently on new machines once iCloud has synced, and never clobbers a real `~/notes` directory.
+- **tmux Pomodoro timer** — `tmux-pomodoro-plus` (tpm). `prefix p` start/pause, `P` cancel, `_` skip. The countdown is always shown in the status bar (` 🍅 --` placeholder when idle, spaced ` 🍅 25m` when running) via a new `bin/pomodoro-status` wrapper; desktop notifications are off. `prefix p` now overrides tmux's default previous-window binding.
 
 ### Changed
 

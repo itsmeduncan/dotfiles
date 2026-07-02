@@ -16,7 +16,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Git:** `gitconfig` (aliases, delta pager, modern defaults), `gitignore` (global ignores including AI tools), `gitmessage` (commit template)
 - **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
-- **Utilities:** `bin/weather`, `bin/battery` (custom scripts used in tmux status bar)
+- **Utilities:** `bin/weather`, `bin/battery`, `bin/pomodoro-status` (custom scripts used in tmux status bar)
 - **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
 - **Bat:** `config/bat/config` (theme + style — symlinked to `~/.config/bat/config`)
 - **Ghostty:** `config/ghostty/config` (terminal config — symlinked to `~/.config/ghostty/config`)
@@ -30,7 +30,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Installer:** `install.sh` (orchestrator) + `lib/*.sh` (phase modules; `lib/_common.sh` has the `log`/`warn`/`ok`/`link`/`run` helpers)
 - **CI / quality gates:** `.github/workflows/ci.yml` (Tier-1 lint on Ubuntu, Tier-2 e2e install on macOS), `.pre-commit-config.yaml` (shellcheck, shfmt, prettier, gitleaks)
 - **Package managers (supply-chain hygiene for project-level installs):** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
-- **Scripts:** `bin/weather`, `bin/battery` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar), `bin/sync-tool-versions` (regenerate `.tool-versions` from `mise.toml`)
+- **Scripts:** `bin/weather`, `bin/battery`, `bin/pomodoro-status` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar), `bin/sync-tool-versions` (regenerate `.tool-versions` from `mise.toml`)
 - **Other:** `gemrc`, `psqlrc`, `CHANGELOG.md` (Keep-a-Changelog format), `AGENTS.md` (symlink → `CLAUDE.md` — this file is the single source of truth)
 
 ## Key tools
@@ -99,12 +99,13 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 
 Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 
-- Plugins: tmux-resurrect (session persistence), tmux-sensible (sensible defaults), tmux-continuum (auto-restore every 15min), tmux-yank (clipboard integration)
+- Plugins: tmux-resurrect (session persistence), tmux-sensible (sensible defaults), tmux-continuum (auto-restore every 15min), tmux-yank (clipboard integration), tmux-pomodoro-plus (Pomodoro timer)
 - Ghostty terminal support: RGB color override, passthrough enabled
 - Vim-style pane navigation (`C-h/j/k/l`) via vim-tmux-navigator integration
 - Status bar: session name (turns amber while prefix is armed), window tabs, weather, battery (red when low), date/time
 - Quick Claude Code pane: `prefix C` (30% right split)
 - Popups: `prefix g` (lazygit, 90%), `prefix f` (fzf session switcher, 40%)
+- Pomodoro (tmux-pomodoro-plus): `prefix p` start/pause, `prefix P` cancel, `prefix _` skip, `prefix C-p` menu; countdown is always shown in the status bar (via `bin/pomodoro-status`, which renders a ` 🍅 --` placeholder when idle), desktop notifications off. Note: `prefix p` overrides tmux's default previous-window.
 - Vi copy mode with pbcopy integration
 
 ## Claude Code
