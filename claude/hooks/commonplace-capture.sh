@@ -16,8 +16,9 @@ input=$(cat)
 transcript=$(printf '%s' "$input" | jq -r '.transcript_path // empty')
 { [ -z "$transcript" ] || [ ! -f "$transcript" ]; } && exit 0
 
-# Already captured this session? Nothing to nudge.
-grep -q '"name":"add_memory"' "$transcript" 2>/dev/null && exit 0
+# Already captured this session? Nothing to nudge. MCP tools are recorded with a
+# namespaced name, e.g. "mcp__commonplace-personal__add_memory" — match that too.
+grep -qE '"name":"(mcp__[a-zA-Z0-9_-]+__)?add_memory"' "$transcript" 2>/dev/null && exit 0
 
 # Only bother if the session actually used tools (skip trivial chats).
 grep -q '"type":"tool_use"' "$transcript" 2>/dev/null || exit 0
