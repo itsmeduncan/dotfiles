@@ -89,4 +89,6 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 
 **CITE what you used.** When a memory fact informs an answer, say so briefly ("from memory: you prefer rebase-workflow"). If you searched and found nothing, that's fine — just don't silently ignore memory.
 
-Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace repo.
+**Write is enforced by a Stop hook.** `claude/hooks/commonplace-capture.sh` (registered under `hooks.Stop` in `claude/settings.json`) nudges a capture pass at the end of any substantive session, so the WRITE step above stops being discretionary. If you get a Stop-hook nudge, do the search-then-`add_memory` pass; if nothing durable emerged, say so and stop.
+
+Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace repo (write-enforcement hook shipped at `clients/claude-code/`).

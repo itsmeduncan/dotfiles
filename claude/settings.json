@@ -49,6 +49,17 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ~/.claude/hooks/commonplace-capture.sh",
+            "timeout": 15
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
