@@ -25,5 +25,5 @@ grep -q '"type":"tool_use"' "$transcript" 2>/dev/null || exit 0
 
 jq -n '{
   decision: "block",
-  reason: "Before ending: run a commonplace memory-capture pass. First search_nodes to avoid duplicates, then add_memory (agent_id=\"claude-code\") for any DURABLE facts from this session — decisions+rationale, stable preferences, project/people/org facts, requirements. Use the personal tier for non-confidential data; the client tier only for NDA/confidential. If nothing durable emerged, say so briefly and stop."
+  reason: "commonplace capture: search_nodes to dedupe, then add_memory(agent_id=\"claude-code\") for durable facts only — decisions, preferences, project/people. Personal tier unless confidential (then client). Nothing durable? say so and stop."
 }'
