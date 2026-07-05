@@ -40,6 +40,7 @@ brew "yazi"
 
 # --- Not in mise registry ---
 brew "git-absorb"
+brew "duti" # sets the macOS default app for .md → the "Open in Neovim" wrapper (lib/macos.sh)
 
 # --- Ruby gem (brew tap is canonical) ---
 brew "cocoapods"

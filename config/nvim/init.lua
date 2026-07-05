@@ -413,11 +413,34 @@ require("lazy").setup({
 
   -- ── Markdown Rendering ─────────────────────────────────────────────
 
+  -- Inline rendering in the buffer: styled headings, full-width code blocks,
+  -- rendered checkboxes/bullets/tables. `<leader>mr` toggles it off for raw edits.
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" },
+    ft = { "markdown", "md" },
+    opts = {
+      code = { style = "full", width = "block", left_pad = 1, right_pad = 2 },
+      checkbox = { enabled = true },
+      heading = { sign = false },
+    },
+    keys = {
+      { "<leader>mr", "<cmd>RenderMarkdown toggle<cr>", ft = "markdown", desc = "Markdown: toggle inline render" },
+    },
+  },
+
+  -- Live browser preview with synced scrolling. `<leader>mp` toggles it.
+  -- `build` fetches a prebuilt server binary — no node/yarn toolchain needed.
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreview", "MarkdownPreviewStop", "MarkdownPreviewToggle" },
     ft = "markdown",
-    opts = {},
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+    keys = {
+      { "<leader>mp", "<cmd>MarkdownPreviewToggle<cr>", ft = "markdown", desc = "Markdown: toggle browser preview" },
+    },
   },
 
   -- ── Personal Wiki / Notes ──────────────────────────────────────────

@@ -33,6 +33,9 @@ repos:
         # bin/* and lib/* are bash; install.sh too. agents/skills/ is not ours.
         files: ^(install\.sh|lib/.*\.sh|bin/.*)$
         exclude_types: [binary]
+        # Follow `# shellcheck source=` directives (each lib/*.sh sources
+        # _common.sh) so single-file commits don't false-positive on SC1091.
+        args: [--external-sources]
 
   - repo: https://github.com/scop/pre-commit-shfmt
     rev: v3.13.0-1

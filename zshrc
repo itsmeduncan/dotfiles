@@ -106,6 +106,17 @@ alias g="git"
 alias vi="nvim"
 alias vim="nvim"
 
+# Markdown: `md file.md` renders it paged with glow; `md` with no args opens
+# glow's file browser scoped to the current dir. Editing is still `vim file.md`
+# (render-markdown.nvim styles it inline); a full browser preview is <leader>mp.
+md() {
+  if [ "$#" -eq 0 ]; then
+    glow
+  else
+    glow -p "$@"
+  fi
+}
+
 # LM Studio CLI
 export PATH="$PATH:$HOME/.lmstudio/bin"
 

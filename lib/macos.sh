@@ -82,6 +82,7 @@ macos_run() {
   set_default com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 
   macos_firewall
+  macos_markdown_handler
 
   if [ "$_DEFAULTS_CHANGED" = true ] && [ "${DRY_RUN:-0}" != "1" ] \
     && [ "${CHECK_MODE:-0}" != "1" ]; then
@@ -89,6 +90,73 @@ macos_run() {
     killall Finder 2>/dev/null || true
     killall Dock 2>/dev/null || true
   fi
+}
+
+# Make nvim (in a new Ghostty window) the default macOS app for markdown files.
+# Compiles macos/open-in-neovim.applescript to a wrapper .app, stamps it with a
+# stable bundle id, and points every markdown UTI + extension at it via duti.
+# Idempotent: the app is only recompiled when the source changes; duti -s is a
+# no-op when the association already matches.
+macos_markdown_handler() {
+  local src="$DOTFILES_DIR/macos/open-in-neovim.applescript"
+  local app="$HOME/Applications/Open in Neovim.app"
+  local bundle_id="com.itsmeduncan.open-in-neovim"
+  local lsregister="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister"
+  # net.daringfireball.markdown is the UTI macOS registers for .md; the bare
+  # public.markdown UTI isn't in the system hierarchy, so we key off extensions.
+  local utis="net.daringfireball.markdown"
+  local exts="md markdown mdown mkd markdn"
+
+  if ! command -v duti >/dev/null 2>&1; then
+    warn "duti not installed — skipping markdown default-app registration (run the brew phase)"
+    return 0
+  fi
+
+  if [ "${CHECK_MODE:-0}" = "1" ]; then
+    local cur
+    cur=$(duti -x md 2>/dev/null | tail -1)
+    if [ "$cur" = "$bundle_id" ]; then
+      ok "markdown handler OK: .md → $bundle_id"
+    else
+      warn "markdown handler DRIFT: .md → ${cur:-none} (want $bundle_id)"
+    fi
+    return 0
+  fi
+
+  # Recompile the wrapper app only when it's missing or the source changed.
+  local rebuilt=false
+  if [ ! -d "$app" ] || [ "$src" -nt "$app/Contents/Info.plist" ]; then
+    if [ "${DRY_RUN:-0}" = "1" ]; then
+      would "osacompile -o '$app' + stamp bundle id $bundle_id + lsregister"
+    else
+      mkdir -p "$HOME/Applications"
+      rm -rf "$app"
+      osacompile -o "$app" "$src"
+      /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $bundle_id" \
+        "$app/Contents/Info.plist" 2>/dev/null \
+        || /usr/libexec/PlistBuddy -c "Add :CFBundleIdentifier string $bundle_id" \
+          "$app/Contents/Info.plist"
+      "$lsregister" -f "$app" 2>/dev/null || true
+      rebuilt=true
+      ok "built wrapper app: $app"
+    fi
+  fi
+
+  # Diff-before-write: if the app is current and .md already resolves to our
+  # wrapper, there's nothing to register — skip the duti pass entirely.
+  if [ "$rebuilt" = false ] && [ "$(duti -x md 2>/dev/null | tail -1)" = "$bundle_id" ]; then
+    return 0
+  fi
+
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+    would "duti -s $bundle_id <markdown UTI + .md/.markdown/…> all"
+    return 0
+  fi
+
+  local x
+  for x in $utis; do duti -s "$bundle_id" "$x" all 2>/dev/null || true; done
+  for x in $exts; do duti -s "$bundle_id" ".$x" all 2>/dev/null || true; done
+  ok "markdown default app → nvim in Ghostty"
 }
 
 macos_firewall() {

@@ -17,6 +17,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
 - **Utilities:** `bin/weather`, `bin/battery`, `bin/pomodoro-status` (custom scripts used in tmux status bar)
+- **Markdown:** nvim is the editor everywhere (`$EDITOR`); `glow` renders it in the terminal (`md` shell function — paged render, or no-arg cwd browser). On macOS, `.md` files open in nvim (in a new Ghostty window) via `macos/open-in-neovim.applescript` — `lib/macos.sh` compiles it to `~/Applications/Open in Neovim.app` and points markdown at it with `duti`.
 - **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
 - **Bat:** `config/bat/config` (theme + style — symlinked to `~/.config/bat/config`)
 - **Ghostty:** `config/ghostty/config` (terminal config — symlinked to `~/.config/ghostty/config`)
@@ -36,13 +37,13 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 ## Key tools
 
 - **Shell:** zsh + oh-my-zsh + Spaceship Prompt + zsh-autosuggestions + zsh-syntax-highlighting
-- **Primary dependency manager:** mise — all language runtimes (Node, Python, Ruby, Go, Java, Bun) AND most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin, `npm:@mariozechner/pi-coding-agent`). Versions pinned in `mise.toml` at the repo root. Upgrade with `mise upgrade --bump`.
-- **Homebrew (`/opt/homebrew`):** secondary, declared in `Brewfile`. Used only for: mise itself (bootstrap), GUI casks, tmux, zsh plugin assets, postgresql@18 (pinned — data dir is version-specific), watchman, system networking tools (mosh, nmap, wget), tldr, yazi, git-absorb, cocoapods (ruby gem).
+- **Primary dependency manager:** mise — all language runtimes (Node, Python, Ruby, Go, Java, Bun) AND most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin, glow, `npm:@mariozechner/pi-coding-agent`). Versions pinned in `mise.toml` at the repo root. Upgrade with `mise upgrade --bump`.
+- **Homebrew (`/opt/homebrew`):** secondary, declared in `Brewfile`. Used only for: mise itself (bootstrap), GUI casks, tmux, zsh plugin assets, postgresql@18 (pinned — data dir is version-specific), watchman, system networking tools (mosh, nmap, wget), tldr, yazi, git-absorb, duti (sets the macOS default markdown app), cocoapods (ruby gem).
 - **AI:** opencode (CLI agent), lm-studio (local LLMs)
 - **Go:** GOPATH at `$HOME/Projects/`
 - **Rust:** rustup (installed by `install.sh` if missing)
 - **Env management:** direnv
-- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit, yazi (file manager), dust (du), bottom (top), tokei (code stats), hyperfine (benchmarks), tldr (man pages), mosh (remote shell), wget
+- **Modern CLI:** eza (ls), bat (cat), ripgrep (grep), fd (find), zoxide (cd), fzf (fuzzy finder), delta (git diffs), lazygit, yazi (file manager), dust (du), bottom (top), tokei (code stats), hyperfine (benchmarks), tldr (man pages), glow (markdown renderer), mosh (remote shell), wget
 - **Shell history:** atuin (SQLite-backed, fuzzy-searchable, per-directory filtering)
 - **Dev tools:** uv (Python packaging), pnpm (Node packaging), jq/yq (JSON/YAML), watchman (file watching), just (command runner), PostgreSQL (database)
 - **Mobile:** cocoapods, swiftlint (iOS); Android SDK + commandlinetools (Android)
@@ -88,7 +89,7 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 - Utilities: snacks.nvim (dashboard, notifier, indent guides, word highlight, terminal — `<leader>d` delete buffer, `<leader>tt` terminal)
 - Icons: nvim-web-devicons
 - Keybinding discovery: which-key.nvim
-- Markdown rendering: render-markdown.nvim
+- Markdown: render-markdown.nvim (inline styled headings/code/checkboxes, `,mr` toggle) + markdown-preview.nvim (live browser preview with synced scroll, `,mp` toggle; prebuilt server binary, no node build)
 - Personal notes: obsidian.nvim (Obsidian-style vault at `~/notes/`, `,ww` quick switch, `,wt` today's daily, `,wn` new, `,wf` grep, `,wb` backlinks) — plain markdown with `[[wikilinks]]` and frontmatter, ingestible by local LLMs
 - Lua LSP: lazydev.nvim
 - Config: `<leader>r` edit, `<leader>R` reload
@@ -104,7 +105,7 @@ Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 - Vim-style pane navigation (`C-h/j/k/l`) via vim-tmux-navigator integration
 - Status bar: session name (turns amber while prefix is armed), window tabs, weather, battery (red when low), date/time
 - Quick Claude Code pane: `prefix C` (30% right split)
-- Popups: `prefix g` (lazygit, 90%), `prefix f` (fzf session switcher, 40%)
+- Popups: `prefix g` (lazygit, 90%), `prefix f` (fzf session switcher, 40%), `prefix m` (glow markdown browser at the pane path, 80% — overrides default mark-pane)
 - Pomodoro (tmux-pomodoro-plus): `prefix p` start/pause, `prefix P` cancel, `prefix _` skip, `prefix C-p` menu; countdown is always shown in the status bar (via `bin/pomodoro-status`, which renders a ` 🍅 --` placeholder when idle), desktop notifications off. Note: `prefix p` overrides tmux's default previous-window.
 - Vi copy mode with pbcopy integration
 
@@ -295,4 +296,5 @@ Rules:
 - Show which hook provided the context (triage-router, bootstrap, etc.)
 - If you chose NOT to use the triage router's suggestion, explain why
 - Skip the trace only for simple follow-up messages in an ongoing conversation
+
 <!-- <<< claude-agents toolkit <<< -->
