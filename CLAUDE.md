@@ -17,7 +17,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
 - **Utilities:** `bin/weather`, `bin/battery`, `bin/pomodoro-status` (custom scripts used in tmux status bar)
-- **Markdown:** nvim is the editor everywhere (`$EDITOR`); `glow` renders it in the terminal (`md` shell function — paged render, or no-arg cwd browser). On macOS, `.md` files open in nvim (in a new Ghostty window) via `macos/open-in-neovim.applescript` — `lib/macos.sh` compiles it to `~/Applications/Open in Neovim.app` and points markdown at it with `duti`.
+- **Markdown:** nvim is the editor everywhere (`$EDITOR`); `glow` renders it in the terminal (`mdr` shell function — paged render, or no-arg cwd browser; `md` stays oh-my-zsh's `mkdir -p`). On macOS, `.md` files open in nvim (in a new Ghostty window) via `macos/open-in-neovim.applescript` — `lib/macos.sh` compiles it to `~/Applications/Open in Neovim.app` and points markdown at it with `duti`.
 - **Yazi:** `config/yazi/` (keymap, theme, and yazi config — symlinked to `~/.config/yazi/`)
 - **Bat:** `config/bat/config` (theme + style — symlinked to `~/.config/bat/config`)
 - **Ghostty:** `config/ghostty/config` (terminal config — symlinked to `~/.config/ghostty/config`)

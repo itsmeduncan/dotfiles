@@ -106,10 +106,11 @@ alias g="git"
 alias vi="nvim"
 alias vim="nvim"
 
-# Markdown: `md file.md` renders it paged with glow; `md` with no args opens
-# glow's file browser scoped to the current dir. Editing is still `vim file.md`
-# (render-markdown.nvim styles it inline); a full browser preview is <leader>mp.
-md() {
+# Markdown: `mdr file.md` renders it paged with glow; `mdr` with no args opens
+# glow's file browser scoped to the current dir. (Not `md` — that's oh-my-zsh's
+# `mkdir -p`.) Editing is still `vim file.md` (render-markdown.nvim styles it
+# inline, `,mr` toggle); a full browser preview is `,mp`.
+mdr() {
   if [ "$#" -eq 0 ]; then
     glow
   else
