@@ -87,8 +87,8 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 - **Scope by project:** pass `group_id` (e.g. `group_id="acme-redesign"`) for project memory; omit for general/personal.
 - **Identify yourself:** pass `agent_id="claude-code"` so the write is attributed.
 
-**CITE what you used.** When a memory fact informs an answer, say so briefly ("from memory: you prefer rebase-workflow"). If you searched and found nothing, that's fine — just don't silently ignore memory.
+**CITE sparingly.** Only when a memory fact _materially changed_ your answer — you'd have asked me, or answered differently, without it — note it in a few words ("from memory: you prefer rebase-workflow"). Don't prefix routine responses, don't narrate searches that found nothing, and don't cite what you'd have known anyway. One quiet line when it counts, not a citation every turn.
 
-**Write is enforced by a Stop hook.** `claude/hooks/commonplace-capture.sh` (registered under `hooks.Stop` in `claude/settings.json`) nudges a capture pass at the end of any substantive session, so the WRITE step above stops being discretionary. If you get a Stop-hook nudge, do the search-then-`add_memory` pass; if nothing durable emerged, say so and stop.
+**Write is enforced by a Stop hook.** `claude/hooks/commonplace-capture.sh` (registered under `hooks.Stop` in `claude/settings.json`) nudges a capture pass at the end of a _substantial_ session — one that changed a file or ran long and tool-heavy; read-only lookups and quick chats are skipped. If you get a Stop-hook nudge, do the search-then-`add_memory` pass; if nothing durable emerged, say so and stop.
 
 Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace repo (write-enforcement hook shipped at `clients/claude-code/`).
