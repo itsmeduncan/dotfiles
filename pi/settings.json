@@ -1,12 +1,19 @@
 {
-  "lastChangelogVersion": "0.80.2",
-  "defaultProvider": "lmstudio",
-  "defaultModel": "qwen3-coder-30b-a3b-instruct-mlx",
-  "theme": "dark",
-  "defaultThinkingLevel": "medium",
+  "lastChangelogVersion": "0.80.3",
+  "defaultProvider": "google",
+  "defaultModel": "gemini-3.1-pro-preview-customtools",
+  "theme": "jellybeans-oled",
+  "defaultThinkingLevel": "high",
   "packages": [
     "npm:@hypabolic/pi-hypa",
     "npm:context-mode",
-    "npm:pi-subagents"
-  ]
+    "npm:pi-subagents",
+    "npm:pi-gemini-search",
+    "npm:@qraxiss/pi-gemini-auth",
+    "npm:pi-prompt-template-model",
+    "npm:pi-intercom"
+  ],
+  "terminal": {
+    "showTerminalProgress": true
+  }
 }
