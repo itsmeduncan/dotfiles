@@ -549,6 +549,16 @@ autocmd("FileType", {
   end,
 })
 
+-- Markdown settings
+autocmd("FileType", {
+  group = augroup("markdown_settings", { clear = true }),
+  pattern = { "markdown", "md" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
+})
+
 -- Remove trailing whitespace on save
 autocmd("BufWritePre", {
   group = augroup("trim_whitespace", { clear = true }),
