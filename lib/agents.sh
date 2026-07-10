@@ -46,6 +46,11 @@ EOF
   link "$DOTFILES_DIR/pi/settings.json" "$HOME/.pi/agent/settings.json"
   link "$DOTFILES_DIR/pi/AGENTS.md" "$HOME/.pi/agent/AGENTS.md"
   link "$DOTFILES_DIR/pi/themes/jellybeans-oled.json" "$HOME/.pi/agent/themes/jellybeans-oled.json"
+  # Extensions (claude-rules, auto-format) and subagent definitions (review,
+  # test, debug, pr, scaffold) — Pi's equivalents of Claude Code's rules loader,
+  # PostToolUse format hook, and claude/agents/.
+  link "$DOTFILES_DIR/pi/extensions" "$HOME/.pi/agent/extensions"
+  link "$DOTFILES_DIR/pi/agents" "$HOME/.pi/agent/agents"
 
   # Claude Code profile-wide config.
   link "$DOTFILES_DIR/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
