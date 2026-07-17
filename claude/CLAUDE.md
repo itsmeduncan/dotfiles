@@ -58,7 +58,7 @@ If a package install fails because a version is "too new":
 
 ## Personal Notes Vault
 
-Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited via `obsidian.nvim` and ingested by local LLMs (lm-studio, ollama) for retrieval/RAG.
+Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited via `obsidian.nvim` and ingested by local LLMs (ollama) for retrieval/RAG.
 
 - **Format:** plain `.md` files with optional YAML frontmatter and `[[wikilinks]]`. Daily notes at `~/notes/daily/YYYY-MM-DD.md`.
 - **When to read:** if the user references "my notes", "the vault", a meeting, a decision, or a project by name and the relevant info isn't in the current repo — grep `~/notes/` before asking. Also useful when looking up the user's stated preferences or prior reasoning on a topic.

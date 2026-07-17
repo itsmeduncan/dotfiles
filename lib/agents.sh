@@ -23,18 +23,18 @@ agents_run() {
     if [ "${CHECK_MODE:-0}" = "1" ]; then
       warn "opencode auth.json missing — will be seeded on next install"
     elif [ "${DRY_RUN:-0}" = "1" ]; then
-      would "seed ~/.local/share/opencode/auth.json with lm-studio placeholder"
+      would "seed ~/.local/share/opencode/auth.json with ollama placeholder"
     else
       mkdir -p "$HOME/.local/share/opencode"
       cat >"$HOME/.local/share/opencode/auth.json" <<'EOF'
 {
-  "lm-studio": {
+  "ollama": {
     "type": "api",
     "key": "sk-local"
   }
 }
 EOF
-      ok "seeded opencode auth.json with lm-studio placeholder"
+      ok "seeded opencode auth.json with ollama placeholder"
     fi
   fi
 
