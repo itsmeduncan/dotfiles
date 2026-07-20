@@ -24,18 +24,6 @@
           "name": "Qwen3-Coder-Next 6-bit (M5 Max, flagship coder)",
           "contextWindow": 262144,
           "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
-        },
-        {
-          "id": "qwen3-coder-30b-a3b-instruct-mlx",
-          "name": "Qwen3-Coder-30B-A3B (M5 Max, agentic)",
-          "contextWindow": 256000,
-          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
-        },
-        {
-          "id": "qwen3.6-27b-ud-mlx",
-          "name": "qwen3.6-27b-ud-mlx (M5 Max)",
-          "contextWindow": 256000,
-          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
         }
       ]
     },
