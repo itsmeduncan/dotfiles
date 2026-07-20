@@ -118,5 +118,8 @@ mdr() {
   fi
 }
 
+# LM Studio CLI
+export PATH="$PATH:$HOME/.lmstudio/bin"
+
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"

@@ -23,7 +23,7 @@ The installer is idempotent and skips already-satisfied work (Brewfile check, nv
 
 `install.sh` is a thin orchestrator over phase modules in `lib/`:
 
-- **brew** — install [Homebrew](https://brew.sh) if missing, then sync the [`Brewfile`](Brewfile): a slim set of things mise can't manage (tmux, postgresql@18, watchman, zsh plugins, mosh/nmap/wget, tldr, yazi, git-absorb, cocoapods) plus GUI casks (Ghostty, OrbStack, 1Password + CLI, Slack, Notion, Tailscale, Ollama, gcloud-cli, MesloLGS Nerd Font)
+- **brew** — install [Homebrew](https://brew.sh) if missing, then sync the [`Brewfile`](Brewfile): a slim set of things mise can't manage (tmux, postgresql@18, watchman, zsh plugins, mosh/nmap/wget, tldr, yazi, git-absorb, cocoapods) plus GUI casks (Ghostty, OrbStack, 1Password + CLI, Slack, Notion, Tailscale, LM Studio, gcloud-cli, MesloLGS Nerd Font)
 - **symlinks** — all dotfiles to `$HOME`; config dirs (`nvim`, `yazi`, `uv`, `bat`, `ghostty`, `opencode`) to `~/.config/`; `pnpm` to `~/Library/Preferences/`; `bin/` utilities to `~/.dotfiles/bin/`
 - **mise** — symlink [`mise.toml`](mise.toml) to `~/.config/mise/config.toml`, then install everything declared there via [mise](https://mise.jdx.dev): all language runtimes (Node, Python, Ruby, Go, Java, Bun) plus most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin, pi-coding-agent)
 - **agents** — shared agent skills from `agents/skills/` to `~/.claude/skills`, `~/.agents/skills`, and `~/.pi/agent/skills`; Claude Code config to `~/.claude/`

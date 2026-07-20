@@ -31,7 +31,6 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 ### Changed
 
-- **LM Studio replaced with Ollama** — the `lm-studio` cask is gone; `ollama-app` (menu-bar app + CLI, serves `:11434`) takes over local LLM duty. Pi's local provider is now `ollama` with `qwen3-coder:30b` (GGUF; the MLX models don't carry over), opencode's provider/default model moved with it (plus `nomic-embed-text` for embeddings), the opencode auth seed is keyed `ollama`, and the `~/.lmstudio/bin` PATH entry is dropped (the cask links the CLI).
 - **Tailscale moved to the `tailscale-app` cask** — was installed via the Mac App Store, which Homebrew can't see, so `brew bundle check` reported permanent drift and re-ran `brew bundle install` every time. Now brew-owned and reproducible.
 - **Homebrew scope reduced** from ~30 packages to 12: only what mise can't manage or what's tightly coupled to brew (services, zsh plugin assets, system networking, GUI casks).
 - **`mise install` failures are now warnings**, not fatal — downstream symlinks and config still land.

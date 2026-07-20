@@ -446,7 +446,7 @@ require("lazy").setup({
   -- ── Personal Wiki / Notes ──────────────────────────────────────────
   -- Obsidian-style vault at ~/notes — plain markdown with [[wikilinks]],
   -- frontmatter, and daily notes. Format is directly ingestible by local
-  -- LLMs (ollama, RAG tools) with no conversion.
+  -- LLMs (lm-studio, ollama, RAG tools) with no conversion.
 
   {
     "epwalsh/obsidian.nvim",

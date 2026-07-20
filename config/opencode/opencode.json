@@ -1,25 +1,42 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "provider": {
-    "ollama": {
+    "lm-studio": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama",
+      "name": "LM Studio",
       "options": {
-        "baseURL": "http://localhost:11434/v1"
+        "baseURL": "http://localhost:1234/v1"
       },
       "models": {
-        "qwen3-coder:30b": {
-          "name": "Qwen3 Coder 30B"
+        "qwen/qwen3-coder-next": {
+          "name": "Qwen3 Coder Next"
         },
-        "nomic-embed-text": {
+        "qwen/qwen3-coder-next-8bit": {
+          "name": "Qwen3 Coder Next 8bit"
+        },
+        "arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8": {
+          "name": "Qwen3.6 35B A3B MLX MXFP8"
+        },
+        "google/gemma-4-26b-a4ba": {
+          "name": "Gemma 4 26B"
+        },
+        "nousresearch/hermes-4-70b": {
+          "name": "Hermes 4 70B"
+        },
+        "nvidia/nemotron-3-super": {
+          "name": "Nemotron 3 Super"
+        },
+        "text-embedding-nomic-embed-text-v1.5": {
           "name": "Nomic Embed Text"
         }
       }
     }
   },
   "skills": {
-    "paths": ["$HOME/.agents/skills"]
+    "paths": [
+      "$HOME/.agents/skills"
+    ]
   },
-  "model": "ollama/qwen3-coder:30b",
-  "small_model": "ollama/qwen3-coder:30b"
+  "model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8",
+  "small_model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8"
 }

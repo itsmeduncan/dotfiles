@@ -4,37 +4,23 @@
       "baseUrl": "https://api.anthropic.com",
       "apiKey": "!op read --account my.1password.com 'op://Private/Anthropic API/credential'"
     },
-    "ollama": {
-      "baseUrl": "http://localhost:11434/v1",
+    "lmstudio": {
+      "baseUrl": "http://localhost:1234/v1",
       "api": "openai-completions",
-      "apiKey": "ollama",
-      "compat": {
-        "supportsDeveloperRole": false,
-        "supportsReasoningEffort": false
-      },
+      "apiKey": "lmstudio",
+      "compat": { "supportsDeveloperRole": false, "supportsReasoningEffort": false },
       "models": [
-        {
-          "id": "qwen3-coder:30b",
-          "name": "Qwen3-Coder-30B-A3B (M5 Max, agentic)",
-          "contextWindow": 256000,
-          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
-        }
+        { "id": "qwen3-coder-30b-a3b-instruct-mlx", "name": "Qwen3-Coder-30B-A3B (M5 Max, agentic)", "contextWindow": 256000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } },
+        { "id": "qwen3.6-27b-ud-mlx", "name": "qwen3.6-27b-ud-mlx (M5 Max)", "contextWindow": 256000, "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } }
       ]
     },
     "darksaber": {
       "baseUrl": "http://darksaber:11434/v1",
       "api": "openai-completions",
       "apiKey": "ollama",
-      "compat": {
-        "supportsDeveloperRole": false,
-        "supportsReasoningEffort": false
-      },
+      "compat": { "supportsDeveloperRole": false, "supportsReasoningEffort": false },
       "models": [
-        {
-          "id": "qwen3.5:35b-a3b",
-          "name": "qwen3.5:35b-a3b (darksaber)",
-          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
-        }
+        { "id": "qwen3.5:35b-a3b", "name": "qwen3.5:35b-a3b (darksaber)", "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 } }
       ]
     }
   }

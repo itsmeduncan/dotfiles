@@ -54,7 +54,7 @@ cask "slack"
 cask "notion"
 cask "obsidian" # markdown notes vault at ~/notes/ (also edited via obsidian.nvim)
 cask "tailscale-app"
-cask "ollama-app" # local LLM server on :11434 (menu-bar app + ollama CLI)
+cask "lm-studio"
 cask "gcloud-cli"
 
 # --- Fonts ---
