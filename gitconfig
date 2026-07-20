@@ -124,3 +124,9 @@
 	clean = git-lfs clean -- %f
 [commit]
 	template = ~/.gitmessage
+[credential "https://github.com"]
+	helper = 
+	helper = !/Users/duncan/.local/share/mise/shims/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/Users/duncan/.local/share/mise/shims/gh auth git-credential
