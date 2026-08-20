@@ -3,7 +3,7 @@ name: ci
 # Two tiers:
 # - tier1 (lint): always cheap; bash -n, shellcheck, shfmt, prettier check, json/yaml validation, gitleaks
 # - tier2 (install): expensive; runs ./install.sh end-to-end on a clean macos-latest runner.
-#                    Triggered only on PRs to main and on workflow_dispatch.
+#                    Triggered on any pull request and on workflow_dispatch.
 
 on:
   push:
