@@ -38,6 +38,7 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **macOS defaults are version-aware** via an optional `min_macos_major` arg to `set_default`. Skipped on non-Darwin (CI-friendly).
 - **`AGENTS.md` is now a symlink to `CLAUDE.md`** — single source of truth, no more drift between the two.
 - **Greptile submodule URL** switched from SSH to HTTPS so forkers without SSH auth can clone.
+- **`README.markdown` renamed to `README.md`, and now carries a full keybinding reference** — GitHub renders `README.md` in preference to `README.markdown`, so the install/CI content was at risk of being invisible on the repo page. The new **Keybindings** section documents every tmux, Neovim, shell, and git binding this config defines, plus a file-to-ownership table for keeping it current.
 
 ### Removed
 
@@ -49,6 +50,9 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 - **bash 3.2 `unbound variable` on cask install** — stock macOS bash doesn't support associative arrays; with `set -u` the lookup tripped on the first cask. Now uses a portable `case` statement.
 - **Stale docs across `CLAUDE.md`, `AGENTS.md`, `README.markdown`** — cask list, skill inventory, mise vs Homebrew split, pi-coding-agent reference.
+- **`prefix J` silently shadowed `resize-pane -D`** — `tmux.conf` bound `J` twice: once in the `H/J/K/L` resize block, then again as `join-pane` 19 lines later. tmux keeps the last binding, so resize-down had no key at all. `join-pane` moved to `prefix @`; the resize block is whole again.
+- **Tier-2 CI trigger comment contradicted the job** — the header comment claimed "only on PRs to main" while the `if:` fires on any pull request or `workflow_dispatch`.
+- **Stale claims in `CLAUDE.md`** — `effortLevel` (medium → high), four undeclared Claude plugins, the `Stop` hook, the vendored Cloudflare skill set, the MesloLGS Nerd Font cask, and the incomplete Pomodoro key list (`prefix e`, `prefix M-p`).
 - **`pi` not on PATH after node version bump** — `pi` was installed under the old node mise install dir. Pinning it via mise's `npm:` backend in `mise.toml` makes it follow whichever node version is active.
 
 ### Security
