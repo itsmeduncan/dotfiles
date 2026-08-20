@@ -92,3 +92,35 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 **Write is enforced by a Stop hook.** `claude/hooks/commonplace-capture.sh` (registered under `hooks.Stop` in `claude/settings.json`) nudges a capture pass at the end of a _substantial_ session — one that changed a file or ran long and tool-heavy; read-only lookups and quick chats are skipped. If you get a Stop-hook nudge, do the search-then-`add_memory` pass; if nothing durable emerged, say so and stop.
 
 Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace repo (write-enforcement hook shipped at `clients/claude-code/`).
+
+## Scriptorium Workspace (tasks, docs, decisions, reviews via MCP)
+
+`scriptorium` is the self-hosted workspace that replaced Notion, Trello and the
+GitHub PR flow. It is a git repo full of markdown, exposed over MCP at
+`http://localhost:8002/mcp`. Tasks, docs, decisions and code reviews all live
+there — if you are doing work that belongs on a board, it belongs in there.
+
+**Read the protocol before you act on the workspace, every session.** It is one
+file and it is kept current by `scriptorium reseed`:
+
+    doc_read(path="../protocol/scriptorium-protocol.md")   # or read it from
+    ~/git/workspace/protocol/scriptorium-protocol.md        # the checkout
+
+Do not summarise it here. Two copies of a contract is how instructions rot —
+that is the protocol's own first paragraph, and it merges the workspace rules
+with the commonplace memory protocol above precisely so there is one file.
+
+The three rules that have to fire *before* you would think to go read it:
+
+- **Claim before you act.** `task_query(status="ready")` is the pool of work
+  dg has authorised; `task_claim` sets owner and status and commits. An
+  uncommitted claim is not a claim, and work done against no task is invisible.
+- **Only dg can answer it?** `task_ask` with one concrete question. Nobody here
+  can unstick it? `task_block` with what it is waiting on — that keeps the
+  task's place in the flow rather than moving it (ADR-0007).
+- **Session end:** `task_update` the status. A finished task still reading
+  `in-progress` is a lie the next agent acts on.
+
+**Propose, don't act unilaterally on a protected repo** (whelk, commonplace,
+workspace, scriptorium): `change_open`, `change_diff`, then `change_merge`,
+which refuses without dg's approval.
