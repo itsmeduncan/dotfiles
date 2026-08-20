@@ -8,6 +8,9 @@
         "baseURL": "http://localhost:1234/v1"
       },
       "models": {
+        "qwen3-coder-next-mlx": {
+          "name": "Qwen3 Coder Next 6-bit (default)"
+        },
         "qwen/qwen3-coder-next": {
           "name": "Qwen3 Coder Next"
         },
@@ -33,10 +36,8 @@
     }
   },
   "skills": {
-    "paths": [
-      "$HOME/.agents/skills"
-    ]
+    "paths": ["$HOME/.agents/skills"]
   },
-  "model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8",
-  "small_model": "lm-studio/arthurcollet/qwen3.6-35b-a3b-mlx-mxfp8"
+  "model": "lm-studio/qwen3-coder-next-mlx",
+  "small_model": "lm-studio/qwen3-coder-next-mlx"
 }
