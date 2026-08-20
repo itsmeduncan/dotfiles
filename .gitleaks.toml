@@ -1,0 +1,29 @@
+title = "dotfiles"
+
+# Extends the stock gitleaks ruleset — this file only ADDS allowlists, it never
+# weakens a rule. CI runs `gitleaks detect` over the pushed commit range and
+# picks this file up from the repo root.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = """
+Vendored third-party skill documentation (the Cloudflare / Workers pack).
+
+These are prose docs whose code samples carry placeholder credentials —
+`Authorization: Bearer YOUR_API_TOKEN`, `"API_KEY": "sk-live-abc123..."` — and
+several of those samples appear in sections teaching people NOT to commit
+secrets. gitleaks flags them on the curl-auth-header and generic-api-key rules.
+
+Scoped to the vendored directories by name rather than to all of
+agents/skills/, so a real secret committed into a hand-authored skill is still
+caught. Add a directory here only when vendoring more third-party docs.
+
+Real secrets never live in this repo: machine-local ones are in
+~/.bootstrap/env.sh, ~/.pi/agent/auth.json and ~/.pi/agent/mcp.json, all
+outside the tree and untracked.
+"""
+paths = [
+  '''^agents/skills/(agents-sdk|cloudflare|cloudflare-email-service|cloudflare-one|cloudflare-one-migrations|durable-objects|sandbox-sdk|turnstile-spin|web-perf|workers-best-practices|wrangler)/''',
+]
