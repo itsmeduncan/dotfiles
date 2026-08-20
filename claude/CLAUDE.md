@@ -110,7 +110,7 @@ Do not summarise it here. Two copies of a contract is how instructions rot —
 that is the protocol's own first paragraph, and it merges the workspace rules
 with the commonplace memory protocol above precisely so there is one file.
 
-The three rules that have to fire *before* you would think to go read it:
+The three rules that have to fire _before_ you would think to go read it:
 
 - **Claim before you act.** `task_query(status="ready")` is the pool of work
   dg has authorised; `task_claim` sets owner and status and commits. An
