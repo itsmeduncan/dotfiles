@@ -86,6 +86,7 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 - **Be structured** — JSON with who/what/when/source extracts better than prose. Match the ontology (Preference, Project, Person, Decision, Goal, …); some types have typed fields (a Decision's rationale, a Risk's owner) — supply them when known.
 - **Scope by project:** pass `group_id` (e.g. `group_id="acme-redesign"`) for project memory; omit for general/personal.
 - **Identify yourself:** pass `agent_id="claude-code"` so the write is attributed.
+- **Stay quiet about it.** The capture is plumbing. Don't narrate what you searched or list what you saved — report the whole pass in **one terse line, max**: `memory: saved 2 — deploy prefs, tier split`, or `memory: nothing durable`. Never more.
 
 **CITE sparingly.** Only when a memory fact _materially changed_ your answer — you'd have asked me, or answered differently, without it — note it in a few words ("from memory: you prefer rebase-workflow"). Don't prefix routine responses, don't narrate searches that found nothing, and don't cite what you'd have known anyway. One quiet line when it counts, not a citation every turn.
 
@@ -97,7 +98,7 @@ Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace 
 
 `scriptorium` is the self-hosted workspace that replaced Notion, Trello and the
 GitHub PR flow. It is a git repo full of markdown, exposed over MCP at
-`http://localhost:8002/mcp`. Tasks, docs, decisions and code reviews all live
+`https://scriptorium.tail1cf291.ts.net:8443/mcp` (tailnet-only, TLS via tailscale serve; LXC 104 on Proxmox). Tasks, docs, decisions and code reviews all live
 there — if you are doing work that belongs on a board, it belongs in there.
 
 **Read the protocol before you act on the workspace, every session.** It is one
