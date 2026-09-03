@@ -2,7 +2,7 @@
 # Snapshot the full bootstrap state of the current machine to a checked-in
 # file. The snapshot is reproducibility insurance: if a future install breaks,
 # this file documents the last-known-good combination of formula versions,
-# mise pins, submodule SHAs, and plugin commits.
+# mise pins, and plugin commits.
 #
 # Not byte-reproducible (we'd need Nix for that), but human-auditable and
 # diff-friendly across commits. Run after every install you're happy with.
@@ -42,13 +42,6 @@ snapshot_generate() {
   fi
   echo ""
 
-  echo "## git submodules"
-  if [ -d "$DOTFILES_DIR/.git" ]; then
-    git -C "$DOTFILES_DIR" submodule status 2>/dev/null \
-      | sed 's/^/  /'
-  fi
-  echo ""
-
   echo "## nvim plugins (lazy-lock.json sha)"
   if [ -f "$DOTFILES_DIR/config/nvim/lazy-lock.json" ]; then
     local hash
@@ -66,15 +59,6 @@ snapshot_generate() {
       sha="$(git -C "$plugin_dir" rev-parse --short HEAD 2>/dev/null || echo "?")"
       printf "  %-30s %s\n" "$plugin" "$sha"
     done
-  fi
-  echo ""
-
-  echo "## marketing-skills sibling repo (HEAD)"
-  local skills_dir="$HOME/Projects/src/github.com/itsmeduncan/ai-marketing-skills"
-  if [ -d "$skills_dir/.git" ]; then
-    local sha
-    sha="$(git -C "$skills_dir" rev-parse --short HEAD 2>/dev/null || echo "?")"
-    echo "  ai-marketing-skills HEAD: $sha"
   fi
   echo ""
 
