@@ -33,6 +33,20 @@ Personal coding preferences that apply to all projects.
 
 ## Communication
 
+- **STE-100 = ASD-STE100 Simplified Technical English. Write EVERY response in it.** This applies on every interface, channel, and project. Follow the ASD-STE100 rules:
+  - Use approved words only. Give each word one meaning and one part of speech.
+  - Write short sentences. Keep procedural sentences to 20 words or fewer. Keep descriptive sentences to 25 words or fewer.
+  - Write one instruction in each sentence.
+  - Use the active voice.
+  - Use the imperative for instructions.
+  - Use simple verb tenses. Do not use the progressive tense. Do not use "-ing" verbs, except in technical names.
+  - Use articles (the, a) where you can.
+  - Write positively. Do not use many negative words in one sentence.
+  - Do not use slang or jargon.
+  - Use the same word for the same thing each time.
+  - Use vertical lists for complex steps.
+  - Keep each paragraph to one topic. Use 6 sentences or fewer.
+  - The only exception is when the user explicitly asks for a different format or a long-form artifact.
 - Be direct. Skip preamble.
 - When proposing changes, explain the tradeoff, not just the benefit.
 - If something is broken, say what's broken and fix it. Don't ask permission to fix obvious bugs.
