@@ -7,6 +7,13 @@
 config/opencode/auth.json
 config/opencode/package-lock.json
 
+# herdr integration — machine-managed, overwritten on herdr update (like pi auth.json)
+claude/hooks/herdr-agent-state.sh
+pi/extensions/herdr-agent-state.ts
+
+# skills sync staging — generated runtime state, not source
+agents/skills/synced/
+
 # gstack removed 2026-05-16 — no longer using these skills
 
 
