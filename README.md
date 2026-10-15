@@ -174,9 +174,7 @@ weather → battery → date/time. The session block **turns amber while the pre
 armed**, so you can see whether `C-b` registered. Weather and battery come from
 [`bin/weather`](bin/weather) and [`bin/battery`](bin/battery); battery goes red when low.
 
-Sessions auto-save every 15 minutes and restore on boot (tmux-resurrect +
-tmux-continuum). The window name tracks `repo:branch` automatically via a zsh
-`precmd` hook.
+The window name tracks `repo:branch` automatically via a zsh `precmd` hook.
 
 ---
 

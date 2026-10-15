@@ -100,7 +100,7 @@ Primary editor (`nvim`). Config at `config/nvim/init.lua`, symlinked to `~/.conf
 
 Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 
-- Plugins: tmux-resurrect (session persistence), tmux-sensible (sensible defaults), tmux-continuum (auto-restore every 15min), tmux-yank (clipboard integration), tmux-pomodoro-plus (Pomodoro timer)
+- Plugins: tmux-sensible (sensible defaults), tmux-yank (clipboard integration), tmux-pomodoro-plus (Pomodoro timer)
 - Ghostty terminal support: RGB color override, passthrough enabled
 - Vim-style pane navigation (`C-h/j/k/l`) via vim-tmux-navigator integration
 - Status bar: session name (turns amber while prefix is armed), window tabs, weather, battery (red when low), date/time
