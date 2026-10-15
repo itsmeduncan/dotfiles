@@ -123,3 +123,10 @@ export PATH="$PATH:$HOME/.lmstudio/bin"
 
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
+
+# bun completions
+[ -s "/Users/duncan/.bun/_bun" ] && source "/Users/duncan/.bun/_bun"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
