@@ -11,6 +11,7 @@ Personal coding preferences that apply to all projects.
 
 ## Coding Preferences
 
+- **All clients, or it isn't done.** A user-facing feature — and the ticket for it — ships across every client together: web, iPhone, iPad, macOS. No web-first, no app-follow-on, no single-client tickets. Each client gets an appropriate adaptive layout (iPad is not a stretched iPhone — split/sidebar where it fits; sidebar on macOS, tab bar on iPhone), but the capability is identical everywhere. The only exception is a genuinely platform-native surface (iOS widget/Live Activity, macOS menu bar), named as such.
 - Write concise, readable code. Favor clarity over cleverness.
 - Use modern language features — f-strings in Python, optional chaining in TypeScript, structured concurrency in Swift.
 - Prefer composition over inheritance.
