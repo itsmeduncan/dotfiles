@@ -38,6 +38,15 @@
   "skills": {
     "paths": ["$HOME/.agents/skills"]
   },
+  "mcpServers": {
+    "scriptorium": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "env": {
+        "MCP_SERVER_FETCH_URL": "https://scriptorium.tail1cf291.ts.net:8443/mcp"
+      }
+    }
+  },
   "model": "lm-studio/qwen3-coder-next-mlx",
   "small_model": "lm-studio/qwen3-coder-next-mlx"
 }
