@@ -2,11 +2,24 @@
 # before Homebrew packages are installed, so a mid-install shell restart would break)
 command -v nvim &>/dev/null && export EDITOR='nvim' && export VISUAL='nvim'
 
+# Agent shells: Claude Code sets CLAUDECODE=1 and snapshots this config for its
+# Bash tool. Agents need stock coreutils and no prompt/ZLE widgets, so the
+# human-only blocks below are skipped there.
+[[ -n "$CLAUDECODE" ]] && _agent_shell=1
+
+# Keep PATH entries unique: zprofile and this file both append to it.
+typeset -U path
+
+# A fixed prefix saves a `brew --prefix` fork on every use (Apple Silicon path).
+: "${HOMEBREW_PREFIX:=/opt/homebrew}"
+
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
 plugins=(brew mise direnv gh fzf zoxide uv terraform aws docker-compose)
+# Skip compaudit's permission scan of fpath (~15 ms per shell). Safe on a
+# single-user Mac; unset this if other users can write to the fpath dirs.
+ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
-source "$(brew --prefix)/opt/spaceship/spaceship.zsh"
 
 SPACESHIP_PROMPT_ORDER=(dir git node docker exec_time line_sep char)
 SPACESHIP_PROMPT_ADD_NEWLINE=true
@@ -35,8 +48,11 @@ SPACESHIP_EXEC_TIME_COLOR="240"
 SPACESHIP_EXEC_TIME_ELAPSED=5
 SPACESHIP_EXEC_TIME_SHOW=true
 
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if (( ! _agent_shell )); then
+  source "$HOMEBREW_PREFIX/opt/spaceship/spaceship.zsh"
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
 
 setopt auto_cd
 cdpath=(~ ~/Projects/src/github.com ~/Projects)
@@ -46,18 +62,12 @@ setopt autopushd
 # Android SDK
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/emulator
-# Only set JAVA_HOME if mise has java installed (avoids empty-string pitfalls)
-if mise where java >/dev/null 2>&1; then
-  export JAVA_HOME=$(mise where java)
-fi
+# JAVA_HOME comes from mise's java tool on activation; no `mise where` fork here.
 
 # fzf customizations (plugin handles init and FZF_DEFAULT_COMMAND)
 export FZF_ALT_C_COMMAND='fd --type d --hidden --follow --exclude .git'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --line-range :200 {}'"
 export FZF_ALT_C_OPTS="--preview 'eza --tree --level=2 {}'"
-
-# atuin - shell history
-eval "$(atuin init zsh)"
 
 # Update tmux window name with project:branch (throttled to avoid git latency on slow FS)
 _tmux_window_name() {
@@ -75,15 +85,23 @@ _tmux_window_name() {
   fi
   tmux rename-window "$name" 2>/dev/null
 }
-add-zsh-hook precmd _tmux_window_name
 
-alias ls="eza"
-alias ll="eza -la --git"
-alias cat="bat --paging=never"
-alias tree="eza --tree"
+if (( ! _agent_shell )); then
+  # atuin - shell history
+  eval "$(atuin init zsh)"
+  add-zsh-hook precmd _tmux_window_name
+
+  # These replace coreutils with tools that take different flags and print
+  # different output, so agents keep the stock commands.
+  alias ls="eza"
+  alias ll="eza -la --git"
+  alias cat="bat --paging=never"
+  alias tree="eza --tree"
+  alias top="btm"
+  alias du="dust"
+fi
+
 alias lg="lazygit"
-alias top="btm"
-alias du="dust"
 alias dc="docker compose"
 # zoxide (already installed) handles this better: `z p` auto-learns the path
 alias p="cd ~/Projects/src/github.com"

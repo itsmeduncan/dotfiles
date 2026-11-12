@@ -12,7 +12,7 @@ Personal dotfiles for macOS (Apple Silicon). Managed by symlinks via `install.sh
 
 All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 
-- **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH)
+- **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH). When `CLAUDECODE=1` (Claude Code's Bash tool snapshots this config), `zshrc` skips the human-only parts — Spaceship, autosuggestions, syntax highlighting, atuin, the tmux window hook, and the eza/bat/dust/btm aliases — so agents get stock coreutils.
 - **Git:** `gitconfig` (aliases, delta pager, modern defaults), `gitignore` (global ignores including AI tools), `gitmessage` (commit template)
 - **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
@@ -132,7 +132,7 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - **Vendored Cloudflare / web-platform skills**: `cloudflare` (umbrella platform skill), `agents-sdk`, `wrangler`, `workers-best-practices`, `durable-objects`, `sandbox-sdk`, `cloudflare-email-service`, `cloudflare-one`, `cloudflare-one-migrations`, `turnstile-spin`, `web-perf`.
 - **`claude/statusline.sh`** — Custom status line script (shows directory, git branch + dirty/ahead-behind markers, model, color-graded context usage, rate limits).
 - **`claude/hooks/`** — Lifecycle hooks:
-  - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
+  - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, swiftformat, ktlint, and the project's own `node_modules/.bin/prettier` only when the project installs it — no `npx`)
   - `commonplace-capture.sh` — Stop hook that nudges a commonplace memory-capture pass at the end of a substantial session (skips read-only lookups and quick chats)
 
 ## Conventions

@@ -4,7 +4,7 @@
  * Formats files after the agent edits or writes them — the Pi equivalent of
  * Claude Code's PostToolUse auto-format.sh hook. Runs the same formatters:
  *   .py                      -> ruff format
- *   .ts .tsx .js .jsx .json .css .md -> prettier
+ *   .ts .tsx .js .jsx .json .css .md -> the project's own prettier, if installed
  *   .swift                   -> swiftformat
  *   .kt .kts                 -> ktlint --format
  *
@@ -14,6 +14,7 @@
 
 import { execFile } from "node:child_process";
 import * as fs from "node:fs";
+import * as path from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 
 const TIMEOUT_MS = 30_000;
@@ -25,13 +26,28 @@ function run(cmd: string, args: string[]): Promise<void> {
 	});
 }
 
+/** Nearest node_modules/.bin/prettier at or above the file's directory. */
+function findProjectPrettier(filePath: string): string | undefined {
+	let dir = path.dirname(path.resolve(filePath));
+	for (;;) {
+		const candidate = path.join(dir, "node_modules", ".bin", "prettier");
+		if (fs.existsSync(candidate)) return candidate;
+		const parent = path.dirname(dir);
+		if (parent === dir) return undefined;
+		dir = parent;
+	}
+}
+
 async function formatFile(filePath: string): Promise<void> {
 	if (!filePath || !fs.existsSync(filePath)) return;
 
 	if (filePath.endsWith(".py")) {
 		await run("ruff", ["format", "--quiet", filePath]);
 	} else if (/\.(tsx?|jsx?|json|css|md)$/.test(filePath)) {
-		await run("npx", ["--yes", "prettier", "--write", "--log-level", "silent", filePath]);
+		// Only projects that install prettier get it; `npx --yes` was slow,
+		// could download a package, and reformatted repos that do not use it.
+		const prettier = findProjectPrettier(filePath);
+		if (prettier) await run(prettier, ["--write", "--log-level", "silent", filePath]);
 	} else if (filePath.endsWith(".swift")) {
 		await run("swiftformat", ["--quiet", filePath]);
 	} else if (/\.(kt|kts)$/.test(filePath)) {

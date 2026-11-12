@@ -6,6 +6,8 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 ### Added
 
+- **Agent-safe shells** — `zshrc` skips Spaceship, autosuggestions, syntax highlighting, atuin, the tmux window hook and the eza/bat/dust/btm aliases when `CLAUDECODE=1`, so Claude Code's Bash tool gets stock `ls`/`cat`/`du`. Agent shell startup: 94 ms.
+- **Read-only Bash allowlist** — `rg`, `fd`, `jq`, `head`, `tail`, `diff`, `stat` in `claude/settings.json`, so auto mode makes fewer classifier calls.
 - **`mise.toml`** — single pinned manifest for all language runtimes and most CLI tools (27 tools migrated from Homebrew). Reproducible across machines; upgrade with `mise upgrade --bump`.
 - **`Brewfile`** — declarative manifest for the remaining Homebrew set (mise bootstrap, casks, system tools). Replaces the inline `brews=(…)` array. Supports `brew bundle check` for drift detection.
 - **`lib/` modules** — `install.sh` split into 9 phase modules (preflight, brew, symlinks, mise, agents, runtimes, android, macos, ssh) sharing helpers via `lib/_common.sh`. Each phase exposes `<name>_run`.
@@ -30,6 +32,10 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **tmux Pomodoro timer** — `tmux-pomodoro-plus` (tpm). `prefix p` start/pause, `P` cancel, `_` skip. The countdown is always shown in the status bar (` 🍅 --` placeholder when idle, spaced ` 🍅 25m` when running) via a new `bin/pomodoro-status` wrapper; desktop notifications are off. `prefix p` now overrides tmux's default previous-window binding.
 
 ### Changed
+
+- **Faster zsh startup (185 → 131 ms)** — fixed `HOMEBREW_PREFIX` replaces three `brew --prefix` forks; the `mise where java` block is gone (mise already exports `JAVA_HOME`); `ZSH_DISABLE_COMPFIX` skips compaudit; `typeset -U path` drops duplicate PATH entries.
+- **Auto-format hooks (Claude + Pi)** — prettier now runs only from the project's own `node_modules/.bin`, never `npx --yes` (~0.6 s per edit, network fetch, and reformatted repos that do not use prettier).
+- **Statusline** — one `jq` call instead of six (80 → 50 ms per refresh); project-relative path match is now quoted.
 
 - **Tailscale moved to the `tailscale-app` cask** — was installed via the Mac App Store, which Homebrew can't see, so `brew bundle check` reported permanent drift and re-ran `brew bundle install` every time. Now brew-owned and reproducible.
 - **Homebrew scope reduced** from ~30 packages to 12: only what mise can't manage or what's tightly coupled to brew (services, zsh plugin assets, system networking, GUI casks).
