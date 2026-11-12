@@ -27,7 +27,7 @@ Personal coding preferences that apply to all projects.
 
 ## Working Style
 
-Every project's memory relearned these rules after dg corrected them. They apply everywhere.
+Every project's memory relearned these rules after dg corrected them. They apply everywhere. (The same section is in `pi/AGENTS.md` and `~/.codex/AGENTS.md`; change all three together.)
 
 - **Finish directed work.** When dg names the work (a task, a queue, a fix), carry it to done. No "should I continue?", no option menus mid-task, no interim checkpoints; report once at the end. The setup confirmation above is the one exception.
 - **Stop only at a real gate:** a decision only dg can make, an irreversible action outside the directive, or an external blocker. Ask with `AskUserQuestion`, batch the questions, and keep working on everything else meanwhile.
@@ -164,8 +164,9 @@ Call shapes, from ~900 refused calls in one month:
   (`task_block`), not `body`, `note` or `reason`. Pages and projects take
   `slug`; changes take `id`. `change_open` requires `repo`, `project`,
   `branch` and `title`, with task links in `closes`/`relates`, never in the body.
-- The decision search tool is `decision_search` (the protocol page says
-  `decisions_search`, which does not exist).
+- Call tools by their listed names (`decision_search`, `person_list`,
+  `release_promotion_list`). Legacy aliases such as `decisions_search` still
+  answer, but no schema loads for them, so their arguments are guesses (SCR-1777).
 
 **Propose, don't act unilaterally on a protected repo** (whelk, commonplace,
 workspace, scriptorium): `change_open`, `change_diff`, then `change_merge`,
