@@ -6,6 +6,10 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 ### Added
 
+- **`ssh/tailnet.conf`** — tailnet hosts use the on-disk key (the 1Password agent locked mid-session and failed agent ssh calls) and share one connection for 10 minutes (~380 ms → ~20 ms per command; agents ran 1,100+ ssh commands a month). The ssh phase links it and prepends an `Include` to the untracked `~/.ssh/config`.
+- **`agents/skills/sync-main/sync-main.sh`** — `/sync-main` (the most used command, 345 runs) now runs one tested script instead of a model-driven multi-step loop (median 4 tool calls / 58 s, p90 27 calls / 14 min → one call, < 1 s). Adds `--dry-run`, and keeps any worktree a running process uses.
+- **`autoMode.environment` + `cleanupPeriodDays: 90`** in `claude/settings.json` — classifier context for the user's own orgs, remotes, tailnet hosts and MCP services; transcripts kept 90 days for usage audits.
+- **Working Style section in `claude/CLAUDE.md`** — the rules every project's memory relearned (finish directed work, ask with AskUserQuestion, verify before reporting, fix root causes, leave dg's processes alone).
 - **Agent-safe shells** — `zshrc` skips Spaceship, autosuggestions, syntax highlighting, atuin, the tmux window hook and the eza/bat/dust/btm aliases when `CLAUDECODE=1`, so Claude Code's Bash tool gets stock `ls`/`cat`/`du`. Agent shell startup: 94 ms.
 - **Read-only Bash allowlist** — `rg`, `fd`, `jq`, `head`, `tail`, `diff`, `stat` in `claude/settings.json`, so auto mode makes fewer classifier calls.
 - **`mise.toml`** — single pinned manifest for all language runtimes and most CLI tools (27 tools migrated from Homebrew). Reproducible across machines; upgrade with `mise upgrade --bump`.
@@ -33,6 +37,7 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 ### Changed
 
+- **Scriptorium call shapes in `claude/CLAUDE.md`** — the doc taught `doc_read(path=…)` and `task_query(status="ready")`, both refused; it now shows the real shapes plus the field-name and `idempotency_key` rules behind ~900 refused calls a month.
 - **Faster zsh startup (185 → 131 ms)** — fixed `HOMEBREW_PREFIX` replaces three `brew --prefix` forks; the `mise where java` block is gone (mise already exports `JAVA_HOME`); `ZSH_DISABLE_COMPFIX` skips compaudit; `typeset -U path` drops duplicate PATH entries.
 - **Auto-format hooks (Claude + Pi)** — prettier now runs only from the project's own `node_modules/.bin`, never `npx --yes` (~0.6 s per edit, network fetch, and reformatted repos that do not use prettier).
 - **Statusline** — one `jq` call instead of six (80 → 50 ms per refresh); project-relative path match is now quoted.

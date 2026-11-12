@@ -21,9 +21,23 @@ Personal coding preferences that apply to all projects.
 
 ## Behavioral Guardrails
 
-- When asked to set up, install, or configure something, confirm approach and scope BEFORE making changes. Prefer the minimal, reversible option. Do not migrate to a different tool/framework unless explicitly asked.
+- When asked to set up, install, or configure something on this machine, confirm approach and scope BEFORE making changes. Prefer the minimal, reversible option. Do not migrate to a different tool/framework unless explicitly asked.
 - Do NOT attempt interactive CLI sessions (TUI tools, interactive installers, `less`, `vim`, etc.). If a command requires interactive input, tell the user the exact command to run with `!` prefix.
 - Scripts and install files must be idempotent — safe to run multiple times without side effects.
+
+## Working Style
+
+Every project's memory relearned these rules after dg corrected them. They apply everywhere.
+
+- **Finish directed work.** When dg names the work (a task, a queue, a fix), carry it to done. No "should I continue?", no option menus mid-task, no interim checkpoints; report once at the end. The setup confirmation above is the one exception.
+- **Stop only at a real gate:** a decision only dg can make, an irreversible action outside the directive, or an external blocker. Ask with `AskUserQuestion`, batch the questions, and keep working on everything else meanwhile.
+- **Read before you act or report.** Read the actual ticket, the code, the CI state and `origin/<branch>` (local checkouts drift) before you claim, write or report. Take every number from a fresh query, never from memory. Never guess a fact you can look up.
+- **Done means verified.** A green compile or a returned call is not proof. Check the behavior, then say done. When dg says it is still broken, re-verify; do not re-assert.
+- **Fix root causes.** After two failed fixes, stop patching: re-read the code, find the cause, fix it once. Fix all review findings in one pass and one push, not one finding per round.
+- **Do not invent work.** Work only what dg assigned or the ready pool. File discovered work; do not build it unasked.
+- **Leave dg's processes alone.** Never start or kill a server dg runs. Kill only processes you started, by PID — never `pkill`/`killall` by name.
+- **Subagents share your working tree** unless spawned with `isolation: "worktree"`; never run two git writers in one tree. Every subagent brief forbids printing env vars, keys or secret stores.
+- **Paste commands, not pointers.** dg does not open runbooks; put the exact command inline.
 
 ## Git Conventions
 
@@ -117,10 +131,9 @@ GitHub PR flow. It is a git repo full of markdown, exposed over MCP at
 there — if you are doing work that belongs on a board, it belongs in there.
 
 **Read the protocol before you act on the workspace, every session.** It is one
-file and it is kept current by `scriptorium reseed`:
+page and it is kept current by `scriptorium reseed`:
 
-    doc_read(path="../protocol/scriptorium-protocol.md")   # or read it from
-    ~/git/workspace/protocol/scriptorium-protocol.md        # the checkout
+    mcp__scriptorium__doc_read({"slug": "scriptorium-protocol"})
 
 Do not summarise it here. Two copies of a contract is how instructions rot —
 that is the protocol's own first paragraph, and it merges the workspace rules
@@ -128,14 +141,31 @@ with the commonplace memory protocol above precisely so there is one file.
 
 The three rules that have to fire _before_ you would think to go read it:
 
-- **Claim before you act.** `task_query(status="ready")` is the pool of work
+- **Claim before you act.** `task_query({"status": ["ready"]})` is the pool of work
   dg has authorised; `task_claim` sets owner and status and commits. An
   uncommitted claim is not a claim, and work done against no task is invisible.
-- **Only dg can answer it?** `task_ask` with one concrete question. Nobody here
+- **Only dg can answer it?** In an interactive session, ask him now with
+  `AskUserQuestion` (he has said "stop filing questions and ASK ME"). In a
+  dispatched run with nobody present, `task_ask` with one concrete question. Nobody here
   can unstick it? `task_block` with what it is waiting on — that keeps the
   task's place in the flow rather than moving it (ADR-0007).
 - **Session end:** `task_update` the status. A finished task still reading
   `in-progress` is a lie the next agent acts on.
+
+Call shapes, from ~900 refused calls in one month:
+
+- The tools are deferred. Load a tool's schema with `ToolSearch`
+  (`select:mcp__scriptorium__<tool>,...`, batched) before its first call. A
+  call sent from a guessed schema is refused.
+- Every mutation needs `idempotency_key`: a fresh UUID per intended change,
+  reused only to retry that change.
+- List filters such as `status` and `priority` take arrays, never a string.
+- Free text goes in `text` (`task_append`), `question` (`task_ask`) and `why`
+  (`task_block`), not `body`, `note` or `reason`. Pages and projects take
+  `slug`; changes take `id`. `change_open` requires `repo`, `project`,
+  `branch` and `title`, with task links in `closes`/`relates`, never in the body.
+- The decision search tool is `decision_search` (the protocol page says
+  `decisions_search`, which does not exist).
 
 **Propose, don't act unilaterally on a protected repo** (whelk, commonplace,
 workspace, scriptorium): `change_open`, `change_diff`, then `change_merge`,

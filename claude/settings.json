@@ -45,6 +45,16 @@
     ],
     "defaultMode": "auto"
   },
+  "autoMode": {
+    "environment": [
+      "$defaults",
+      "Source control: the GitHub orgs itsmeduncan, getwhelk, wellrunpartners and AqenAI belong to the user, and every repo under them is the user's own.",
+      "Self-hosted git: ssh://whelk-forge/ and ssh://duncan@scriptorium.tail1cf291.ts.net/ are the user's own git remotes.",
+      "Homelab: hosts on the user's Tailscale tailnet (*.ts.net names, 100.64.0.0/10 addresses, and the short names darksaber, scriptorium, mini and duncans-mac-mini) are personal machines that only the user operates and shares with no one. They run the user's own services: the scriptorium workspace and its CI, and commonplace memory. One-shot ssh commands to them are routine development work, not access to someone else's production. Destructive or irreversible actions there still need the user's request, and CI builders still run live jobs.",
+      "Trusted internal services: https://scriptorium.tail1cf291.ts.net:8443 and http://darksaber.tail1cf291.ts.net:8000 and :8001 are the user's own MCP services."
+    ]
+  },
+  "cleanupPeriodDays": 90,
   "hooks": {
     "PostToolUse": [
       {
