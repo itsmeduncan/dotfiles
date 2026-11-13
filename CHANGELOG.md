@@ -50,6 +50,7 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 - **`AGENTS.md` is now a symlink to `CLAUDE.md`** — single source of truth, no more drift between the two.
 - **Greptile submodule URL** switched from SSH to HTTPS so forkers without SSH auth can clone.
 - **`README.markdown` renamed to `README.md`, and now carries a full keybinding reference** — GitHub renders `README.md` in preference to `README.markdown`, so the install/CI content was at risk of being invisible on the repo page. The new **Keybindings** section documents every tmux, Neovim, shell, and git binding this config defines, plus a file-to-ownership table for keeping it current.
+- **Vendored Cloudflare skill pack refreshed** from `cloudflare/skills` (synced 2026-11-08). Adds 12 skills (`cf-cli`, `workers-development`, `workers-profiling`, `frameworks-on-cloudflare`, `nextjs-on-cloudflare`, `cloudflare-app-bootstrap`, `sandbox-stable`, `sandbox-next`, `sandbox-migrate-to-next`, `basin`, `k2`, `gateway-workers`) and rewrites the rest to retrieve current docs instead of carrying them (about 18,000 fewer lines). The new directories join the gitleaks allowlist for vendored docs.
 
 ### Removed
 
