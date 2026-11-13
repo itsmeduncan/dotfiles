@@ -36,13 +36,13 @@ case "$FILE_PATH" in
   *.py)
     ruff format --quiet "$FILE_PATH" 2>/dev/null || true
     ;;
-  *.ts|*.tsx|*.js|*.jsx|*.json|*.css|*.md)
+  *.ts | *.tsx | *.js | *.jsx | *.json | *.css | *.md)
     format_prettier
     ;;
   *.swift)
     swiftformat --quiet "$FILE_PATH" 2>/dev/null || true
     ;;
-  *.kt|*.kts)
+  *.kt | *.kts)
     ktlint --format "$FILE_PATH" 2>/dev/null || true
     ;;
 esac

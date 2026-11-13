@@ -32,8 +32,8 @@ act() {
 
 main_checkout() {
   local common
-  common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) ||
-    die "not inside a git repository; cd into one and run again"
+  common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) \
+    || die "not inside a git repository; cd into one and run again"
   dirname "$common"
 }
 

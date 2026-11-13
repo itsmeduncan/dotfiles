@@ -34,7 +34,10 @@ _ssh_tailnet_config() {
 
   local tmp
   tmp="$(mktemp "$HOME/.ssh/config.XXXXXX")"
-  { printf '%s\n\n' "$_SSH_INCLUDE"; [ -f "$cfg" ] && cat "$cfg"; } >"$tmp"
+  {
+    printf '%s\n\n' "$_SSH_INCLUDE"
+    [ -f "$cfg" ] && cat "$cfg"
+  } >"$tmp"
   chmod 600 "$tmp"
   mv "$tmp" "$cfg"
   ok "ssh config now includes ~/.ssh/config.d"
