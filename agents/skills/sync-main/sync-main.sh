@@ -1,11 +1,22 @@
 #!/usr/bin/env bash
-# sync-main: switch the main checkout to the default branch, pull, and remove
-# finished worktrees and branches. Never prompts: the rules below decide, and
-# whatever they keep is listed in the report with the reason.
+# sync-main: move the main checkout to the default branch, fast-forward it, and
+# remove finished worktrees and branches. Never prompts: the rules below decide,
+# and whatever they keep is listed in the report with the reason.
+#
+# Safety rules (each one is a case in test-sync-main.sh):
+# - Never stash, and never discard uncommitted or untracked work.
+# - A branch is finished only when its CONTENT is already on main: an ancestor,
+#   every patch already on main (`git cherry`), or merging it would leave main's
+#   tree unchanged (catches squash merges). Commit subjects and a `[gone]`
+#   upstream are NOT evidence: both deleted unmerged work.
+# - Keep a worktree that is locked, detached, has tracked OR untracked changes,
+#   or is the working directory of a running process.
+# - Report "Removed" only for a command that succeeded.
 #
 # Usage: sync-main.sh [--dry-run]   (run from anywhere inside the repo)
 #
 # Bash 3.2 compatible (macOS /bin/bash): no associative arrays, no mapfile.
+# Needs git >= 2.38 (`git merge-tree --write-tree`).
 
 set -uo pipefail
 
@@ -21,13 +32,17 @@ die() {
   exit 1
 }
 
-# Run a mutating git command, or print it under --dry-run.
+# Run a mutating git command, or print it under --dry-run. On failure, keep the
+# first line of git's message in $act_err and return non-zero.
+act_err=""
 act() {
   if ((dry_run)); then
     echo "[dry-run] $*"
-  else
-    "$@" >/dev/null 2>&1
+    return 0
   fi
+  act_err=$("$@" 2>&1 >/dev/null) && return 0
+  act_err=$(printf '%s' "$act_err" | head -1)
+  return 1
 }
 
 main_checkout() {
@@ -64,15 +79,12 @@ in_use() {
   return 1
 }
 
-# Every commit subject on $br but not on $main also appears on $main
-# (picked into a batch with conflict fixes).
-subjects_landed() {
-  local br=$1 subject
-  while IFS= read -r subject; do
-    [ -z "$subject" ] && continue
-    grep -Fxq -- "$subject" "$main_subjects" || return 1
-  done < <(git log --format=%s "$main..$br")
-  return 0
+# Merging $1 into $main would produce exactly $main's tree: everything on the
+# branch is already on main, even when it landed as a squash merge.
+content_landed() {
+  local merged
+  merged=$(git merge-tree --write-tree "$main" "$1" 2>/dev/null) || return 1
+  [ "$(printf '%s\n' "$merged" | head -1)" = "$(git rev-parse "$main^{tree}")" ]
 }
 
 # The skill's "finished" test: any one of these means the work landed.
@@ -83,39 +95,43 @@ finished() {
   if cherry=$(git cherry "$main" "$br" 2>/dev/null); then
     grep -q '^+' <<<"$cherry" || return 0
   fi
-  subjects_landed "$br" && return 0
-  [ "$(git for-each-ref --format='%(upstream:track)' "refs/heads/$br")" = "[gone]" ] && return 0
-  return 1
+  content_landed "$br"
 }
 
 unique_subjects() {
   git log --format='    %s' "$main..$1" | head -5
 }
 
-stash_main_checkout() {
-  [ -z "$(git status --porcelain)" ] && return
-  act git stash push --include-untracked -m "sync-main-$(date +%F)"
-  notes+=("stashed uncommitted work in the main checkout; restore it with: git stash pop")
-}
-
 update_main() {
-  act git checkout "$main" || die "cannot check out $main; resolve the error above and run again"
-  if ! act git pull; then
-    notes+=("git pull failed (offline or diverged); cleanup used the local $main")
+  local current
+  current=$(git branch --show-current)
+  if [ "$current" != "$main" ] && ! act git checkout "$main"; then
+    # git carries uncommitted changes across a checkout when they do not
+    # conflict; when they do, it refuses and touches nothing.
+    notes+=("stayed on ${current:-a detached HEAD}: checkout of $main failed ($act_err)")
   fi
-  act git remote prune origin
-  act git worktree prune
+  act git fetch --prune origin || notes+=("git fetch failed ($act_err); cleanup used the local $main")
+  if { [ "$(git branch --show-current)" = "$main" ] || ((dry_run)); } \
+    && git rev-parse --verify --quiet "origin/$main" >/dev/null \
+    && ! act git merge --ff-only "origin/$main"; then
+    # Fast-forward only: unrelated uncommitted files stay in place, and
+    # overlapping ones make git refuse without changing anything.
+    notes+=("$main not fast-forwarded ($act_err)")
+  fi
+  act git worktree prune || true
 }
 
+# Parse `git worktree list --porcelain` and judge every linked worktree.
 clean_worktrees() {
-  local wt="" br="" line
+  local wt="" br="" locked=0 line
   while IFS= read -r line; do
     case "$line" in
-      "worktree "*) wt=${line#worktree } br="" ;;
+      "worktree "*) wt=${line#worktree } br="" locked=0 ;;
       "branch refs/heads/"*) br=${line#branch refs/heads/} ;;
       "detached") br="(detached)" ;;
+      "locked" | "locked "*) locked=1 ;;
       "")
-        [ -n "$wt" ] && [ "$wt" != "$top" ] && clean_worktree "$wt" "$br"
+        [ -n "$wt" ] && [ "$wt" != "$top" ] && clean_worktree "$wt" "$br" "$locked"
         wt=""
         ;;
     esac
@@ -123,35 +139,42 @@ clean_worktrees() {
 }
 
 clean_worktree() {
-  local wt=$1 br=$2
-  if [ "$br" = "(detached)" ] || [ -z "$br" ]; then
+  local wt=$1 br=$2 locked=$3
+  if ((locked)); then
+    kept+=("worktree $wt (${br:-?}): locked")
+  elif [ "$br" = "(detached)" ] || [ -z "$br" ]; then
     kept+=("worktree $wt: detached HEAD")
   elif in_use "$wt"; then
     kept+=("worktree $wt ($br): a running process uses it")
-  elif [ -n "$(git -C "$wt" status --porcelain --untracked-files=no 2>/dev/null)" ]; then
-    kept+=("worktree $wt ($br): uncommitted changes")
-  elif finished "$br"; then
-    act git worktree unlock "$wt"
-    act git worktree remove --force "$wt"
-    act git branch -D "$br"
-    removed+=("worktree $wt and branch $br")
-  else
+  elif [ -n "$(git -C "$wt" status --porcelain 2>/dev/null)" ]; then
+    kept+=("worktree $wt ($br): uncommitted or untracked changes")
+  elif ! finished "$br"; then
     kept+=("worktree $wt ($br): unique commits"$'\n'"$(unique_subjects "$br")")
+  elif ! act git worktree remove "$wt"; then
+    # No --force: git refuses a worktree it considers unclean.
+    kept+=("worktree $wt ($br): git refused to remove it ($act_err)")
+  elif ! act git branch -D "$br"; then
+    removed+=("worktree $wt")
+    kept+=("branch $br: delete failed ($act_err)")
+  else
+    removed+=("worktree $wt and branch $br")
   fi
 }
 
 clean_branches() {
   local br wtpath
   while IFS=$'\t' read -r br wtpath; do
-    # Skip branches checked out in a kept worktree. The main checkout's branch
-    # is judged too: update_main moved it to $main (a dry run only pretends).
-    [ -n "$wtpath" ] && [ "$wtpath" != "$top" ] && continue
+    # Skip a branch checked out in a linked worktree (judged above) or still
+    # checked out in the main checkout (its checkout of $main failed). A dry
+    # run only pretends to switch, so it judges the main checkout's branch.
+    [ -n "$wtpath" ] && { [ "$wtpath" != "$top" ] || ((!dry_run)); } && continue
     case "$br" in main | master | "$main" | *release*) continue ;; esac
-    if finished "$br"; then
-      act git branch -D "$br"
+    if ! finished "$br"; then
+      kept+=("branch $br: unique commits"$'\n'"$(unique_subjects "$br")")
+    elif act git branch -D "$br"; then
       removed+=("branch $br")
     else
-      kept+=("branch $br: unique commits"$'\n'"$(unique_subjects "$br")")
+      kept+=("branch $br: delete failed ($act_err)")
     fi
   done < <(git for-each-ref --format='%(refname:short)%09%(worktreepath)' refs/heads)
 }
@@ -171,12 +194,8 @@ top=$(main_checkout)
 cd "$top" || die "cannot cd to the main checkout $top"
 main=$(default_branch)
 cwds=$(process_cwds)
-main_subjects=$(mktemp "${TMPDIR:-/tmp}/sync-main.XXXXXX")
-trap 'rm -f "$main_subjects"' EXIT
 
-stash_main_checkout
 update_main
-git log --format=%s "$main" >"$main_subjects"
 clean_worktrees
 clean_branches
 report
