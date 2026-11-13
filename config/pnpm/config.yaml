@@ -1,0 +1,7 @@
+# pnpm 11+ reads its global settings from this file (~/Library/Preferences/pnpm
+# on macOS, linked here). pnpm 12 ignored minimum-release-age in `rc`: it
+# locked a 2-day-old vite until this file existed.
+#
+# Refuse versions published less than 7 days ago (minutes). Do not weaken this;
+# pin an older version instead.
+minimumReleaseAge: 10080

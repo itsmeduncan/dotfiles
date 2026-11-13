@@ -54,6 +54,23 @@ done
 
 export DRY_RUN CHECK_MODE
 
+# Phase ordering matters:
+#   preflight → brew (provides mise) → symlinks (cheap, no deps) → mise →
+#   agents → runtimes → android → macos → ssh
+_PHASES=(preflight brew symlinks mise agents runtimes android macos ssh)
+
+# Reject a misspelled phase: `--only=bogus` used to skip every phase and
+# still print "install.sh complete".
+for _p in ${ONLY_PHASES//,/ } ${SKIP_PHASES//,/ }; do
+  case " ${_PHASES[*]} " in
+    *" $_p "*) ;;
+    *)
+      echo "Unknown phase: $_p (phases: ${_PHASES[*]})" >&2
+      exit 64
+      ;;
+  esac
+done
+
 # shellcheck source=lib/_common.sh
 . "$DOTFILES_DIR/lib/_common.sh"
 
@@ -71,11 +88,6 @@ if [ "$SNAPSHOT_ONLY" = "1" ]; then
   snapshot_run
   exit $?
 fi
-
-# Phase ordering matters:
-#   preflight → brew (provides mise) → symlinks (cheap, no deps) → mise →
-#   agents → runtimes → android → macos → ssh
-_PHASES=(preflight brew symlinks mise agents runtimes android macos ssh)
 
 _should_run() {
   local phase="$1"
@@ -109,4 +121,16 @@ for phase in "${_PHASES[@]}"; do
   "${phase}_run"
 done
 
+if [ "$WARN_COUNT" -gt 0 ]; then
+  if [ "$CHECK_MODE" = "1" ]; then
+    err "check found $WARN_COUNT problem(s); see the WARN lines above"
+    exit 1
+  fi
+  if [ "${DOTFILES_CI:-0}" = "1" ]; then
+    err "install finished with $WARN_COUNT warning(s); CI treats them as failures"
+    exit 1
+  fi
+  warn "install.sh complete with $WARN_COUNT warning(s); see the WARN lines above"
+  exit 0
+fi
 ok "install.sh complete"

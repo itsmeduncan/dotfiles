@@ -14,12 +14,21 @@ ssh_run() {
 # file holds host IPs — and only gains the Include line, at the top: ssh keeps
 # the first value per keyword, so the include must precede any `Host *`.
 _SSH_INCLUDE='Include ~/.ssh/config.d/*.conf'
+# Any existing Include of config.d counts, whatever its exact spelling.
+_SSH_INCLUDE_RE='^[[:space:]]*Include[[:space:]]+(~/\.ssh/)?config\.d/\*(\.conf)?[[:space:]]*$'
 
 _ssh_tailnet_config() {
   local cfg="$HOME/.ssh/config"
+  # ssh refuses keys and configs in a group- or world-readable ~/.ssh.
+  if [ "${CHECK_MODE:-0}" != "1" ] && [ "${DRY_RUN:-0}" != "1" ]; then
+    [ -d "$HOME/.ssh" ] || mkdir -m 700 "$HOME/.ssh"
+    [ -d "$HOME/.ssh/config.d" ] || mkdir -m 700 "$HOME/.ssh/config.d"
+  fi
   link "$DOTFILES_DIR/ssh/tailnet.conf" "$HOME/.ssh/config.d/tailnet.conf"
+  # A symlinked ~/.ssh/config: edit the file it points to, keep the link.
+  [ -L "$cfg" ] && cfg="$(readlink -f "$cfg")"
 
-  if [ -f "$cfg" ] && grep -qxF "$_SSH_INCLUDE" "$cfg"; then
+  if [ -f "$cfg" ] && grep -qE "$_SSH_INCLUDE_RE" "$cfg"; then
     if [ "${CHECK_MODE:-0}" = "1" ]; then ok "ssh config includes config.d"; fi
     return 0
   fi
@@ -33,7 +42,7 @@ _ssh_tailnet_config() {
   fi
 
   local tmp
-  tmp="$(mktemp "$HOME/.ssh/config.XXXXXX")"
+  tmp="$(mktemp "$(dirname "$cfg")/config.XXXXXX")"
   {
     printf '%s\n\n' "$_SSH_INCLUDE"
     [ -f "$cfg" ] && cat "$cfg"

@@ -38,6 +38,13 @@ Every project's memory relearned these rules after dg corrected them. They apply
 - **Leave dg's processes alone.** Never start or kill a server dg runs. Kill only processes you started, by PID — never `pkill`/`killall` by name.
 - **Subagents share your working tree** unless spawned with `isolation: "worktree"`; never run two git writers in one tree. Every subagent brief forbids printing env vars, keys or secret stores.
 - **Paste commands, not pointers.** dg does not open runbooks; put the exact command inline.
+- **One task per session.** Hand work to the next session through the task record or the PR, not through a long context. Every turn re-reads the whole context; the context-guard hook says when a session has grown expensive.
+
+## Claude Code tool use
+
+- **Read before Edit.** View a file with `Read` (use `offset`/`limit` for a large one) before you `Edit` it. Output from `cat`, `sed` or `rg` does not count as a read, and `Edit` refuses the change.
+- **Worktree-isolated agents run git one command at a time.** In an agent spawned with `isolation: "worktree"`, run each git command alone, from the worktree root, with literal arguments: no `cd` chains, `&&`/`;`, `$(…)` or `eval`. The isolation check refuses compound git commands it cannot verify.
+- **Hooks enforce some rules.** `bash-guard` blocks `pkill`/`killall` by name, skipped git hooks (`--no-verify`) and force pushes to main/master. Edits to the live dotfiles checkout ask first: change dotfiles in a worktree and land them through a PR.
 
 ## Git Conventions
 
@@ -65,7 +72,7 @@ Every project's memory relearned these rules after dg corrected them. They apply
 - Be direct. Skip preamble.
 - When proposing changes, explain the tradeoff, not just the benefit.
 - If something is broken, say what's broken and fix it. Don't ask permission to fix obvious bugs.
-- When unsure between approaches, present the options with pros/cons and a recommendation.
+- When a choice is dg's to make, ask with `AskUserQuestion` and give a recommendation. When it is yours, choose, say why in one line, and continue: no option menus.
 
 ## Supply Chain Security
 
@@ -125,10 +132,11 @@ Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace 
 
 ## Scriptorium Workspace (tasks, docs, decisions, reviews via MCP)
 
-`scriptorium` is the self-hosted workspace that replaced Notion, Trello and the
-GitHub PR flow. It is a git repo full of markdown, exposed over MCP at
-`https://scriptorium.tail1cf291.ts.net:8443/mcp` (tailnet-only, TLS via tailscale serve; LXC 104 on Proxmox). Tasks, docs, decisions and code reviews all live
-there — if you are doing work that belongs on a board, it belongs in there.
+`scriptorium` is the self-hosted workspace (tasks, docs, decisions and code
+reviews) for the repos hosted on its forge: whelk, scriptorium and inkhold. It is
+exposed over MCP at `https://scriptorium.tail1cf291.ts.net:8443/mcp`
+(tailnet-only). Repos on GitHub, such as the wellrunpartners repos, use the
+GitHub PR flow instead; follow that repo's own CLAUDE.md/AGENTS.md.
 
 **Read the protocol before you act on the workspace, every session.** It is one
 page and it is kept current by `scriptorium reseed`:
@@ -152,21 +160,9 @@ The three rules that have to fire _before_ you would think to go read it:
 - **Session end:** `task_update` the status. A finished task still reading
   `in-progress` is a lie the next agent acts on.
 
-Call shapes, from ~900 refused calls in one month:
-
-- The tools are deferred. Load a tool's schema with `ToolSearch`
-  (`select:mcp__scriptorium__<tool>,...`, batched) before its first call. A
-  call sent from a guessed schema is refused.
-- Every mutation needs `idempotency_key`: a fresh UUID per intended change,
-  reused only to retry that change.
-- List filters such as `status` and `priority` take arrays, never a string.
-- Free text goes in `text` (`task_append`), `question` (`task_ask`) and `why`
-  (`task_block`), not `body`, `note` or `reason`. Pages and projects take
-  `slug`; changes take `id`. `change_open` requires `repo`, `project`,
-  `branch` and `title`, with task links in `closes`/`relates`, never in the body.
-- Call tools by their listed names (`decision_search`, `person_list`,
-  `release_promotion_list`). Legacy aliases such as `decisions_search` still
-  answer, but no schema loads for them, so their arguments are guesses (SCR-1777).
+Call shapes (deferred tools, `idempotency_key`, array filters, field names):
+the `scriptorium-session` SessionStart hook prints them at the start of every
+session in a scriptorium-hosted repo. They live only there, so there is one copy.
 
 **Propose, don't act unilaterally on a protected repo** (whelk, commonplace,
 workspace, scriptorium): `change_open`, `change_diff`, then `change_merge`,

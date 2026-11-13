@@ -16,8 +16,9 @@ typeset -U path
 # oh-my-zsh
 export ZSH="$HOME/.oh-my-zsh"
 plugins=(brew mise direnv gh fzf zoxide uv terraform aws docker-compose)
-# Skip compaudit's permission scan of fpath (~15 ms per shell). Safe on a
-# single-user Mac; unset this if other users can write to the fpath dirs.
+# Load completions without the insecure-directory prompt (compinit -i). The
+# compaudit scan itself still runs (~7 ms). Safe on a single-user Mac; unset
+# this if other users can write to the fpath dirs.
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
 
@@ -139,12 +140,9 @@ mdr() {
 # LM Studio CLI
 export PATH="$PATH:$HOME/.lmstudio/bin"
 
-# opencode
-export PATH="$HOME/.opencode/bin:$PATH"
+# opencode and bun come from mise (mise.toml pins them). Their own installers
+# add ~/.opencode/bin and ~/.bun/bin to PATH, ahead of mise, which hid the
+# pinned versions; do not add those back.
 
 # bun completions
-[ -s "/Users/duncan/.bun/_bun" ] && source "/Users/duncan/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"

@@ -3,9 +3,6 @@
 # pass at the end of a substantive session, so the WRITE step of the memory
 # protocol stops being discretionary.
 #
-# The write step is the one agents skip: it's the last thing in a task, easy to
-# drop, and nothing forces it. This hook closes that gap without nagging.
-#
 # Fires at most ONCE per session and only when:
 #   - this isn't the continuation we ourselves triggered (no loops), AND
 #   - add_memory was NOT already called this session, AND
@@ -15,59 +12,69 @@
 #     skipped so the hook stays quiet on trivial sessions.
 # Otherwise it exits silently (0) and Claude stops normally.
 #
-# Install: copy to ~/.claude/hooks/commonplace-capture.sh, chmod +x, and register
-# under hooks.Stop in ~/.claude/settings.json:
+# Speed: the hook runs on every Stop. Grepping the whole transcript (up to
+# 500 MB) timed out at 15 s 59 times in one month, and a timeout skips the
+# nudge. So it keeps per-session state under $TMPDIR and scans only the bytes
+# appended since the last Stop. A session first seen when already large is
+# scanned from its last 5 MB only.
 #
-#   "hooks": {
-#     "Stop": [
-#       { "hooks": [ { "type": "command",
-#                      "command": "sh ~/.claude/hooks/commonplace-capture.sh",
-#                      "timeout": 15 } ] }
-#     ]
-#   }
-#
-# Requires: jq. Assumes the commonplace MCP servers are configured in the client.
+# Registered under hooks.Stop in claude/settings.json. Requires jq.
 #
 # POSIX sh only (no `pipefail`): Claude Code runs the hook command through the
-# system shell, which is dash on most Linux hosts. `set -o pipefail` is a bashism
-# and aborts dash with "Illegal option -o pipefail", turning every Stop into a
-# hook error. `set -eu` is enough here — the only pipes end in the command whose
-# status we care about, so pipefail buys nothing.
+# system shell, which is dash on most Linux hosts.
 set -eu
-input=$(cat)
+# Read exactly one JSON value from stdin, never to end-of-file: Claude Code
+# sometimes keeps a hook's stdin open, and a hook that waits for EOF hangs
+# until its timeout and then fails open.
+input=$(jq -c -n input 2>/dev/null) || exit 0
 
 # Don't re-fire on our own continuation → prevents infinite Stop loops.
 [ "$(printf '%s' "$input" | jq -r '.stop_hook_active // false')" = "true" ] && exit 0
 
 transcript=$(printf '%s' "$input" | jq -r '.transcript_path // empty')
 { [ -z "$transcript" ] || [ ! -f "$transcript" ]; } && exit 0
+session=$(printf '%s' "$input" | jq -r '.session_id // empty' | tr -cd 'A-Za-z0-9_-')
+[ -n "$session" ] || session=$(printf '%s' "$transcript" | cksum | cut -d' ' -f1)
 
-# Already WROTE to memory this session? Then a capture happened — nothing to nudge.
-# Match add_memory ONLY. Do NOT count search_nodes/search_memory_facts as proof: the
-# protocol is search-FIRST, so a read-first lookup at task start would trip this guard
-# and suppress the write nudge on exactly the compliant sessions the hook exists to
-# serve. MCP tools are recorded namespaced, e.g. "mcp__commonplace-personal__add_memory";
-# JSON spacing varies between clients, so allow optional whitespace after the colon.
-grep -qE '"name":[[:space:]]*"(mcp__[a-zA-Z0-9_-]+__)?add_memory"' "$transcript" 2>/dev/null && exit 0
+state_dir="${TMPDIR:-/tmp}/commonplace-capture"
+mkdir -p "$state_dir"
+st="$state_dir/$session"
+# Already wrote to memory, or already nudged once: stay quiet for the session.
+{ [ -f "$st.wrote" ] || [ -f "$st.nudged" ]; } && exit 0
 
-# Already nudged once this session? Don't re-nudge on every following user turn. A
-# nothing-durable pass legitimately writes no add_memory, so keying only on add_memory
-# would re-fire the nudge after each later message. `stop_hook_active` guards only the
-# immediate continuation; this covers subsequent turns. The reason below carries a
-# unique sentinel — its presence in the transcript proves the hook already fired.
-grep -qF 'commonplace-capture-nudge' "$transcript" 2>/dev/null && exit 0
+size=$(wc -c <"$transcript" | tr -d ' ')
+offset=$(cat "$st.offset" 2>/dev/null || echo 0)
+[ "$offset" -le "$size" ] || offset=0 # transcript replaced: start over
+window=5000000
+[ "$offset" -eq 0 ] && [ "$size" -gt "$window" ] && offset=$((size - window))
 
-# Only nudge after a session that did REAL work — otherwise the end-of-session
-# turn is pure noise. "Real work" = the session changed something (an edit, a
-# write, a notebook edit), OR it was a long, tool-heavy session (research that
-# likely surfaced durable facts). Read-only lookups and quick chats stay silent.
-# Override the length bar with COMMONPLACE_CAPTURE_MIN_TOOLS (default 12).
+chunk=$(mktemp "$state_dir/chunk.XXXXXX")
+trap 'rm -f "$chunk"' EXIT
+tail -c +"$((offset + 1))" "$transcript" >"$chunk"
+printf '%s\n' "$size" >"$st.offset"
+
+# Match add_memory ONLY. search_nodes/search_memory_facts are the protocol's
+# read-first step and must not suppress the write nudge. MCP tools are
+# namespaced (mcp__commonplace-personal__add_memory); spacing varies.
+if grep -qE '"name":[[:space:]]*"(mcp__[a-zA-Z0-9_-]+__)?add_memory"' "$chunk"; then
+  : >"$st.wrote"
+  exit 0
+fi
+
+count() { grep -cE "$1" "$chunk" || true; }
+mutated=$(($(cat "$st.mutated" 2>/dev/null || echo 0) + $(count '"name":[[:space:]]*"(Edit|Write|NotebookEdit)"')))
+tool_uses=$(($(cat "$st.tools" 2>/dev/null || echo 0) + $(count '"type":[[:space:]]*"tool_use"')))
+printf '%s\n' "$mutated" >"$st.mutated"
+printf '%s\n' "$tool_uses" >"$st.tools"
+
 min_tools=${COMMONPLACE_CAPTURE_MIN_TOOLS:-12}
-mutated=$(grep -cE '"name":[[:space:]]*"(Edit|Write|NotebookEdit)"' "$transcript" 2>/dev/null || true)
-tool_uses=$(grep -cE '"type":[[:space:]]*"tool_use"' "$transcript" 2>/dev/null || true)
-[ "${mutated:-0}" -eq 0 ] && [ "${tool_uses:-0}" -lt "$min_tools" ] && exit 0
+[ "$mutated" -eq 0 ] && [ "$tool_uses" -lt "$min_tools" ] && exit 0
+
+: >"$st.nudged"
+# Drop state older than a week so $TMPDIR does not grow without bound.
+find "$state_dir" -type f -mtime +7 -delete 2>/dev/null || true
 
 jq -n '{
   decision: "block",
-  reason: "commonplace capture: silently search_nodes to dedupe, then add_memory(agent_id=\"claude-code\") for durable facts only — decisions, preferences, project/people. Personal tier unless confidential (then client). Do NOT narrate the pass: emit ONE terse line and nothing else — `memory: saved N — <2-4 word gist>`, or `memory: nothing durable`. <!-- commonplace-capture-nudge -->"
+  reason: "commonplace capture: silently search_nodes to dedupe, then add_memory(agent_id=\"claude-code\") for durable facts only — decisions, preferences, project/people. Personal tier unless confidential (then client). Do NOT narrate the pass: emit ONE terse line and nothing else — `memory: saved N — <2-4 word gist>`, or `memory: nothing durable`."
 }'

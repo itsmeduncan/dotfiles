@@ -115,8 +115,11 @@
 	ui = auto
 [credential]
 	helper = osxkeychain
+# Push to GitHub over SSH, fetch over HTTPS. A fetch-side insteadOf broke every
+# HTTPS clone (mise plugins, oh-my-zsh, tpm, lazy.nvim) on a machine whose SSH
+# key is not on GitHub yet, such as a fresh install or CI.
 [url "git@github.com:"]
-	insteadOf = https://github.com/
+	pushInsteadOf = https://github.com/
 [filter "lfs"]
 	required = true
 	smudge = git-lfs smudge -- %f
@@ -125,8 +128,8 @@
 [commit]
 	template = ~/.gitmessage
 [credential "https://github.com"]
-	helper = 
+	helper =
 	helper = !/Users/duncan/.local/share/mise/shims/gh auth git-credential
 [credential "https://gist.github.com"]
-	helper = 
+	helper =
 	helper = !/Users/duncan/.local/share/mise/shims/gh auth git-credential

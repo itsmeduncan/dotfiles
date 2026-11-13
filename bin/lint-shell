@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# Lint every first-party shell script: shellcheck, shfmt (-i 2 -ci -bn) and
+# `zsh -n` for the zsh startup files. CI runs this; it finds the files itself
+# (tracked files with a sh/bash shebang or a .sh name), so a new script cannot
+# slip past the gate the way claude/hooks and sync-main.sh once did.
+#
+# Vendored third-party skills under agents/skills/ are skipped, except the
+# locally authored sync-main.
+
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+files=()
+while IFS= read -r f; do
+  case "$f" in
+    agents/skills/sync-main/*) ;;
+    agents/skills/*) continue ;;
+  esac
+  [ -f "$f" ] || continue
+  if [[ "$f" == *.sh ]] || head -1 "$f" | grep -qE '^#!.*[/ ](ba)?sh([[:space:]]|$)'; then
+    files+=("$f")
+  fi
+done < <(git ls-files)
+
+echo "lint-shell: ${#files[@]} scripts"
+status=0
+shellcheck -x "${files[@]}" || status=1
+shfmt -d -i 2 -ci -bn "${files[@]}" || status=1
+if command -v zsh >/dev/null 2>&1; then
+  zsh -n zshrc zprofile || status=1
+else
+  echo "lint-shell: zsh not installed; skipped zsh -n" >&2
+fi
+exit "$status"

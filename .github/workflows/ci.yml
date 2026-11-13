@@ -10,6 +10,10 @@ on:
     branches: [main, master]
   pull_request:
   workflow_dispatch:
+  # Weekly: a fresh install breaks when upstream changes (a disabled Homebrew
+  # formula, a moved plugin) even when this repo does not.
+  schedule:
+    - cron: "17 9 * * 1"
 
 permissions:
   contents: read
@@ -25,41 +29,34 @@ jobs:
           # gitleaks diffs BASE^..HEAD; needs full history.
           fetch-depth: 0
 
-      - name: Install shellcheck + shfmt
+      - name: Install shellcheck + shfmt + zsh
+        # Same versions as .pre-commit-config.yaml, so CI and the local hook agree.
         run: |
           sudo apt-get update
-          sudo apt-get install -y shellcheck
-          curl -sSfL -o /usr/local/bin/shfmt \
-            https://github.com/mvdan/sh/releases/download/v3.12.0/shfmt_v3.12.0_linux_amd64
-          chmod +x /usr/local/bin/shfmt
+          sudo apt-get install -y zsh
+          curl -sSfL https://github.com/koalaman/shellcheck/releases/download/v0.11.0/shellcheck-v0.11.0.linux.x86_64.tar.xz \
+            | tar -xJ -C /tmp
+          sudo install /tmp/shellcheck-v0.11.0/shellcheck /usr/local/bin/shellcheck
+          curl -sSfL -o /tmp/shfmt \
+            https://github.com/mvdan/sh/releases/download/v3.13.0/shfmt_v3.13.0_linux_amd64
+          sudo install /tmp/shfmt /usr/local/bin/shfmt
 
-      - name: bash -n (syntax check)
-        run: |
-          for f in install.sh lib/*.sh; do
-            echo "::group::bash -n $f"
-            bash -n "$f"
-            echo "::endgroup::"
-          done
-
-      - name: shellcheck
-        run: |
-          shellcheck install.sh lib/*.sh agents/skills/sync-main/*.sh
-
-      - name: shfmt (formatting check)
-        run: |
-          shfmt -d -i 2 -ci -bn install.sh lib/*.sh agents/skills/sync-main/*.sh
+      - name: Shell lint (shellcheck, shfmt, zsh -n on every first-party script)
+        run: bin/lint-shell
 
       - name: sync-main regression tests
         run: bash agents/skills/sync-main/test-sync-main.sh
 
-      - name: JSON / YAML validation
+      - name: JSON validation
         run: |
-          # claude/settings.json (tracked), all top-level json/yaml files
-          for f in claude/settings.json config/opencode/opencode.json; do
-            [ -f "$f" ] || continue
+          # Every tracked first-party JSON file (vendored skills excluded).
+          git ls-files '*.json' ':!:agents/skills/**' | while IFS= read -r f; do
             python3 -c "import json,sys;json.load(open(sys.argv[1]))" "$f"
             echo "ok: $f"
           done
+
+      - name: Hook scripts behave
+        run: bash claude/hooks/test-hooks.sh
 
       - name: .tool-versions in sync with mise.toml
         run: bin/sync-tool-versions --check
@@ -85,20 +82,15 @@ jobs:
     name: Tier-2 install (e2e on macOS)
     runs-on: macos-latest
     needs: tier1-lint
-    # Run on PRs to main and on manual dispatch — not on every push.
-    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    # Every PR, every push to master (direct pushes skipped it before), the
+    # weekly schedule, and manual dispatch.
+    if: >-
+      github.event_name == 'pull_request' || github.event_name == 'push' ||
+      github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Force HTTPS for all github.com clones
-        # The macOS runner image has no SSH key for github.com, but several
-        # downstream installers (mise's pyenv/eza plugins, oh-my-zsh) default
-        # to git@github.com: URLs. Rewrite to HTTPS at the git layer.
-        run: |
-          git config --global url.https://github.com/.insteadOf git@github.com:
-          git config --global url.https://github.com/.insteadOf ssh://git@github.com/
 
       - name: Dry-run installer (catch wiring bugs cheaply)
         run: |
@@ -115,10 +107,19 @@ jobs:
           # mise's aqua backend hits api.github.com per tool resolve; without a
           # token the unauthenticated rate limit (60/hr) is exhausted in seconds.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Any warning (a failed formula, a failed mise tool) fails the job.
           DOTFILES_CI: "1"
+          # The runner has no SSH key for GitHub. Rewrite SSH URLs to HTTPS
+          # through the environment: the symlinks phase replaces ~/.gitconfig,
+          # so a `git config --global` rewrite would be lost mid-install.
+          GIT_CONFIG_COUNT: "2"
+          GIT_CONFIG_KEY_0: url.https://github.com/.insteadOf
+          GIT_CONFIG_VALUE_0: "git@github.com:"
+          GIT_CONFIG_KEY_1: url.https://github.com/.insteadOf
+          GIT_CONFIG_VALUE_1: ssh://git@github.com/
         run: |
           ./install.sh --skip=macos,ssh,android,runtimes
 
-      - name: Verify symlinks landed
+      - name: Verify the install (--check exits 1 on any drift)
         run: |
-          ./install.sh --check
+          ./install.sh --check --skip=macos,ssh,android,runtimes

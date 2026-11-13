@@ -64,7 +64,9 @@ _link_notes_vault() {
 
   # iCloud vault hasn't synced to this machine yet — nothing to link.
   if [ ! -d "$target" ]; then
-    if [ "${CHECK_MODE:-0}" = "1" ]; then warn "notes vault: iCloud folder not synced yet"; fi
+    # Informational, not drift: a machine without the vault (CI, a new Mac
+    # before iCloud syncs) is still correctly installed.
+    if [ "${CHECK_MODE:-0}" = "1" ]; then log "notes vault: iCloud folder not synced yet; skipped"; fi
     return 0
   fi
 

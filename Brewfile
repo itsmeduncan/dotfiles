@@ -35,7 +35,7 @@ brew "nmap"
 brew "wget"
 
 # --- Docs / files ---
-brew "tldr"
+brew "tlrc" # tldr client (the old "tldr" formula is disabled since 2025-10-24); command: tldr
 brew "yazi"
 
 # --- Not in mise registry ---
