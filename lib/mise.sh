@@ -58,6 +58,15 @@ _precommit_hook() {
     warn "pre-commit not on PATH; run 'pre-commit install' in $DOTFILES_DIR later"
     return 0
   fi
-  run "pre-commit install" pre-commit install --install-hooks -f >/dev/null \
-    || warn "pre-commit install failed"
+  # Only the git hook: no --install-hooks. Building every hook environment
+  # (node, go, python) needs the network and failed in CI; pre-commit builds
+  # them on the first commit instead.
+  if [ "${DRY_RUN:-0}" = "1" ]; then
+    would "pre-commit install"
+    return 0
+  fi
+  local out
+  if ! out="$(cd "$DOTFILES_DIR" && pre-commit install -f 2>&1)"; then
+    warn "pre-commit install failed: $out"
+  fi
 }
