@@ -5,14 +5,15 @@ Personal dotfiles for macOS (Apple Silicon). Managed by symlinks via `install.sh
 ## Setup
 
 1. Clone the repo and run `./install.sh`
-2. The script is a thin orchestrator over phase modules in `lib/` (preflight, brew, symlinks, mise, agents, runtimes, android, macos, ssh). It handles: Homebrew via `Brewfile` (bootstrap + casks + a small set of system tools), mise (all runtimes + CLI tools, declared in `mise.toml`), symlinks, SSH key, oh-my-zsh, tpm, rustup, Neovim plugins, macOS defaults, firewall, and Claude Code config
+2. The script is a thin orchestrator over phase modules in `lib/` (preflight, brew, symlinks, mise, agents, runtimes, android, macos, ssh). It handles: Homebrew via `Brewfile` (bootstrap + casks + a small set of system tools), mise (all runtimes + CLI tools, declared in `mise.toml`), symlinks, SSH key + tailnet include, oh-my-zsh, tpm, rustup, Neovim plugins, macOS defaults, firewall, and Claude Code config
 3. Flags: `--dry-run` (preview), `--check` (drift audit, no changes), `--skip=`/`--only=` (phase selection), `--snapshot` (write `bootstrap-state.snapshot`). Idempotent — already-satisfied work is skipped.
 
 ## Structure
 
 All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 
-- **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH)
+- **Shell:** `zshrc` (primary shell config, oh-my-zsh + Spaceship), `zprofile` (env vars, PATH). When `CLAUDECODE=1` (Claude Code's Bash tool snapshots this config), `zshrc` skips the human-only parts — Spaceship, autosuggestions, syntax highlighting, atuin, the tmux window hook, and the eza/bat/dust/btm aliases — so agents get stock coreutils.
+- **SSH:** `ssh/tailnet.conf` — settings for tailnet hosts (`*.ts.net`, `100.*`, darksaber/scriptorium/mini): the on-disk key instead of the 1Password agent (which locks mid-session), and `ControlMaster` connection reuse (~380 ms → ~20 ms per command). The ssh phase links it to `~/.ssh/config.d/` and prepends `Include ~/.ssh/config.d/*.conf` to `~/.ssh/config`, which stays untracked: this repo is public and that file holds host IPs.
 - **Git:** `gitconfig` (aliases, delta pager, modern defaults), `gitignore` (global ignores including AI tools), `gitmessage` (commit template)
 - **Editor:** `config/nvim/init.lua` (Neovim primary editor, lazy.nvim + LSP), `vimrc` (legacy Vim config with vim-plug), `.editorconfig` (cross-editor formatting)
 - **Terminal:** `tmux.conf` (tmux with tpm, mouse, clipboard, session restore, Ghostty terminal overrides)
@@ -114,7 +115,7 @@ Managed by tpm (tmux plugin manager). Config at `tmux.conf`.
 Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.sh`.
 
 - **`claude/CLAUDE.md`** — Profile-wide instructions (coding preferences, conventions). Universal rules loaded every session.
-- **`claude/settings.json`** — Pre-approved tool permissions, `defaultMode: auto` (continuous execution), status line, hooks (`PostToolUse` auto-format on Edit/Write, `Stop` commonplace capture), `effortLevel`, `theme: dark-ansi`, `tui: fullscreen`, `skipAutoPermissionPrompt`, `agentPushNotifEnabled`, and enabled plugins — language servers only (`swift-lsp`, `rust-analyzer-lsp`, `clangd-lsp`). Workflow/agent plugin packs are deliberately off: they inject their own hooks, agents, and mandatory `CLAUDE.md` boilerplate, which duplicated the local skills and added per-turn noise.
+- **`claude/settings.json`** — Pre-approved tool permissions, `defaultMode: auto` (continuous execution), status line, hooks (`PostToolUse` auto-format on Edit/Write, `Stop` commonplace capture), `autoMode.environment` (tells the auto-mode classifier which GitHub orgs, git remotes, tailnet hosts and MCP services are the user's own, to cut false denials), `cleanupPeriodDays: 90` (keeps transcripts long enough to audit usage), `effortLevel`, `theme: dark-ansi`, `tui: fullscreen`, `skipAutoPermissionPrompt`, `agentPushNotifEnabled`, and enabled plugins — language servers only (`swift-lsp`, `rust-analyzer-lsp`, `clangd-lsp`). Workflow/agent plugin packs are deliberately off: they inject their own hooks, agents, and mandatory `CLAUDE.md` boilerplate, which duplicated the local skills and added per-turn noise.
 - **`claude/rules/`** — Path-specific rules loaded only when working with matching files:
   - `python.md` — Python conventions (uv, ruff, pyright, pytest). Triggers on `*.py`, `pyproject.toml`
   - `typescript.md` — TypeScript/Node conventions (pnpm, prettier, eslint). Triggers on `*.ts`, `*.tsx`, `package.json`
@@ -128,11 +129,11 @@ Profile-wide config stored in `claude/`, symlinked to `~/.claude/` by `install.s
   - `pr.md` — Create pull requests (read-only: Read, Grep, Glob, Bash)
   - `scaffold.md` — Bootstrap new projects (Read, Grep, Glob, Bash, Write, Edit)
 - **`claude/skills/` → `agents/skills/`** (symlink) — Workflow skills shared across Claude, Codex, opencode, and pi. Every entry is a plain tracked directory: no submodules, no symlinks out of the repo, so a fresh clone is the complete set. Use `ls agents/skills/` for the live inventory. Two categories:
-  - **Local skills** (authored in this repo): `audit`, `code-review`, `cross-platform-review`, `deep-review`, `doc-sync`, `fix-ci`, `fix-pipeline`, `release`, `sync-docs`, `sync-main`, `unstick`.
+  - **Local skills** (authored in this repo; `sync-main` runs its tested `sync-main.sh` in one call, with `--dry-run` to preview): `audit`, `code-review`, `cross-platform-review`, `deep-review`, `doc-sync`, `fix-ci`, `fix-pipeline`, `release`, `sync-docs`, `sync-main`, `unstick`.
   - **Vendored Cloudflare / web-platform skills**: `cloudflare` (umbrella platform skill), `agents-sdk`, `wrangler`, `workers-best-practices`, `durable-objects`, `sandbox-sdk`, `cloudflare-email-service`, `cloudflare-one`, `cloudflare-one-migrations`, `turnstile-spin`, `web-perf`.
 - **`claude/statusline.sh`** — Custom status line script (shows directory, git branch + dirty/ahead-behind markers, model, color-graded context usage, rate limits).
 - **`claude/hooks/`** — Lifecycle hooks:
-  - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, prettier, swiftformat, ktlint)
+  - `auto-format.sh` — PostToolUse hook that auto-formats files after Edit/Write (ruff, swiftformat, ktlint, and the project's own `node_modules/.bin/prettier` only when the project installs it — no `npx`)
   - `commonplace-capture.sh` — Stop hook that nudges a commonplace memory-capture pass at the end of a substantial session (skips read-only lookups and quick chats)
 
 ## Conventions

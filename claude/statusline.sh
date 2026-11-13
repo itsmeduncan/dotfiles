@@ -2,15 +2,23 @@
 # Claude Code status line script
 # Receives JSON on stdin; outputs a single status line.
 
-input=$(cat)
+# Parse every field in one jq call (this runs on each refresh; six jq forks
+# cost ~30 ms). @sh quotes each value so eval is safe.
+cwd='' project_dir='' model='' used_pct='' five_pct='' week_pct=''
+eval "$(jq -r '@sh "
+  cwd=\(.workspace.current_dir // .cwd // "")
+  project_dir=\(.workspace.project_dir // "")
+  model=\(.model.display_name // "")
+  used_pct=\(.context_window.used_percentage // "")
+  five_pct=\(.rate_limits.five_hour.used_percentage // "")
+  week_pct=\(.rate_limits.seven_day.used_percentage // "")
+"')"
 
 # --- Working directory (project-relative if inside a project) ---
-cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
-project_dir=$(echo "$input" | jq -r '.workspace.project_dir // empty')
 if [ -n "$project_dir" ] && [ "$cwd" != "$project_dir" ]; then
   # Show path relative to project root, prefixed with the project dir name
   proj_name=$(basename "$project_dir")
-  rel="${cwd#$project_dir}"
+  rel="${cwd#"$project_dir"}"
   dir_part="${proj_name}${rel}"
 else
   dir_part=$(basename "${cwd:-$(pwd)}")
@@ -32,16 +40,6 @@ if [ -n "$branch" ]; then
     [ "$behind" -gt 0 ] 2>/dev/null && ahead_behind="${ahead_behind}↓${behind}"
   fi
 fi
-
-# --- Model (short form) ---
-model=$(echo "$input" | jq -r '.model.display_name // empty')
-
-# --- Context window usage ---
-used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
-
-# --- Rate limits (Claude.ai subscribers only) ---
-five_pct=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty')
-week_pct=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty')
 
 # --- ANSI colors ---
 RESET='\033[0m'
