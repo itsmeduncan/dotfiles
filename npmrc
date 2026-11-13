@@ -1,3 +1,15 @@
-# 7 days
+# User-level npm config. ~/.npmrc is a SYMLINK to this file in a PUBLIC repo.
+# Anything that writes to ~/.npmrc (`npm login`, `npm config set`, a project's
+# setup steps) writes here. Run `git diff npmrc` before every commit.
+
+# Supply chain: refuse versions published less than 7 days ago, and never run
+# install scripts. Do not weaken these; pin an older version instead.
 min-release-age=7
 ignore-scripts=true
+
+# GitHub Packages (@wellrunpartners scope; each repo's .npmrc maps the scope).
+# The token is never written here: npm and pnpm expand ${NODE_AUTH_TOKEN} in
+# this user-level file, and ~/.bootstrap/env.sh (untracked, sourced by
+# ~/.zshrc) exports it. pnpm ignores env vars in a repo's own .npmrc, so this
+# line is the one that works for pnpm. Unset, installs from that scope get 401.
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}

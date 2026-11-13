@@ -30,7 +30,7 @@ All files in the repo root get symlinked to `~/.<filename>` by `install.sh`.
 - **Homebrew:** `Brewfile` (declarative manifest for everything brew-managed; postgresql pinned `@18`)
 - **Installer:** `install.sh` (orchestrator) + `lib/*.sh` (phase modules; `lib/_common.sh` has the `log`/`warn`/`ok`/`link`/`run` helpers)
 - **CI / quality gates:** `.github/workflows/ci.yml` (Tier-1 lint on Ubuntu, Tier-2 e2e install on macOS), `.pre-commit-config.yaml` (shellcheck, shfmt, prettier, gitleaks), `.gitleaks.toml` (extends the default ruleset; allowlists the vendored Cloudflare skill docs, whose samples carry placeholder credentials)
-- **Package managers (supply-chain hygiene for project-level installs):** `npmrc` (npm — min release age, no scripts), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
+- **Package managers (supply-chain hygiene for project-level installs):** `npmrc` (npm — min release age, no scripts; GitHub Packages auth as `${NODE_AUTH_TOKEN}`, exported by the untracked `~/.bootstrap/env.sh`, because `~/.npmrc` is a symlink into this public repo), `bunfig.toml` (bun — min release age), `config/uv/uv.toml` (uv — exclude-newer), `config/pnpm/rc` (pnpm — min release age)
 - **Scripts:** `bin/weather`, `bin/battery`, `bin/pomodoro-status` (symlinked to `~/.dotfiles/bin/`, used in tmux status bar), `bin/sync-tool-versions` (regenerate `.tool-versions` from `mise.toml`)
 - **Other:** `gemrc`, `psqlrc`, `README.md` (install, CI, reproducibility, and the full keybinding reference), `CHANGELOG.md` (Keep-a-Changelog format), `LICENSE`, `AGENTS.md` (symlink → `CLAUDE.md` — this file is the single source of truth)
 
