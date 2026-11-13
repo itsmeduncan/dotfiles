@@ -43,11 +43,14 @@ jobs:
 
       - name: shellcheck
         run: |
-          shellcheck install.sh lib/*.sh
+          shellcheck install.sh lib/*.sh agents/skills/sync-main/*.sh
 
       - name: shfmt (formatting check)
         run: |
-          shfmt -d -i 2 -ci -bn install.sh lib/*.sh
+          shfmt -d -i 2 -ci -bn install.sh lib/*.sh agents/skills/sync-main/*.sh
+
+      - name: sync-main regression tests
+        run: bash agents/skills/sync-main/test-sync-main.sh
 
       - name: JSON / YAML validation
         run: |

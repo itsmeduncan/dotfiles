@@ -60,6 +60,7 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 ### Fixed
 
+- **`sync-main.sh` deleted unmerged work** — it removed worktrees that held only untracked files, unlocked and removed locked (agent) worktrees, deleted branches whose commit subjects matched main or whose upstream was `[gone]` even with different or unpushed commits, and stashed the main checkout's uncommitted work. It now judges content (ancestor, `git cherry`, or a `git merge-tree` result equal to main), keeps locked and untracked worktrees, removes without `--force`, never stashes (checkout + `--ff-only`), and reports only removals that succeeded. `test-sync-main.sh` covers each case and runs in CI.
 - **bash 3.2 `unbound variable` on cask install** — stock macOS bash doesn't support associative arrays; with `set -u` the lookup tripped on the first cask. Now uses a portable `case` statement.
 - **Stale docs across `CLAUDE.md`, `AGENTS.md`, `README.markdown`** — cask list, skill inventory, mise vs Homebrew split, pi-coding-agent reference.
 - **`prefix J` silently shadowed `resize-pane -D`** — `tmux.conf` bound `J` twice: once in the `H/J/K/L` resize block, then again as `join-pane` 19 lines later. tmux keeps the last binding, so resize-down had no key at all. `join-pane` moved to `prefix @`; the resize block is whole again.
