@@ -128,11 +128,14 @@ check "auto-format resolves a relative path (no hang)" '[ -f "$root/trusted/RAN"
 # --- statusline ------------------------------------------------------------------
 git init -q -b main "$root/proj" && mkdir -p "$root/proj/sub" && echo x >"$root/proj/f" && git -C "$root/proj" add f && git -C "$root/proj" commit -qm init
 sl() { run_hook "$statusline" "$1"; }
-index_before=$(stat -f %m "$root/proj/.git/index" 2>/dev/null || stat -c %Y "$root/proj/.git/index")
+# git rewrites the index by renaming a new file over it, so any rewrite
+# changes the inode (portable, unlike BSD vs GNU stat flags).
+inode() { perl -e 'print((stat shift)[1])' "$1"; }
+index_before=$(inode "$root/proj/.git/index")
 sleep 1
 touch "$root/proj/f"
 out=$(sl "{\"cwd\": \"$root/proj/sub\", \"workspace\": {\"project_dir\": \"$root/proj\"}, \"model\": {\"display_name\": \"Opus\"}, \"context_window\": {\"used_percentage\": 42}}")
-index_after=$(stat -f %m "$root/proj/.git/index" 2>/dev/null || stat -c %Y "$root/proj/.git/index")
+index_after=$(inode "$root/proj/.git/index")
 check "statusline shows project-relative dir and branch" 'printf "%s" "$out" | grep -q "proj/sub (main"'
 check "statusline shows context percent" 'printf "%s" "$out" | grep -q "ctx 42%"'
 check "statusline does not rewrite .git/index" '[ "$index_before" = "$index_after" ]'
