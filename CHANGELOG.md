@@ -68,6 +68,7 @@ All notable changes to this repo, in human terms. Format: [Keep a Changelog](htt
 
 ### Security
 
+- **`npmrc` reads the GitHub Packages token from `${NODE_AUTH_TOKEN}`** — `~/.npmrc` is a symlink to this tracked file, so a tool that saved a token to `~/.npmrc` wrote a live PAT into the public repo's working tree (it was never committed). The token now lives in the untracked `~/.bootstrap/env.sh`, and the file warns every future writer.
 - Added `gitleaks` to pre-commit and CI to catch accidentally-committed secrets.
 - SSH key generation now defaults to a passphrase-protected key.
 - Commits/tags are signed by default via 1Password SSH-signing.
