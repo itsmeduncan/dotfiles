@@ -21,8 +21,11 @@ brew_run() {
     eval "$(/opt/homebrew/bin/brew shellenv)"
   fi
 
+  # --no-upgrade: "satisfied" means installed. Without it, an outdated formula
+  # counted as drift, and every install run upgraded everything (and restarted
+  # postgresql@18 through restart_service: :changed).
   if [ "${CHECK_MODE:-0}" = "1" ]; then
-    if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+    if brew bundle check --no-upgrade --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
       ok "Brewfile satisfied"
     else
       warn "Brewfile drift — run 'brew bundle install --file=Brewfile'"
@@ -33,16 +36,16 @@ brew_run() {
   # Skip the install pass entirely when Brewfile is already satisfied —
   # `brew bundle check` is ~1s, `brew bundle install` is ~5s + network even
   # in the no-op case. Saves repeated work on re-runs.
-  if brew bundle check --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
+  if brew bundle check --no-upgrade --file="$DOTFILES_DIR/Brewfile" &>/dev/null; then
     ok "Brewfile already satisfied — skipping install"
     return 0
   fi
 
   log "Syncing Brewfile..."
   if [ "${DRY_RUN:-0}" = "1" ]; then
-    would "brew bundle install --file=$DOTFILES_DIR/Brewfile"
+    would "brew bundle install --no-upgrade --file=$DOTFILES_DIR/Brewfile"
   else
-    if ! brew bundle install --file="$DOTFILES_DIR/Brewfile"; then
+    if ! brew bundle install --no-upgrade --file="$DOTFILES_DIR/Brewfile"; then
       warn "brew bundle install reported errors; continuing"
     fi
   fi

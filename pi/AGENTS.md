@@ -25,7 +25,7 @@ Use specific queries and small `max_facts` — the goal is spending _fewer_ toke
 
 ## Working Style
 
-Every project's memory relearned these rules after dg corrected them. They apply everywhere. (Same section as `claude/CLAUDE.md` in the dotfiles repo; change both together.)
+Every project's memory relearned these rules after dg corrected them. They apply everywhere. (The same section is in the dotfiles repo's `claude/CLAUDE.md` and `pi/AGENTS.md`, and in `~/.codex/AGENTS.md`; change all three together.)
 
 - **Finish directed work.** When dg names the work (a task, a queue, a fix), carry it to done. No "should I continue?", no option menus mid-task, no interim checkpoints; report once at the end. Confirming scope before setting up or installing something on this machine is the one exception.
 - **Stop only at a real gate:** a decision only dg can make, an irreversible action outside the directive, or an external blocker. Ask him directly in the session, batch the questions, and keep working on everything else meanwhile.
@@ -36,3 +36,4 @@ Every project's memory relearned these rules after dg corrected them. They apply
 - **Leave dg's processes alone.** Never start or kill a server dg runs. Kill only processes you started, by PID — never `pkill`/`killall` by name.
 - **Subagents share your working tree** unless given their own worktree; never run two git writers in one tree. Every subagent brief forbids printing env vars, keys or secret stores.
 - **Paste commands, not pointers.** dg does not open runbooks; put the exact command inline.
+- **One task per session.** Hand work to the next session through the task record or the PR, not through a long context. Every turn re-reads the whole context.

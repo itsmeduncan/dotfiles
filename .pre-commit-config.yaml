@@ -30,8 +30,9 @@ repos:
     rev: v0.11.0
     hooks:
       - id: shellcheck
-        # bin/* and lib/* are bash; install.sh too. agents/skills/ is not ours.
-        files: ^(install\.sh|lib/.*\.sh|bin/.*)$
+        # Every first-party script (bin/lint-shell, which CI runs, finds the same
+        # set by shebang). Vendored agents/skills/ are not ours; sync-main is.
+        files: ^(install\.sh|lib/.*\.sh|bin/[^/]+|claude/statusline\.sh|claude/hooks/.*\.sh|agents/skills/sync-main/.*\.sh)$
         exclude_types: [binary]
         # Follow `# shellcheck source=` directives (each lib/*.sh sources
         # _common.sh) so single-file commits don't false-positive on SC1091.
@@ -42,7 +43,7 @@ repos:
     hooks:
       - id: shfmt
         args: ["-i", "2", "-ci", "-bn"]
-        files: ^(install\.sh|lib/.*\.sh|bin/.*\.sh)$
+        files: ^(install\.sh|lib/.*\.sh|bin/[^/]+|claude/statusline\.sh|claude/hooks/.*\.sh|agents/skills/sync-main/.*\.sh)$
 
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v4.0.0-alpha.8
@@ -55,3 +56,13 @@ repos:
     rev: v8.30.0
     hooks:
       - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: tool-versions-sync
+        name: .tool-versions matches mise.toml
+        # CI fails when they drift; catch it before the commit instead.
+        entry: bin/sync-tool-versions --check
+        language: system
+        files: ^(mise\.toml|\.tool-versions)$
+        pass_filenames: false

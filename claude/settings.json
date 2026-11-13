@@ -1,61 +1,151 @@
 {
+  "cleanupPeriodDays": 90,
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
+  },
   "permissions": {
     "allow": [
-      "Bash(git *)",
-      "Bash(git)",
-      "Bash(gh *)",
-      "Bash(gh)",
-      "Bash(*&& git *)",
-      "Bash(*&& gh *)",
-      "Bash(*; git *)",
-      "Bash(*; gh *)",
-      "Bash(*| git *)",
-      "Bash(*| gh *)",
-      "Bash(mise *)",
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git diff)",
+      "Bash(git diff *)",
+      "Bash(git log)",
+      "Bash(git log *)",
+      "Bash(git show)",
+      "Bash(git show *)",
+      "Bash(git rev-parse *)",
+      "Bash(git ls-files)",
+      "Bash(git ls-files *)",
+      "Bash(git blame *)",
+      "Bash(git branch --show-current)",
+      "Bash(git branch --list *)",
+      "Bash(git remote -v)",
+      "Bash(git worktree list)",
+      "Bash(git worktree list *)",
+      "Bash(git stash list)",
+      "Bash(git fetch)",
+      "Bash(git fetch *)",
+      "Bash(git merge-base *)",
+      "Bash(git cherry *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git switch *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr list)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr checks *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh pr status)",
+      "Bash(gh run list)",
+      "Bash(gh run list *)",
+      "Bash(gh run view *)",
+      "Bash(gh run watch *)",
+      "Bash(gh issue view *)",
+      "Bash(gh issue list)",
+      "Bash(gh issue list *)",
+      "Bash(gh repo view)",
+      "Bash(gh repo view *)",
+      "Bash(gh auth status)",
+      "Bash(mise ls)",
+      "Bash(mise ls *)",
+      "Bash(mise which *)",
+      "Bash(mise current)",
+      "Bash(mise current *)",
+      "Bash(mise where *)",
+      "Bash(mise ls-remote *)",
+      "Bash(mise doctor)",
+      "Bash(brew info *)",
+      "Bash(brew list)",
+      "Bash(brew list *)",
+      "Bash(brew outdated)",
+      "Bash(brew search *)",
+      "Bash(xcrun simctl list)",
+      "Bash(xcrun simctl list *)",
+      "Bash(xcrun --find *)",
+      "Bash(xcrun xcresulttool *)",
       "Bash(uv *)",
       "Bash(pnpm *)",
       "Bash(npm *)",
-      "Bash(npx *)",
-      "Bash(node *)",
-      "Bash(python *)",
-      "Bash(python3 *)",
       "Bash(ruff *)",
-      "Bash(just *)",
-      "Bash(atuin *)",
-      "Bash(yazi)",
-      "Bash(btm)",
+      "Bash(swiftlint *)",
+      "Bash(git-cliff *)",
       "Bash(cat *)",
       "Bash(wc *)",
       "Bash(which *)",
-      "Bash(brew *)",
       "Bash(find *)",
       "Bash(ls *)",
       "Bash(rg *)",
-      "Bash(fd *)",
       "Bash(jq *)",
       "Bash(head *)",
       "Bash(tail *)",
       "Bash(diff *)",
       "Bash(stat *)",
-      "Bash(swiftlint *)",
-      "Bash(xcrun *)",
-      "Bash(xcodebuild *)",
-      "Bash(xcodegen *)",
-      "Bash(git-cliff *)"
+      "Bash(yazi)",
+      "Bash(btm)"
+    ],
+    "deny": [
+      "Bash(rg *--pre*)",
+      "Read(~/.ssh/**)",
+      "Read(~/.bootstrap/**)",
+      "Read(~/.pi/agent/auth.json)",
+      "Read(~/.pi/agent/mcp.json)",
+      "Read(~/.claude.json)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(~/.netrc)",
+      "Read(~/.aws/credentials)",
+      "Read(~/.docker/config.json)",
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)"
+    ],
+    "ask": [
+      "Bash(gh gist *)",
+      "Bash(gh secret *)",
+      "Bash(gh repo edit *)",
+      "Bash(gh repo delete *)",
+      "Bash(gh auth token*)",
+      "Edit(~/Projects/src/github.com/itsmeduncan/dotfiles/**)"
     ],
     "defaultMode": "auto"
   },
-  "autoMode": {
-    "environment": [
-      "$defaults",
-      "Source control: the GitHub orgs itsmeduncan, getwhelk, wellrunpartners and AqenAI belong to the user, and every repo under them is the user's own.",
-      "Self-hosted git: ssh://whelk-forge/ and ssh://duncan@scriptorium.tail1cf291.ts.net/ are the user's own git remotes.",
-      "Homelab: hosts on the user's Tailscale tailnet (*.ts.net names, 100.64.0.0/10 addresses, and the short names darksaber, scriptorium, mini and duncans-mac-mini) are personal machines that only the user operates and shares with no one. They run the user's own services: the scriptorium workspace and its CI, and commonplace memory. One-shot ssh commands to them are routine development work, not access to someone else's production. Destructive or irreversible actions there still need the user's request, and CI builders still run live jobs.",
-      "Trusted internal services: https://scriptorium.tail1cf291.ts.net:8443 and http://darksaber.tail1cf291.ts.net:8000 and :8001 are the user's own MCP services."
-    ]
-  },
-  "cleanupPeriodDays": 90,
+  "model": "opus",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ~/.claude/hooks/scriptorium-session.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ~/.claude/hooks/context-guard.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh ~/.claude/hooks/bash-guard.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -89,13 +179,14 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "clangd-lsp@claude-plugins-official": true
   },
+  "feedbackDrafts": "notify",
   "effortLevel": "high",
   "modelSettings": {
     "claude-opus-5": {
       "effortLevel": "medium"
     },
     "claude-opus-5-5": {
-      "effortLevel": "medium"
+      "effortLevel": "high"
     },
     "claude-fable-5-1": {
       "effortLevel": "high"
@@ -109,5 +200,13 @@
   "theme": "dark-ansi",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "model": "claude-opus-4-8"
+  "autoMode": {
+    "environment": [
+      "$defaults",
+      "Source control: the GitHub orgs itsmeduncan and getwhelk belong to the user, and every repo under them is the user's own. wellrunpartners and AqenAI are shared orgs where the user is one member among others: their repos are shared, and branches, PRs and history the user did not create belong to other people.",
+      "Self-hosted git: ssh://whelk-forge/ and ssh://duncan@scriptorium.tail1cf291.ts.net/ are the user's own git remotes.",
+      "Homelab: the user's Tailscale tailnet is tail1cf291.ts.net. Its hosts darksaber, scriptorium, mini and duncans-mac-mini (reached by those short names or as <name>.tail1cf291.ts.net) are personal machines that only the user operates and shares with no one. They run the user's own services: the scriptorium workspace and its CI, and commonplace memory. One-shot ssh commands to them are routine development work, not access to someone else's production. Destructive or irreversible actions there still need the user's request, and CI builders still run live jobs. Any other *.ts.net name belongs to another tailnet and is external.",
+      "Trusted internal services: https://scriptorium.tail1cf291.ts.net:8443 and http://darksaber.tail1cf291.ts.net:8000 and :8001 are the user's own MCP services."
+    ]
+  }
 }

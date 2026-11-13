@@ -76,9 +76,6 @@ snapshot_run() {
       if ! diff -u "$SNAPSHOT_FILE" <(snapshot_generate) >/dev/null 2>&1; then
         warn "bootstrap-state.snapshot is stale vs current system"
         warn "Run: ./install.sh --snapshot"
-        if [ "${CHECK_MODE:-0}" = "1" ]; then
-          return 0
-        fi
         return 1
       fi
       ok "bootstrap-state.snapshot in sync with current system"

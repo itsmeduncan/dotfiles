@@ -33,7 +33,13 @@ fi
 
 log() { printf "%s[INFO]%s %s\n" "$_C_CYN" "$_C_RST" "$*" >&2; }
 ok() { printf "%s[ OK ]%s %s\n" "$_C_GRN" "$_C_RST" "$*" >&2; }
-warn() { printf "%s[WARN]%s %s\n" "$_C_YEL" "$_C_RST" "$*" >&2; }
+# Every warning is counted: `--check` exits 1 when any phase warned, and so does
+# a CI install (DOTFILES_CI=1), so drift and failed installs cannot pass green.
+WARN_COUNT=${WARN_COUNT:-0}
+warn() {
+  WARN_COUNT=$((WARN_COUNT + 1))
+  printf "%s[WARN]%s %s\n" "$_C_YEL" "$_C_RST" "$*" >&2
+}
 err() { printf "%s[ERR ]%s %s\n" "$_C_RED" "$_C_RST" "$*" >&2; }
 
 would() {
@@ -54,6 +60,9 @@ run() {
 
 # link <src> <dst>
 # Idempotent symlink. Creates parent dir of dst. Honors DRY_RUN and CHECK_MODE.
+# A real file or directory already at dst is moved aside to
+# dst.pre-dotfiles.<timestamp> first: `ln -sfn` would overwrite a file, and
+# would nest the link INSIDE a real directory.
 link() {
   local src="$1" dst="$2"
   if [ "${CHECK_MODE:-0}" = "1" ]; then
@@ -65,6 +74,19 @@ link() {
       warn "link MISSING: $dst → $src"
     fi
     return 0
+  fi
+  if [ -L "$dst" ] && [ "$(readlink "$dst")" = "$src" ]; then
+    return 0
+  fi
+  if [ -e "$dst" ] && [ ! -L "$dst" ]; then
+    local backup
+    backup="$dst.pre-dotfiles.$(date +%Y%m%d%H%M%S)"
+    if [ "${DRY_RUN:-0}" = "1" ]; then
+      would "move existing $dst to $backup"
+    else
+      mv "$dst" "$backup"
+      log "moved existing $dst to $backup"
+    fi
   fi
   if [ "${DRY_RUN:-0}" = "1" ]; then
     would "ln -sfn $src $dst"

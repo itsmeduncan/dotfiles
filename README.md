@@ -15,7 +15,7 @@ cd dotfiles
 ### Flags
 
 - `--dry-run` — preview every mutating action as `[DRY] would: ...` without executing
-- `--check` — audit mode: report drift (symlinks, Brewfile, mise, macOS defaults), change nothing
+- `--check` — audit mode: report drift (symlinks, Brewfile, mise, macOS defaults), change nothing; exits 1 on any warning
 - `--skip=a,b` / `--only=a,b` — skip or isolate phases: `preflight brew symlinks mise agents runtimes android macos ssh`
 - `--snapshot` — write `bootstrap-state.snapshot` recording current versions of every brew/mise tool, submodule, and plugin
 
@@ -25,7 +25,7 @@ The installer is idempotent and skips already-satisfied work (Brewfile check, nv
 
 `install.sh` is a thin orchestrator over phase modules in `lib/`:
 
-- **brew** — install [Homebrew](https://brew.sh) if missing, then sync the [`Brewfile`](Brewfile): a slim set of things mise can't manage (tmux, postgresql@18, watchman, zsh plugins, mosh/nmap/wget, tldr, yazi, git-absorb, cocoapods) plus GUI casks (Ghostty, OrbStack, 1Password + CLI, Slack, Notion, Tailscale, LM Studio, gcloud-cli, MesloLGS Nerd Font)
+- **brew** — install [Homebrew](https://brew.sh) if missing, then sync the [`Brewfile`](Brewfile): a slim set of things mise can't manage (tmux, postgresql@18, watchman, zsh plugins, mosh/nmap/wget, tlrc (`tldr`), yazi, git-absorb, cocoapods) plus GUI casks (Ghostty, OrbStack, 1Password + CLI, Slack, Notion, Tailscale, LM Studio, gcloud-cli, MesloLGS Nerd Font)
 - **symlinks** — all dotfiles to `$HOME`; config dirs (`nvim`, `yazi`, `uv`, `bat`, `ghostty`, `opencode`) to `~/.config/`; `pnpm` to `~/Library/Preferences/`; `bin/` utilities to `~/.dotfiles/bin/`
 - **mise** — symlink [`mise.toml`](mise.toml) to `~/.config/mise/config.toml`, then install everything declared there via [mise](https://mise.jdx.dev): all language runtimes (Node, Python, Ruby, Go, Java, Bun) plus most CLI tools (neovim, eza, bat, ripgrep, fd, zoxide, fzf, delta, direnv, gh, lazygit, pre-commit, uv, pnpm, just, jq, yq, hyperfine, dust, bottom, tokei, awscli, terraform, opencode, swiftlint, atuin, pi-coding-agent)
 - **agents** — shared agent skills from `agents/skills/` to `~/.claude/skills`, `~/.agents/skills`, and `~/.pi/agent/skills`; Claude Code config to `~/.claude/`
@@ -57,8 +57,8 @@ The tracked `gitconfig` wires up SSH signing via 1Password's `op-ssh-sign` but l
 
 `.github/workflows/ci.yml`:
 
-- **Tier-1** (Ubuntu, every push/PR): `bash -n`, shellcheck, shfmt, JSON/YAML validation, prettier, gitleaks secret scan, `.tool-versions` sync check
-- **Tier-2** (macOS, any pull request or manual `workflow_dispatch`): `./install.sh --dry-run`, then a real end-to-end install on a clean runner, then `./install.sh --check`
+- **Tier-1** (Ubuntu, every push/PR): `bin/lint-shell` (shellcheck 0.11.0, shfmt 3.13.0 and `zsh -n` over every first-party script), the sync-main and hook behavior tests, JSON validation, prettier, gitleaks secret scan, `.tool-versions` sync check
+- **Tier-2** (macOS, every pull request, every push to master, weekly, or manual `workflow_dispatch`): `./install.sh --dry-run`, then a real end-to-end install on a clean runner that fails on any warning, then `./install.sh --check` (exits 1 on drift)
 
 Pre-commit hooks (`.pre-commit-config.yaml`) run the same linters locally: `pre-commit install` once, then they fire on every commit.
 

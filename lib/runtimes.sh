@@ -13,7 +13,7 @@ runtimes_run() {
       log "Installing oh-my-zsh..."
       run "install oh-my-zsh" sh -c \
         "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
-        "" --unattended
+        "" --unattended --keep-zshrc
     fi
   else
     ok "oh-my-zsh present"
@@ -46,12 +46,6 @@ runtimes_run() {
     ok "tpm present"
   fi
 
-  # Seed tmux-resurrect dir so continuum auto-restore doesn't error on first launch.
-  if [ "${CHECK_MODE:-0}" != "1" ] && [ "${DRY_RUN:-0}" != "1" ]; then
-    mkdir -p "$HOME/.tmux/resurrect"
-    [ -f "$HOME/.tmux/resurrect/last" ] || touch "$HOME/.tmux/resurrect/last"
-  fi
-
   # tmux plugin install (headless). Skip if every plugin declared in
   # tmux.conf already has a directory under ~/.tmux/plugins — `install_plugins`
   # would otherwise re-clone-or-noop every install run (cheap but noisy).
@@ -71,7 +65,9 @@ runtimes_run() {
   # Neovim plugins (headless via lazy.nvim). Skip if lazy-lock.json hasn't
   # changed since the last sync — `Lazy! sync` is a 5-30s no-op when up to
   # date, and that's the common case across re-runs.
-  if command -v nvim &>/dev/null && [ "${CHECK_MODE:-0}" != "1" ]; then
+  if ! command -v nvim &>/dev/null; then
+    [ "${CHECK_MODE:-0}" = "1" ] || warn "nvim not on PATH; skipped the Neovim plugin sync (run 'mise install', then this phase again)"
+  elif [ "${CHECK_MODE:-0}" != "1" ]; then
     if _nvim_plugins_satisfied; then
       ok "nvim plugins satisfied (lazy-lock unchanged since last sync)"
     elif [ "${DRY_RUN:-0}" = "1" ]; then
@@ -87,14 +83,13 @@ runtimes_run() {
   fi
 }
 
+# Satisfied when every `set -g @plugin 'owner/name'` in tmux.conf has a
+# directory under ~/.tmux/plugins. Read from tmux.conf so the list never drifts.
 _tmux_plugins_satisfied() {
-  # Cheap heuristic: tpm + tmux-resurrect + tmux-continuum + tmux-yank +
-  # tmux-sensible + vim-tmux-navigator are the declared plugins in tmux.conf.
-  # If all six dirs exist, declare satisfied.
-  local expected=(tpm tmux-resurrect tmux-continuum tmux-yank tmux-sensible vim-tmux-navigator)
-  for p in "${expected[@]}"; do
-    [ -d "$HOME/.tmux/plugins/$p" ] || return 1
-  done
+  local p
+  while IFS= read -r p; do
+    [ -d "$HOME/.tmux/plugins/${p##*/}" ] || return 1
+  done < <(sed -nE "s/^[[:space:]]*set(-option)?[[:space:]]+-g[[:space:]]+@plugin[[:space:]]+['\"]([^'\"]+)['\"].*/\\2/p" "$DOTFILES_DIR/tmux.conf")
   return 0
 }
 

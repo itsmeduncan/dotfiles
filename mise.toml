@@ -10,15 +10,15 @@
 
 [tools]
 # Language runtimes
-node    = "26.10.0"
+node    = "26.12.1"
 python  = "3.14.8"
-ruby    = "4.0.7"
-go      = "1.27.1"
-java    = "temurin-17.0.20+101"
-bun     = "1.4.2"
+ruby    = "4.0.9"
+go      = "1.27.3"
+java    = "temurin-17.0.21+9"
+bun     = "1.4.4"
 
 # Editors
-neovim  = "0.12.5"
+neovim  = "0.12.6"
 
 # Modern CLI replacements
 eza     = "0.23.5"
@@ -26,19 +26,19 @@ bat     = "0.26.1"
 ripgrep = "15.2.0"
 fd      = "10.5.0"
 zoxide  = "0.10.0"
-fzf     = "0.74.4"
-delta   = "0.19.2"
-direnv  = "2.37.1"
+fzf     = "0.74.5"
+delta   = "0.20.1"
+direnv  = "2.38.2"
 
 # Git / GitHub
-gh      = "2.102.0"
-lazygit = "0.65.1"
-pre-commit = "4.6.2"
+gh      = "2.103.2"
+lazygit = "0.66.2"
+pre-commit = "4.7.0"
 
 # Package managers / build tooling
-uv      = "0.12.23"
-pnpm    = "12.9.1"
-just    = "1.58.0"
+uv      = "0.13.5"
+pnpm    = "12.15.0"
+just    = "1.59.0"
 
 # Data tools
 jq      = "1.8.2"
@@ -48,14 +48,14 @@ yq      = "4.54.1"
 glow    = "3.0.0" # terminal markdown renderer (aqua:charmbracelet/glow)
 
 # Performance / inspection
-hyperfine = "1.20.0"
+hyperfine = "2.0.0"
 dust    = "1.2.6"
 bottom  = "0.14.9"
 tokei   = "15.0.0"
 
 # Cloud & infra
-awscli    = { version = "2.37.9", symlink_bins = "true" }
-terraform = "1.16.5"
+awscli    = { version = "2.38.5", symlink_bins = "true" }
+terraform = "1.17.0"
 
 # AI / agents
 opencode  = "1.18.34"
@@ -65,4 +65,9 @@ opencode  = "1.18.34"
 swiftlint = "0.65.1"
 
 # Shell history
-atuin   = "18.23.0"
+atuin   = "18.24.2"
+
+[settings]
+# Supply chain: like the 7-day gate for npm/pnpm/uv/bun, never install a tool
+# version published less than 7 days ago (`mise upgrade --bump` included).
+minimum_release_age = "7d"
