@@ -25,5 +25,5 @@ Real secrets never live in this repo: machine-local ones are in
 outside the tree and untracked.
 """
 paths = [
-  '''^agents/skills/(agents-sdk|cloudflare|cloudflare-email-service|cloudflare-one|cloudflare-one-migrations|durable-objects|sandbox-sdk|turnstile-spin|web-perf|workers-best-practices|wrangler)/''',
+  '''^agents/skills/(agents-sdk|basin|cf-cli|cloudflare|cloudflare-app-bootstrap|cloudflare-email-service|cloudflare-one|cloudflare-one-migrations|durable-objects|frameworks-on-cloudflare|gateway-workers|k2|nextjs-on-cloudflare|sandbox-migrate-to-next|sandbox-next|sandbox-sdk|sandbox-stable|turnstile-spin|web-perf|workers-best-practices|workers-development|workers-profiling|wrangler)/''',
 ]
