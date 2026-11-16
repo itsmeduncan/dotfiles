@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# commonplace-capture.sh — Claude Code Stop hook that nudges a memory-capture
+# memory-capture.sh — Claude Code Stop hook that nudges a memory-capture
 # pass at the end of a substantive session, so the WRITE step of the memory
 # protocol stops being discretionary.
 #
@@ -7,8 +7,8 @@
 #   - this isn't the continuation we ourselves triggered (no loops), AND
 #   - add_memory was NOT already called this session, AND
 #   - the session did SUBSTANTIAL work — it mutated a file (Edit/Write/
-#     NotebookEdit) or ran a long tool-heavy session (>= COMMONPLACE_CAPTURE_
-#     MIN_TOOLS tool_uses, default 12). Read-only lookups and quick chats are
+#     NotebookEdit) or ran a long tool-heavy session (>= MEMORY_CAPTURE_MIN_
+#     TOOLS tool_uses, default 12). Read-only lookups and quick chats are
 #     skipped so the hook stays quiet on trivial sessions.
 # Otherwise it exits silently (0) and Claude stops normally.
 #
@@ -36,7 +36,7 @@ transcript=$(printf '%s' "$input" | jq -r '.transcript_path // empty')
 session=$(printf '%s' "$input" | jq -r '.session_id // empty' | tr -cd 'A-Za-z0-9_-')
 [ -n "$session" ] || session=$(printf '%s' "$transcript" | cksum | cut -d' ' -f1)
 
-state_dir="${TMPDIR:-/tmp}/commonplace-capture"
+state_dir="${TMPDIR:-/tmp}/memory-capture"
 mkdir -p "$state_dir"
 st="$state_dir/$session"
 # Already wrote to memory, or already nudged once: stay quiet for the session.
@@ -55,7 +55,7 @@ printf '%s\n' "$size" >"$st.offset"
 
 # Match add_memory ONLY. search_nodes/search_memory_facts are the protocol's
 # read-first step and must not suppress the write nudge. MCP tools are
-# namespaced (mcp__commonplace-personal__add_memory); spacing varies.
+# namespaced (e.g. mcp__<server>__add_memory); spacing varies.
 if grep -qE '"name":[[:space:]]*"(mcp__[a-zA-Z0-9_-]+__)?add_memory"' "$chunk"; then
   : >"$st.wrote"
   exit 0
@@ -67,7 +67,7 @@ tool_uses=$(($(cat "$st.tools" 2>/dev/null || echo 0) + $(count '"type":[[:space
 printf '%s\n' "$mutated" >"$st.mutated"
 printf '%s\n' "$tool_uses" >"$st.tools"
 
-min_tools=${COMMONPLACE_CAPTURE_MIN_TOOLS:-12}
+min_tools=${MEMORY_CAPTURE_MIN_TOOLS:-12}
 [ "$mutated" -eq 0 ] && [ "$tool_uses" -lt "$min_tools" ] && exit 0
 
 : >"$st.nudged"
@@ -76,5 +76,5 @@ find "$state_dir" -type f -mtime +7 -delete 2>/dev/null || true
 
 jq -n '{
   decision: "block",
-  reason: "commonplace capture: silently search_nodes to dedupe, then add_memory(agent_id=\"claude-code\") for durable facts only — decisions, preferences, project/people. Personal tier unless confidential (then client). Do NOT narrate the pass: emit ONE terse line and nothing else — `memory: saved N — <2-4 word gist>`, or `memory: nothing durable`."
+  reason: "memory capture: follow the memory protocol in your instructions. Silently search to dedupe, then add_memory(agent_id=\"claude-code\") for durable facts only — decisions, preferences, project/people — in the tier the protocol names. Do NOT narrate the pass: emit ONE terse line and nothing else — `memory: saved N — <2-4 word gist>`, or `memory: nothing durable`."
 }'

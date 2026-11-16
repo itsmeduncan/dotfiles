@@ -111,6 +111,64 @@ alias p="cd ~/Projects/src/github.com"
 
 export PATH="$HOME/.local/bin:$PATH"
 
+# Machine-local overlay: config that names private hosts, projects or accounts
+# lives here, untracked, so this public repo names none of them. CLAUDE.md
+# ("Machine-local overlay") lists every file.
+export DOTFILES_LOCAL="${DOTFILES_LOCAL:-$HOME/.config/dotfiles-local}"
+# opencode merges this file over ~/.config/opencode/opencode.json.
+[[ -r "$DOTFILES_LOCAL/opencode.json" ]] && export OPENCODE_CONFIG="$DOTFILES_LOCAL/opencode.json"
+
+# >>> claude-accounts >>>
+# Claude Code account per directory, from the overlay's claude-accounts map.
+# One account per line, first match wins, `#` starts a comment, no spaces in
+# <directory>:
+#   <name>  <directory>  <config-dir>
+# Inside <directory>, `claude` runs with CLAUDE_CONFIG_DIR=<config-dir>;
+# elsewhere it uses the default ~/.claude. `claude-<name>` forces that account
+# anywhere, and `claude-personal` forces the default.
+_claude_accounts_file="$DOTFILES_LOCAL/claude-accounts"
+
+# Print "<name> <directory> <config-dir>" for each map line, with ~ expanded.
+_claude_accounts() {
+  [[ -r "$_claude_accounts_file" ]] || return 0
+  local name root dir
+  while read -r name root dir; do
+    [[ -z "$name" || "$name" == \#* || -z "$dir" ]] && continue
+    print -r -- "$name" "${root/#\~/$HOME}" "${dir/#\~/$HOME}"
+  done <"$_claude_accounts_file"
+}
+
+# Print the config dir of the first account whose directory holds $PWD.
+_claude_config_for_pwd() {
+  local name root dir
+  _claude_accounts | while read -r name root dir; do
+    if [[ "$PWD" == "$root" || "$PWD" == "$root"/* ]]; then
+      print -r -- "$dir"
+      return
+    fi
+  done
+}
+
+claude() {
+  local dir
+  dir="$(_claude_config_for_pwd)"
+  if [[ -n "$dir" ]]; then
+    CLAUDE_CONFIG_DIR="$dir" command claude "$@"
+  else
+    command claude "$@"
+  fi
+}
+
+alias claude-personal='env -u CLAUDE_CONFIG_DIR claude'
+
+() {
+  local name root dir
+  _claude_accounts | while read -r name root dir; do
+    alias "claude-$name=CLAUDE_CONFIG_DIR=${(q)dir} command claude"
+  done
+}
+# <<< claude-accounts <<<
+
 # yazi - cd to last directory on exit
 function y() {
   local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd

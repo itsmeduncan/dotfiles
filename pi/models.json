@@ -26,22 +26,6 @@
           "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
         }
       ]
-    },
-    "darksaber": {
-      "baseUrl": "http://darksaber:11434/v1",
-      "api": "openai-completions",
-      "apiKey": "ollama",
-      "compat": {
-        "supportsDeveloperRole": false,
-        "supportsReasoningEffort": false
-      },
-      "models": [
-        {
-          "id": "qwen3.5:35b-a3b",
-          "name": "qwen3.5:35b-a3b (darksaber)",
-          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
-        }
-      ]
     }
   }
 }

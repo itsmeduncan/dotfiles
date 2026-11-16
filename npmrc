@@ -7,7 +7,7 @@
 min-release-age=7
 ignore-scripts=true
 
-# GitHub Packages (@wellrunpartners scope; each repo's .npmrc maps the scope).
+# GitHub Packages (an org scope; each repo's .npmrc maps the scope).
 # The token is never written here: npm and pnpm expand ${NODE_AUTH_TOKEN} in
 # this user-level file, and ~/.bootstrap/env.sh (untracked, sourced by
 # ~/.zshrc) exports it. pnpm ignores env vars in a repo's own .npmrc, so this
