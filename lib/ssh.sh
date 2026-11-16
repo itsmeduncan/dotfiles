@@ -25,6 +25,10 @@ _ssh_tailnet_config() {
     [ -d "$HOME/.ssh/config.d" ] || mkdir -m 700 "$HOME/.ssh/config.d"
   fi
   link "$DOTFILES_DIR/ssh/tailnet.conf" "$HOME/.ssh/config.d/tailnet.conf"
+  # The tailnet's host names are private: a machine-local overlay file tags
+  # them for tailnet.conf. The 00- prefix sorts it before tailnet.conf.
+  local hosts="${DOTFILES_LOCAL:-$HOME/.config/dotfiles-local}/ssh/tailnet-hosts.conf"
+  [ -f "$hosts" ] && link "$hosts" "$HOME/.ssh/config.d/00-tailnet-hosts.conf"
   # A symlinked ~/.ssh/config: edit the file it points to, keep the link.
   [ -L "$cfg" ] && cfg="$(readlink -f "$cfg")"
 

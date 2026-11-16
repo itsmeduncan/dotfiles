@@ -101,69 +101,9 @@ Persistent notes live in `~/notes/` — an Obsidian-style markdown vault edited 
 - **When to write:** only when explicitly asked ("save this to notes", "add to my vault"). Never auto-create notes from conversation. When you do write, use frontmatter (`---\ntitle: ...\ntags: [...]\ncreated: YYYY-MM-DD\n---`) so the local LLM indexer can chunk and tag correctly.
 - **Privacy:** treat the vault as private. Never paste vault contents into web tools, gists, PR descriptions, or external services.
 
-## Commonplace Memory (long-term graph memory via MCP)
+## Machine-local instructions
 
-`commonplace` is a two-tier knowledge graph exposed over MCP. Two tiers, **never cross them**:
+Instructions that name private hosts, projects or services live outside this
+public repo, in an untracked file on each machine. Claude Code loads it here:
 
-- `commonplace-personal` — my own notes, projects, preferences, decisions, life.
-- `commonplace-client` — confidential / client / NDA material **only** (extracts locally, never leaves the box). The personal tier may use a hosted model, so **never write confidential data to it.** When unsure, use the client tier or don't write.
-
-**READ — search before you answer.** At the start of a task, and whenever I reference a person, project, preference, or past decision ("like we discussed", "my usual…"), search first instead of asking me to re-explain:
-
-- `mcp__commonplace-personal__search_memory_facts(query, max_facts)` — facts/relationships.
-- `mcp__commonplace-personal__search_nodes(query, entity_types)` — entities, optionally filtered (e.g. `["Preference","Decision"]`).
-  Use specific queries and small `max_facts` — the goal is spending _fewer_ tokens than re-deriving, not dumping the graph.
-
-**WRITE — capture durable facts, not chatter.** After learning something that matters _beyond this session_, call `mcp__commonplace-personal__add_memory` (or `commonplace-client` for confidential):
-
-- **Do:** stable preferences, decisions + rationale, people/orgs/projects and how they relate, goals, requirements, durable facts about my setup.
-- **Don't:** ephemeral chatter, transient task state, secrets/credentials.
-- **Check first** (a quick search) so you don't re-add an existing fact.
-- **Be structured** — JSON with who/what/when/source extracts better than prose. Match the ontology (Preference, Project, Person, Decision, Goal, …); some types have typed fields (a Decision's rationale, a Risk's owner) — supply them when known.
-- **Scope by project:** pass `group_id` (e.g. `group_id="acme-redesign"`) for project memory; omit for general/personal.
-- **Identify yourself:** pass `agent_id="claude-code"` so the write is attributed.
-- **Stay quiet about it.** The capture is plumbing. Don't narrate what you searched or list what you saved — report the whole pass in **one terse line, max**: `memory: saved 2 — deploy prefs, tier split`, or `memory: nothing durable`. Never more.
-
-**CITE sparingly.** Only when a memory fact _materially changed_ your answer — you'd have asked me, or answered differently, without it — note it in a few words ("from memory: you prefer rebase-workflow"). Don't prefix routine responses, don't narrate searches that found nothing, and don't cite what you'd have known anyway. One quiet line when it counts, not a citation every turn.
-
-**Write is enforced by a Stop hook.** `claude/hooks/commonplace-capture.sh` (registered under `hooks.Stop` in `claude/settings.json`) nudges a capture pass at the end of a _substantial_ session — one that changed a file or ran long and tool-heavy; read-only lookups and quick chats are skipped. If you get a Stop-hook nudge, do the search-then-`add_memory` pass; if nothing durable emerged, say so and stop.
-
-Source of truth for this protocol: `docs/memory-protocol.md` in the commonplace repo (write-enforcement hook shipped at `clients/claude-code/`).
-
-## Scriptorium Workspace (tasks, docs, decisions, reviews via MCP)
-
-`scriptorium` is the self-hosted workspace (tasks, docs, decisions and code
-reviews) for the repos hosted on its forge: whelk, scriptorium and inkhold. It is
-exposed over MCP at `https://scriptorium.tail1cf291.ts.net:8443/mcp`
-(tailnet-only). Repos on GitHub, such as the wellrunpartners repos, use the
-GitHub PR flow instead; follow that repo's own CLAUDE.md/AGENTS.md.
-
-**Read the protocol before you act on the workspace, every session.** It is one
-page and it is kept current by `scriptorium reseed`:
-
-    mcp__scriptorium__doc_read({"slug": "scriptorium-protocol"})
-
-Do not summarise it here. Two copies of a contract is how instructions rot —
-that is the protocol's own first paragraph, and it merges the workspace rules
-with the commonplace memory protocol above precisely so there is one file.
-
-The three rules that have to fire _before_ you would think to go read it:
-
-- **Claim before you act.** `task_query({"status": ["ready"]})` is the pool of work
-  dg has authorised; `task_claim` sets owner and status and commits. An
-  uncommitted claim is not a claim, and work done against no task is invisible.
-- **Only dg can answer it?** In an interactive session, ask him now with
-  `AskUserQuestion` (he has said "stop filing questions and ASK ME"). In a
-  dispatched run with nobody present, `task_ask` with one concrete question. Nobody here
-  can unstick it? `task_block` with what it is waiting on — that keeps the
-  task's place in the flow rather than moving it (ADR-0007).
-- **Session end:** `task_update` the status. A finished task still reading
-  `in-progress` is a lie the next agent acts on.
-
-Call shapes (deferred tools, `idempotency_key`, array filters, field names):
-the `scriptorium-session` SessionStart hook prints them at the start of every
-session in a scriptorium-hosted repo. They live only there, so there is one copy.
-
-**Propose, don't act unilaterally on a protected repo** (whelk, commonplace,
-workspace, scriptorium): `change_open`, `change_diff`, then `change_merge`,
-which refuses without dg's approval.
+@~/.config/dotfiles-local/claude/CLAUDE.md

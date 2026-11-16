@@ -38,16 +38,6 @@
   "skills": {
     "paths": ["$HOME/.agents/skills"]
   },
-  "mcp": {
-    "scriptorium": {
-      "type": "remote",
-      "url": "https://scriptorium.tail1cf291.ts.net:8443/mcp",
-      "headers": {
-        "Authorization": "{file:~/.bootstrap/scriptorium-mcp-auth}"
-      },
-      "enabled": true
-    }
-  },
   "model": "lm-studio/qwen3-coder-next-mlx",
   "small_model": "lm-studio/qwen3-coder-next-mlx"
 }

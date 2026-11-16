@@ -41,6 +41,6 @@ k=$((tokens / 1000))
 jq -n --arg k "$k" '{
   hookSpecificOutput: {
     hookEventName: "UserPromptSubmit",
-    additionalContext: ("context-guard: this session is at \($k)k tokens of context, and every turn re-reads all of it. Finish the current task, record a handoff where the next session will find it (task_append on the scriptorium task, or the PR/issue), and tell dg in one line that a fresh session (/clear) is now cheaper. Do not start new unrelated work in this session.")
+    additionalContext: ("context-guard: this session is at \($k)k tokens of context, and every turn re-reads all of it. Finish the current task, record a handoff where the next session will find it (the task record, or the PR/issue), and tell dg in one line that a fresh session (/clear) is now cheaper. Do not start new unrelated work in this session.")
   }
 }'

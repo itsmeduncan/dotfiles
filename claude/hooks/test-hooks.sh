@@ -65,16 +65,23 @@ for c in "git status" "rg -n pkill src" "pgrep -f vite" "echo killall is banned"
   check "bash-guard allows: $c" 'allowed "$c"'
 done
 
-# --- scriptorium-session -----------------------------------------------------------
+# --- forge-session -------------------------------------------------------------
 repo_with_origin() {
   git init -q "$1" && git -C "$1" remote add origin "$2"
 }
-repo_with_origin "$root/forge" "duncan@scriptorium.tail1cf291.ts.net:git/inkhold.git"
-repo_with_origin "$root/gh" "git@github.com:wellrunpartners/cockpit.git"
-out=$(run_hook "$here/scriptorium-session.sh" "{\"cwd\": \"$root/forge\"}")
-check "scriptorium-session speaks in a forge repo" 'printf "%s" "$out" | jq -e ".hookSpecificOutput.additionalContext | test(\"scriptorium-protocol\")" >/dev/null'
-out=$(run_hook "$here/scriptorium-session.sh" "{\"cwd\": \"$root/gh\"}")
-check "scriptorium-session is silent in a GitHub repo" '[ -z "$out" ]'
+repo_with_origin "$root/forge" "user@forge.example.ts.net:git/example.git"
+repo_with_origin "$root/gh" "git@github.com:example-org/example-repo.git"
+forge() { run_hook "$here/forge-session.sh" "{\"cwd\": \"$root/$1\"}"; }
+export DOTFILES_LOCAL="$root/local"
+out=$(forge forge)
+check "forge-session is silent with no local config" '[ -z "$out" ]'
+mkdir -p "$DOTFILES_LOCAL/claude"
+jq -n '{origins: ["*nomatch*", "*forge.example*"], context: "read example-protocol"}' >"$DOTFILES_LOCAL/claude/forge-session.json"
+out=$(forge forge)
+check "forge-session speaks in a forge repo" 'printf "%s" "$out" | jq -e ".hookSpecificOutput.additionalContext | test(\"example-protocol\")" >/dev/null'
+out=$(forge gh)
+check "forge-session is silent in a GitHub repo" '[ -z "$out" ]'
+unset DOTFILES_LOCAL
 
 # --- context-guard -------------------------------------------------------------
 usage_line() { jq -cn --argjson n "$1" '{type: "assistant", message: {usage: {input_tokens: 10, cache_read_input_tokens: $n, cache_creation_input_tokens: 0}}}'; }
@@ -88,11 +95,11 @@ check "context-guard warns once per 100k step" '[ -z "$out" ]'
 out=$(ctx s2 "$root/small.jsonl")
 check "context-guard is silent below 400k" '[ -z "$out" ]'
 
-# --- commonplace-capture ---------------------------------------------------------
-cap() { run_hook "$here/commonplace-capture.sh" "{\"session_id\": \"$1\", \"transcript_path\": \"$2\", \"stop_hook_active\": ${3:-false}}"; }
+# --- memory-capture ------------------------------------------------------------
+cap() { run_hook "$here/memory-capture.sh" "{\"session_id\": \"$1\", \"transcript_path\": \"$2\", \"stop_hook_active\": ${3:-false}}"; }
 printf '%s\n' '{"type":"tool_use","name":"Edit"}' >"$root/edit.jsonl"
 printf '%s\n' '{"type":"tool_use","name":"Read"}' >"$root/read.jsonl"
-printf '%s\n%s\n' '{"type":"tool_use","name":"Edit"}' '{"type":"tool_use","name":"mcp__commonplace-personal__add_memory"}' >"$root/wrote.jsonl"
+printf '%s\n%s\n' '{"type":"tool_use","name":"Edit"}' '{"type":"tool_use","name":"mcp__memory-server__add_memory"}' >"$root/wrote.jsonl"
 out=$(cap c1 "$root/edit.jsonl")
 check "capture nudges after an edit" 'printf "%s" "$out" | jq -e ".decision == \"block\"" >/dev/null'
 out=$(cap c1 "$root/edit.jsonl")

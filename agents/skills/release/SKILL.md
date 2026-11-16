@@ -149,7 +149,7 @@ If a tag has zero entries, omit the heading.
 
 If **every** PR in the range was internal (no Feature / Improvement / Fix / Connector / Guardrail entries), use AskUserQuestion:
 
-> Re-grounding: Project = Aqen, on branch `<branch>`, cutting release to `<RELEASE_DATE>`.
+> Re-grounding: Project = `<project>`, on branch `<branch>`, cutting release to `<RELEASE_DATE>`.
 > Plain English: Every PR in this batch is internal plumbing — nothing that a customer can see has changed since the last release. Want to ship the release anyway (internal-only)?
 >
 > RECOMMENDATION: Choose A — internal releases are still worth tagging so the audit trail is continuous. Completeness: 9/10.
@@ -166,7 +166,7 @@ Run the build script so the rendered HTML + RSS land in the same release commit:
 node sites/landing/scripts/build-changelog.mjs
 ```
 
-Output: `sites/landing/changelog/index.html` + `sites/landing/changelog/rss.xml`. The script has no npm deps; it walks `docs/changelog/public/*.md`, parses each file, and emits the canonical /changelog page Caddy serves on `www.aqen.ai/changelog`.
+Output: `sites/landing/changelog/index.html` + `sites/landing/changelog/rss.xml`. The script has no npm deps; it walks `docs/changelog/public/*.md`, parses each file, and emits the canonical `/changelog` page of the project's public site.
 
 Skip this step on internal-only releases — there's no public markdown to render.
 
@@ -258,7 +258,7 @@ If the FF is rejected (someone direct-pushed to `release`, or `release` diverged
 
 ### Tag rule of thumb
 
-Ask: **"would a non-Aqen-employee customer notice this?"** If yes → public, pick the tag. If no → internal-only.
+Ask: **"would a customer outside the company notice this?"** If yes → public, pick the tag. If no → internal-only.
 
 ## When NOT to invoke this skill
 

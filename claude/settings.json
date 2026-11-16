@@ -117,7 +117,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh ~/.claude/hooks/scriptorium-session.sh",
+            "command": "sh ~/.claude/hooks/forge-session.sh",
             "timeout": 5
           }
         ]
@@ -163,7 +163,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh ~/.claude/hooks/commonplace-capture.sh",
+            "command": "sh ~/.claude/hooks/memory-capture.sh",
             "timeout": 15
           }
         ]
@@ -203,10 +203,8 @@
   "autoMode": {
     "environment": [
       "$defaults",
-      "Source control: the GitHub orgs itsmeduncan and getwhelk belong to the user, and every repo under them is the user's own. wellrunpartners and AqenAI are shared orgs where the user is one member among others: their repos are shared, and branches, PRs and history the user did not create belong to other people.",
-      "Self-hosted git: ssh://whelk-forge/ and ssh://duncan@scriptorium.tail1cf291.ts.net/ are the user's own git remotes.",
-      "Homelab: the user's Tailscale tailnet is tail1cf291.ts.net. Its hosts darksaber, scriptorium, mini and duncans-mac-mini (reached by those short names or as <name>.tail1cf291.ts.net) are personal machines that only the user operates and shares with no one. They run the user's own services: the scriptorium workspace and its CI, and commonplace memory. One-shot ssh commands to them are routine development work, not access to someone else's production. Destructive or irreversible actions there still need the user's request, and CI builders still run live jobs. Any other *.ts.net name belongs to another tailnet and is external.",
-      "Trusted internal services: https://scriptorium.tail1cf291.ts.net:8443 and http://darksaber.tail1cf291.ts.net:8000 and :8001 are the user's own MCP services."
+      "Source control: the GitHub org itsmeduncan belongs to the user, and every repo under it is the user's own. Other orgs, self-hosted remotes, tailnet hosts and services that machine-local managed settings name as the user's own are the user's too. Every other GitHub org is shared or third-party: the user is at most one member among others, and branches, PRs and history the user did not create belong to other people.",
+      "Tailnets: a *.ts.net name or 100.64.0.0/10 address that the machine-local managed settings do not name as the user's tailnet belongs to another tailnet and is external."
     ]
   }
 }
